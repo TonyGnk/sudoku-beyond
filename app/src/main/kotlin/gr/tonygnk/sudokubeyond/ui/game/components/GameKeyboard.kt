@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2022-2025 kaajjo
- * Copyright (C) 2026 TonyGnk
- *
- * This file is part of Sudoku Beyond.
- * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- */
-
 package gr.tonygnk.sudokubeyond.ui.game.components
 
 import android.view.HapticFeedbackConstants
@@ -52,6 +34,8 @@ import androidx.compose.ui.unit.sp
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
+import kotlin.math.ceil
+import kotlin.math.sqrt
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -196,6 +180,62 @@ fun DefaultGameKeyboard(
                         },
                         selected = number == selected
                     )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SquareGameKeyboard(
+    modifier: Modifier = Modifier,
+    itemModifier: Modifier = Modifier,
+    remainingUses: List<Int>? = null,
+    onClick: (Int) -> Unit,
+    onLongClick: (Int) -> Unit,
+    size: Int,
+    selected: Int = 0
+) {
+    val numbers by remember(size) { mutableStateOf((1..size).toList()) }
+
+    Column(
+        verticalArrangement = Arrangement.spacedBy(2.dp)
+    ) {
+        val chunkSize = ceil(sqrt(size.toDouble())).toInt()
+        val chunkedNumbers = numbers.chunked(chunkSize)
+        chunkedNumbers.forEachIndexed { index, chunked ->
+            AnimatedVisibility(
+                visible =
+                    (!remainingUses.isNullOrEmpty() && remainingUses.chunked(chunkSize)[index].any { it > 0 }) ||
+                            remainingUses == null
+            ) {
+                KeyboardRow {
+                    chunked.forEach { number ->
+                        val hide =
+                            remainingUses != null && (remainingUses.size > number && remainingUses[number - 1] <= 0)
+                        KeyboardItem(
+                            modifier = itemModifier
+                                .weight(1f)
+                                .alpha(if (hide) 0f else 1f),
+                            number = number,
+                            onClick = {
+                                if (!hide) {
+                                    onClick(number)
+                                }
+                            },
+                            onLongClick = {
+                                if (!hide) {
+                                    onLongClick(number)
+                                }
+                            },
+                            remainingUses = if (remainingUses != null && remainingUses.size >= number) {
+                                remainingUses[number - 1]
+                            } else {
+                                null
+                            },
+                            selected = number == selected
+                        )
+                    }
                 }
             }
         }
