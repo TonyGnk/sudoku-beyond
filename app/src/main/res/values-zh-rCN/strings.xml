@@ -321,9 +321,6 @@
     <string name="autobackup_never">从不</string>
     <string name="restore_existing_data_alert">现有的数据将会被删除！</string>
     <string name="onboard_settings_description">根据您的喜好调整应用程序</string>
-    <string name="theme_custom">自定义</string>
-    <string name="color_picker_title">选择一种颜色</string>
-    <string name="parse_color_fail">不是颜色</string>
     <string name="pref_monet_style">莫奈风格</string>
     <string name="monet_tonalspot">色调点</string>
     <string name="monet_fruitsalad">水果沙拉</string>

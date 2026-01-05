@@ -351,9 +351,6 @@
     <string name="monet_neutral">Нейтральный</string>
     <string name="monet_fruitsalad">Фруктовый салат</string>
     <string name="theme_orange">Оранжевая</string>
-    <string name="parse_color_fail">Не цвет</string>
-    <string name="theme_custom">Своя</string>
-    <string name="color_picker_title">Выберите цвет</string>
     <string name="onboard_restore_backup">Восстановить копию</string>
     <string name="onboard_settings_description">Настройте приложение под ваш вкус</string>
     <string name="onboard_restore_backup_description">У вас уже есть резервная копия? Восстановите ее</string>

@@ -86,7 +86,6 @@
     <string name="toolbar_undo_description">واگرد</string>
     <string name="toolbar_hint_description">مقدار صحیح را در سلول انتخاب شده قرار می‌دهد. از طریق تنظیمات می‌توان آن را غیر فعال کرد</string>
     <string name="toolbar_erase_description">مقدار یا یادداشت‌های سلول انتخاب شده را پاک می‌کند</string>
-    <string name="theme_custom">سفارشی</string>
     <plurals name="last_x_games">
         <item quantity="one">%1$d بازی آخر</item>
         <item quantity="other">%1$d بازی آخر</item>
@@ -110,14 +109,12 @@
     <string name="dialog_yes">بله</string>
     <string name="pref_app_language">زبان برنامه</string>
     <string name="theme_cyan">فیروزه‌ای</string>
-    <string name="parse_color_fail">یک رنگ نیست</string>
     <string name="onboard_settings_description">برنامه را به دلخواه خود تنظیم کنید</string>
     <string name="telegram_link">در تلگرام به ما بپیوندید</string>
     <string name="donation_description">این برنامه برای همیشه رایگان و فاقد تبلیغات است. شما می‌توانید در پایین از من حمایت کنید</string>
     <string name="onboard_restore_backup_description">آیا از قبل نسخه‌ی پشتیبان دارید؟ آن را بازیابی کنید</string>
     <string name="app_version">نسخه‌ی %1$s (%2$s)</string>
     <string name="theme_orange">نارنجی</string>
-    <string name="color_picker_title">یک رنگ انتخاب کنید</string>
     <string name="pref_appearance">ظاهر</string>
     <string name="pref_delete_stats">پاکسازی تمام آمار</string>
     <string name="pref_pure_black">تم سیاه خالص</string>

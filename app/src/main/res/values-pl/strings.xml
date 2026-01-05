@@ -337,7 +337,6 @@
     <string name="monet_monochrome">Monochromatyczny</string>
     <string name="onboard_restore_backup">Przywróć z kopii zapasowej</string>
     <string name="onboard_settings_description">Dostosuj aplikację do swoich preferencji</string>
-    <string name="color_picker_title">Wybierz kolor</string>
     <string name="monet_neutral">Neutralny</string>
     <string name="monet_rainbow">Tęcza</string>
     <string name="monet_content">Treść</string>

@@ -74,13 +74,6 @@ class SettingsAppearanceViewModel @Inject constructor(
             themeSettings.setPaletteStyle(ThemeSettingsManager.paletteStyles[index].first)
         }
 
-    val isUserDefinedSeedColor by lazy { themeSettings.isUserDefinedSeedColor }
-    fun updateIsUserDefinedSeedColor(value: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            themeSettings.setIsUserDefinedSeedColor(value)
-        }
-    }
-
     val seedColor by lazy { themeSettings.themeColorSeed }
     fun updateCurrentSeedColor(seedColor: Color) {
         viewModelScope.launch(Dispatchers.IO) {

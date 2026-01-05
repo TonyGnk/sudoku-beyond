@@ -341,9 +341,6 @@
     <string name="monet_vibrant">Vibrante</string>
     <string name="monet_rainbow">Arcoíris</string>
     <string name="theme_cyan">Cian</string>
-    <string name="color_picker_title">Elige un color</string>
-    <string name="parse_color_fail">No es un color</string>
-    <string name="theme_custom">Personalizado</string>
     <string name="onboard_settings_description">Adapta la aplicación a tu gusto</string>
     <string name="onboard_restore_backup">Restaurar la copia de seguridad</string>
     <string name="onboard_restore_backup_description">¿Ya tienes una copia de seguridad? Restaurarla ahora</string>

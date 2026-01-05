@@ -310,10 +310,7 @@
     <string name="backup_restore_title">備份與還原</string>
     <string name="backup_restore_settings">還原設定</string>
     <string name="auto_backups_frequency">備份頻率</string>
-    <string name="color_picker_title">選擇顏色</string>
     <string name="crash_screen_title">糟糕，發生問題了</string>
-    <string name="theme_custom">自訂</string>
-    <string name="parse_color_fail">不是顏色</string>
     <plurals name="last_x_games">
         <item quantity="other">最後的 %1$d 個遊戲</item>
     </plurals>

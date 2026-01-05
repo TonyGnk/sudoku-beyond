@@ -337,9 +337,6 @@
     <string name="monet_tonalspot">टोनल स्पॉट</string>
     <string name="monet_rainbow">इंद्रधनुष</string>
     <string name="monet_content">सामग्री</string>
-    <string name="theme_custom">कस्टम</string>
-    <string name="color_picker_title">एक रंग चुनें</string>
-    <string name="parse_color_fail">रंग नहीं है</string>
     <string name="onboard_restore_backup">बैकअप पुनर्स्थापित करें</string>
     <string name="onboard_restore_backup_description">क्या आपके पास पहले से ही बैकअप है? इसे अभी पुनर्स्थापित करें</string>
     <string name="onboard_settings_description">ऐप को अपनी पसंद के अनुसार अनूकुल करें</string>

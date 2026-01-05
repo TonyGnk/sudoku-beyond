@@ -205,7 +205,6 @@
     <string name="last_backup_date">Viimeisin varmuuskopio: %1$s</string>
     <string name="theme_orange">Oranssi</string>
     <string name="theme_cyan">Sinivihreä</string>
-    <string name="theme_custom">Mukautettu</string>
     <string name="onboard_restore_backup">Palauta varmuuskopio</string>
     <string name="onboard_restore_backup_description">Onko sinulla jo varmuuskopio? Palauta se nyt</string>
     <string name="onboard_settings_description">Säädä sovellus mieluisaksesi</string>
@@ -273,8 +272,6 @@
     </plurals>
     <string name="action_create">Luo</string>
     <string name="restore_existing_data_alert">Olemassa olevat tiedot poistetaan!</string>
-    <string name="color_picker_title">Valitse väri</string>
-    <string name="parse_color_fail">Ei väriä</string>
     <string name="app_version">Versio %1$s (%2$s)</string>
     <string name="crash_screen_title">Hups, jotain meni pieleen</string>
     <string name="pref_mistakes_limit_summ">Kolme virhettä ja peli päättyy</string>

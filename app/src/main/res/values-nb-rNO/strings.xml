@@ -291,9 +291,6 @@
     <string name="theme_blue">Blå</string>
     <string name="redo">Gjenta</string>
     <string name="font_size_automatic">Automatisk</string>
-    <string name="theme_custom">Tilpasset</string>
-    <string name="color_picker_title">Velg en farge</string>
-    <string name="parse_color_fail">Ikke en farge</string>
     <string name="create_backup_description">Lag sikkerhetskopieringsfil</string>
     <string name="action_restore">Gjenopprett</string>
     <string name="restore_description">Gjenopprett fra fil</string>

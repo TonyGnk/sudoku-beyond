@@ -314,9 +314,6 @@
     <string name="last_backup_date">Sauvegarde la plus récente : %1$s</string>
     <string name="onboard_restore_backup">Restaurer une sauvegarde</string>
     <string name="onboard_restore_backup_description">Avez-vous déjà une sauvegarde ? Restaurez-la maintenant</string>
-    <string name="theme_custom">Personnalisé</string>
-    <string name="color_picker_title">Choisissez une couleur</string>
-    <string name="parse_color_fail">Pas une couleur</string>
     <string name="monet_rainbow">Arc-en-ciel</string>
     <string name="monet_fruitsalad">Salade de fruits</string>
     <string name="monet_monochrome">Monochrome</string>
