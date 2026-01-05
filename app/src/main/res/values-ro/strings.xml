@@ -335,11 +335,8 @@
     <string name="save_backup_error">Nu s-a putut salva fișierul ce conține copia de securitate</string>
     <string name="theme_orange">Portocaliu</string>
     <string name="save_backup_success">Copie de securitate salvată</string>
-    <string name="theme_custom">Personalizat</string>
     <string name="restore_backup_error">Restaurare eșuată</string>
-    <string name="color_picker_title">Alegeți o culoare</string>
     <string name="backup_restore_settings">Restaurați setările</string>
-    <string name="parse_color_fail">Nu este o culoare</string>
     <string name="auto_backups_frequency">Frecvența copiilor de securitate</string>
     <string name="backup_option_settings">Setări</string>
     <string name="autobackup_never">Niciodată</string>

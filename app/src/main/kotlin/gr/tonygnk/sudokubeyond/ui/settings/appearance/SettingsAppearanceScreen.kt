@@ -73,7 +73,6 @@ import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SetDateFormatPatternDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
-import gr.tonygnk.sudokubeyond.ui.settings.components.ColorPickerDialog
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
@@ -99,7 +98,6 @@ fun SettingsAppearanceScreen(
     var dateFormatDialog by rememberSaveable { mutableStateOf(false) }
     var customFormatDialog by rememberSaveable { mutableStateOf(false) }
     var paletteStyleDialog by rememberSaveable { mutableStateOf(false) }
-    var colorPickerDialog by rememberSaveable { mutableStateOf(false) }
 
     val darkTheme by viewModel.darkTheme.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_DARK_THEME)
     val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(initialValue = "")
@@ -111,9 +109,6 @@ fun SettingsAppearanceScreen(
         initialValue = Color(
             PreferencesConstants.DEFAULT_THEME_SEED_COLOR
         )
-    )
-    val isUserDefinedSeedColor by viewModel.isUserDefinedSeedColor.collectAsStateWithLifecycle(
-        initialValue = false
     )
 
     SettingsScaffoldLazyColumn(
@@ -170,7 +165,6 @@ fun SettingsAppearanceScreen(
                                         selected = dynamicColors,
                                         onClick = {
                                             viewModel.updateDynamicColors(true)
-                                            viewModel.updateIsUserDefinedSeedColor(false)
                                         },
                                         colorScheme = MaterialTheme.colorScheme,
                                         shapes = MaterialTheme.shapes
@@ -209,46 +203,11 @@ fun SettingsAppearanceScreen(
                             onClick = {
                                 viewModel.updateDynamicColors(false)
                                 viewModel.updateCurrentSeedColor(it.first)
-                                viewModel.updateIsUserDefinedSeedColor(false)
                             },
-                            selected = currentSeedColor == it.first && !dynamicColors && !isUserDefinedSeedColor,
+                            selected = currentSeedColor == it.first && !dynamicColors,
                             amoledBlack = amoledBlack,
                             darkTheme = darkTheme,
                         )
-                    }
-
-                    item {
-                        Box {
-                            AppThemeItem(
-                                title = stringResource(R.string.theme_custom),
-                                colorScheme = rememberDynamicColorScheme(
-                                    seedColor = currentSeedColor,
-                                    isDark = when (darkTheme) {
-                                        0 -> isSystemInDarkTheme()
-                                        1 -> false
-                                        else -> true
-                                    },
-                                    style = currentPaletteStyle,
-                                    isAmoled = amoledBlack
-                                ),
-                                onClick = {
-                                    viewModel.updateDynamicColors(false)
-                                    viewModel.updateIsUserDefinedSeedColor(true)
-                                    colorPickerDialog = true
-                                },
-                                selected = isUserDefinedSeedColor,
-                                amoledBlack = amoledBlack,
-                                darkTheme = darkTheme,
-                            )
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .padding(top = 8.dp, end = 16.dp)
-                                    .align(Alignment.TopEnd)
-                                    .size(24.dp)
-                            )
-                        }
                     }
                 }
             }
@@ -379,60 +338,6 @@ fun SettingsAppearanceScreen(
                 viewModel.updatePaletteStyle(index)
             },
             onDismiss = { paletteStyleDialog = false }
-        )
-    } else if (colorPickerDialog) {
-        val clipboardManager = LocalClipboardManager.current
-        var currentColor by remember {
-            mutableIntStateOf(currentSeedColor.toArgb())
-        }
-        ColorPickerDialog(
-            currentColor = currentColor,
-            onConfirm = {
-                viewModel.updateCurrentSeedColor(Color(currentColor))
-                colorPickerDialog = false
-            },
-            onDismiss = {
-                colorPickerDialog = false
-            },
-            onHexColorClick = {
-                clipboardManager.setText(
-                    AnnotatedString(
-                        "#" + currentColor.toHexString(
-                            HexFormat.UpperCase
-                        )
-                    )
-                )
-            },
-            onRandomColorClick = {
-                currentColor = (Math.random() * 16777215).toInt() or (0xFF shl 24)
-            },
-            onColorChange = {
-                currentColor = it
-            },
-            onPaste = {
-                val clipboardContent = clipboardManager.getText()
-                var parsedColor: Int? = null
-                if (clipboardContent != null) {
-                    try {
-                        parsedColor = android.graphics.Color.parseColor(
-                            clipboardContent.text
-                        )
-                    } catch (_: Exception) {
-
-                    }
-                }
-                if (parsedColor != null) {
-                    currentColor = parsedColor
-                } else {
-                    Toast
-                        .makeText(
-                            context,
-                            context.getString(R.string.parse_color_fail),
-                            Toast.LENGTH_SHORT
-                        )
-                        .show()
-                }
-            }
         )
     }
 

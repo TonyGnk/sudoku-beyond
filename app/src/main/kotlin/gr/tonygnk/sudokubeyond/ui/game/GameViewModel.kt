@@ -348,7 +348,7 @@ class GameViewModel @Inject constructor(
 
     private fun countRemainingUses(board: List<List<Cell>>): MutableList<Int> {
         val uses = mutableListOf<Int>()
-        for (i in 0..size) {
+        for (i in 0 until size) {
             uses.add(size - sudokuUtils.countNumberInBoard(board, i + 1))
         }
         return uses
@@ -533,6 +533,7 @@ class GameViewModel @Inject constructor(
     }
 
     private fun useHint() {
+        if (currCell.row < 0 || currCell.col < 0 || currCell.locked) return
         if (solvedBoard.isEmpty()) solveBoard()
         if (currCell.row >= 0 && currCell.col >= 0 && !currCell.locked) {
             notes = clearNotesAtCell(notes, currCell.row, currCell.col)

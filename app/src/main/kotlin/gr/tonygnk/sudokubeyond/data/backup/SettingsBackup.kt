@@ -52,7 +52,6 @@ data class SettingsBackup(
     val boardCrossHighlight: Boolean = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT,
     val currentThemeSeedColor: Int = PreferencesConstants.DEFAULT_THEME_SEED_COLOR,
     val paletteStyle: Int = PreferencesConstants.DEFAULT_PALETTE_STYLE,
-    val isUserDefinedSeedColor: Boolean = false,
     val advancedHint: Boolean = PreferencesConstants.DEFAULT_ADVANCED_HINT
 ) {
     suspend fun setSettings(settings: AppSettingsManager, themeSettings: ThemeSettingsManager) {
@@ -81,7 +80,6 @@ data class SettingsBackup(
         themeSettings.setBoardCrossHighlight(boardCrossHighlight)
         themeSettings.setCurrentThemeColor(Color(currentThemeSeedColor))
         themeSettings.setPaletteStyle(ThemeSettingsManager.getPaletteStyle(paletteStyle))
-        themeSettings.setIsUserDefinedSeedColor(isUserDefinedSeedColor)
     }
 
     companion object {
@@ -113,7 +111,6 @@ data class SettingsBackup(
                 boardCrossHighlight = runBlocking { themeSettings.boardCrossHighlight.first() },
                 currentThemeSeedColor = runBlocking { themeSettings.themeColorSeed.first().toArgb() },
                 paletteStyle = runBlocking { ThemeSettingsManager.getPaletteIndex(themeSettings.themePaletteStyle.first()) },
-                isUserDefinedSeedColor = runBlocking { themeSettings.isUserDefinedSeedColor.first() },
                 advancedHint = runBlocking { settings.advancedHintEnabled.first() }
             )
         }

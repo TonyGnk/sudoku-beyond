@@ -293,8 +293,6 @@
     <string name="pref_cross_highlight">Scacchiera</string>
     <string name="pref_fun_keyboard_over_num">Pannello strumenti sopra i numeri</string>
     <string name="pref_fun_keyboard_over_num_subtitle">Sposta il pannello degli strumenti sopra alla tastiera dei numeri</string>
-    <string name="theme_custom">Personalizzato</string>
-    <string name="parse_color_fail">Non è un colore</string>
     <string name="backup_restore_title">Backup e Ripristino</string>
     <string name="action_create_backup">Backup</string>
     <string name="hosted_weblate">Puoi aiutare con la traduzione su Hosted Weblate</string>
@@ -378,7 +376,6 @@
     <string name="monet_fidelity">Fedeltà</string>
     <string name="monet_content">Contenuto</string>
     <string name="theme_orange">Arancione</string>
-    <string name="color_picker_title">Scegli un colore</string>
     <string name="onboard_restore_backup">Ripristina backup</string>
     <string name="app_version">Versione %1$s(%2$s)</string>
     <string name="type_killer_12x12">Killer 12x12</string>

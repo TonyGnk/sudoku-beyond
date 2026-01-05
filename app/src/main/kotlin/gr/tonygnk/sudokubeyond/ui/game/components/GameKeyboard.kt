@@ -1,18 +1,19 @@
 /*
- *  Copyright (C) 2025 TonyGnk
+ * Copyright (C) 2022-2025 kaajjo
+ * Copyright (C) 2026 TonyGnk
  *
- *  This file is part of Sudoku Beyond.
- *  Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ * This file is part of Sudoku Beyond.
+ * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package gr.tonygnk.sudokubeyond.ui.game.components
@@ -142,7 +143,7 @@ fun DefaultGameKeyboard(
                         KeyboardRow {
                             chunked.forEach { number ->
                                 val hide =
-                                    remainingUses != null && (remainingUses.size > number && remainingUses[number - 1] <= 0)
+                                    remainingUses != null && (number <= remainingUses.size && remainingUses[number - 1] <= 0)
                                 KeyboardItem(
                                     modifier = itemModifier
                                         .weight(1f)
@@ -174,7 +175,7 @@ fun DefaultGameKeyboard(
             KeyboardRow(modifier = modifier) {
                 numbers.forEach { number ->
                     val hide =
-                        remainingUses != null && (remainingUses.size > number && remainingUses[number - 1] <= 0)
+                        remainingUses != null && (number <= remainingUses.size && remainingUses[number - 1] <= 0)
                     KeyboardItem(
                         modifier = itemModifier
                             .weight(1f)
@@ -229,7 +230,7 @@ fun SquareGameKeyboard(
                 KeyboardRow {
                     chunked.forEach { number ->
                         val hide =
-                            remainingUses != null && (remainingUses.size > number && remainingUses[number - 1] <= 0)
+                            remainingUses != null && (number <= remainingUses.size && remainingUses[number - 1] <= 0)
                         KeyboardItem(
                             modifier = itemModifier
                                 .weight(1f)

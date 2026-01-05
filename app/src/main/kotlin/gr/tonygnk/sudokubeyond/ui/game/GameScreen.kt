@@ -1,18 +1,19 @@
 /*
- *  Copyright (C) 2025 TonyGnk
+ * Copyright (C) 2022-2025 kaajjo
+ * Copyright (C) 2026 TonyGnk
  *
- *  This file is part of Sudoku Beyond.
- *  Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ * This file is part of Sudoku Beyond.
+ * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
  *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  */
 
 package gr.tonygnk.sudokubeyond.ui.game
@@ -500,6 +501,7 @@ fun GameScreen(
                                                 ToolbarItem(
                                                     modifier = Modifier.weight(1f),
                                                     painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                    enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
                                                     onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
                                                 )
                                             }
@@ -772,6 +774,7 @@ fun GameScreen(
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
                                                 painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
                                                 onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
                                             )
                                         }

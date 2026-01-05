@@ -331,9 +331,6 @@
         <item quantity="one">Sidste spil</item>
         <item quantity="other">Sidste %1$d spil</item>
     </plurals>
-    <string name="theme_custom">Brugertilpasset</string>
-    <string name="color_picker_title">Vælg en farve</string>
-    <string name="parse_color_fail">Ikke en farve</string>
     <string name="monet_rainbow">Regnbue</string>
     <string name="monet_fruitsalad">Frugtsalat</string>
     <string name="monet_monochrome">Monokrom</string>

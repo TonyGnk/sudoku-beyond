@@ -33,4 +33,3 @@ dependencyResolutionManagement {
 }
 rootProject.name = "LibreSudoku"
 include(":app")
-include(":Color-Picker")

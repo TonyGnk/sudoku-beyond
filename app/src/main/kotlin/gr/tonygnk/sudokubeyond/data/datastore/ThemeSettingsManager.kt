@@ -61,8 +61,6 @@ class ThemeSettingsManager @Inject constructor(@ApplicationContext context: Cont
     // palette style for the custom dynamic color scheme
     private val paletteStyleKey = intPreferencesKey("palette_style")
 
-    private val isUserDefinedSeedColorKey = booleanPreferencesKey("is_user_defined_seed_color")
-
     suspend fun setDynamicColors(enabled: Boolean) {
         dataStore.edit { settings ->
             settings[dynamicColorsKey] = enabled
@@ -138,16 +136,6 @@ class ThemeSettingsManager @Inject constructor(@ApplicationContext context: Cont
         } else {
             paletteStyles.first().first
         }
-    }
-
-    suspend fun setIsUserDefinedSeedColor(value: Boolean) {
-        dataStore.edit { prefs ->
-            prefs[isUserDefinedSeedColorKey] = value
-        }
-    }
-
-    val isUserDefinedSeedColor = dataStore.data.map { prefs ->
-        prefs[isUserDefinedSeedColorKey] ?: false
     }
 
 
