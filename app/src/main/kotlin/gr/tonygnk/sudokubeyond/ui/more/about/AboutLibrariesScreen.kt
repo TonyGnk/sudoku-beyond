@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.more.about
+package gr.tonygnk.sudokubeyond.ui.more.about
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import com.ramcosta.composedestinations.annotation.Destination

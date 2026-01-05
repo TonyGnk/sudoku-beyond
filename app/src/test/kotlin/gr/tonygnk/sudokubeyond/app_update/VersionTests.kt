@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.app_update
+package gr.tonygnk.sudokubeyond.app_update
 
-import com.kaajjo.libresudoku.core.update.Version
+import gr.tonygnk.sudokubeyond.core.update.Version
 import org.junit.Test
 
 class VersionTests {

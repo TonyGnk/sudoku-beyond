@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.util
+package gr.tonygnk.sudokubeyond.ui.util
 
 /*
 * MIT License

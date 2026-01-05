@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.locale_emoji
+package gr.tonygnk.sudokubeyond.ui.components.locale_emoji
 
 /**
  * Map of language codes to country codes (ISO 3166-1 alpha-2)

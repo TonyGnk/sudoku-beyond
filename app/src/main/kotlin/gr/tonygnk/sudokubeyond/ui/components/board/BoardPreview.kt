@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.board
+package gr.tonygnk.sudokubeyond.ui.components.board
 
 import android.graphics.Paint
 import android.graphics.Rect
@@ -45,13 +45,13 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kaajjo.libresudoku.LocalBoardColors
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.ui.theme.BoardColors
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
-import com.kaajjo.libresudoku.ui.theme.SudokuBoardColors
-import com.kaajjo.libresudoku.ui.theme.SudokuBoardColorsImpl
-import com.kaajjo.libresudoku.ui.util.LightDarkPreview
+import gr.tonygnk.sudokubeyond.LocalBoardColors
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColors
+import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
+import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
 import kotlin.math.ceil
 import kotlin.math.floor
 import kotlin.math.sqrt

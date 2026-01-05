@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game
+package gr.tonygnk.sudokubeyond.ui.game
 
 import android.os.Build
 import android.os.Build.VERSION.SDK_INT
@@ -82,25 +82,25 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHintData
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.destinations.SettingsAdvancedHintScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsCategoriesScreenDestination
-import com.kaajjo.libresudoku.ui.components.AdvancedHintContainer
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.board.Board
-import com.kaajjo.libresudoku.ui.game.components.DefaultGameKeyboard
-import com.kaajjo.libresudoku.ui.game.components.GameMenu
-import com.kaajjo.libresudoku.ui.game.components.NotesMenu
-import com.kaajjo.libresudoku.ui.game.components.ToolBarItem
-import com.kaajjo.libresudoku.ui.game.components.ToolbarItem
-import com.kaajjo.libresudoku.ui.game.components.UndoRedoMenu
-import com.kaajjo.libresudoku.ui.onboarding.FirstGameDialog
-import com.kaajjo.libresudoku.ui.util.ReverseArrangement
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintData
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.destinations.SettingsAdvancedHintScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AdvancedHintContainer
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.board.Board
+import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
+import gr.tonygnk.sudokubeyond.ui.game.components.GameMenu
+import gr.tonygnk.sudokubeyond.ui.game.components.NotesMenu
+import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
+import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
+import gr.tonygnk.sudokubeyond.ui.game.components.UndoRedoMenu
+import gr.tonygnk.sudokubeyond.ui.onboarding.FirstGameDialog
+import gr.tonygnk.sudokubeyond.ui.util.ReverseArrangement
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

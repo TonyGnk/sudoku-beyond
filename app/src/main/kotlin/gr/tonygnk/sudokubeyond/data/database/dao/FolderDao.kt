@@ -16,15 +16,15 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.dao
+package gr.tonygnk.sudokubeyond.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import kotlinx.coroutines.flow.Flow
 
 @Dao

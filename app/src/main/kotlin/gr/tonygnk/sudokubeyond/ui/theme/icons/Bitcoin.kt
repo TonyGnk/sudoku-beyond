@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.theme.icons
+package gr.tonygnk.sudokubeyond.ui.theme.icons
 
 import androidx.compose.material.icons.Icons
-import com.kaajjo.libresudoku.ui.util.iconFromXmlPath
+import gr.tonygnk.sudokubeyond.ui.util.iconFromXmlPath
 
 val Icons.Filled.Bitcoin by lazy {
     iconFromXmlPath(

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game
+package gr.tonygnk.sudokubeyond.ui.game
 
 data class GameScreenNavArgs(
     val gameUid: Long,

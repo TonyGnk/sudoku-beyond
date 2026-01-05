@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.more
+package gr.tonygnk.sudokubeyond.ui.more
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
@@ -79,20 +79,20 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.update.Release
-import com.kaajjo.libresudoku.core.update.UpdateUtil
-import com.kaajjo.libresudoku.destinations.AboutScreenDestination
-import com.kaajjo.libresudoku.destinations.AutoUpdateScreenDestination
-import com.kaajjo.libresudoku.destinations.BackupScreenDestination
-import com.kaajjo.libresudoku.destinations.FoldersScreenDestination
-import com.kaajjo.libresudoku.destinations.LearnScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsCategoriesScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.PreferenceRow
-import com.kaajjo.libresudoku.ui.settings.autoupdate.UpdateChannel
-import com.kaajjo.libresudoku.ui.theme.RoundedPolygonShape
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.update.Release
+import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
+import gr.tonygnk.sudokubeyond.destinations.AboutScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.AutoUpdateScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.FoldersScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.LearnScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import com.materialkolor.ktx.blend
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

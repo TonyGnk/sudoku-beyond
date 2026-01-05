@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game.components
+package gr.tonygnk.sudokubeyond.ui.game.components
 
 import android.view.HapticFeedbackConstants
 import androidx.compose.animation.AnimatedVisibility
@@ -49,9 +49,9 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
-import com.kaajjo.libresudoku.ui.util.LightDarkPreview
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

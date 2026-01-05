@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.app_crash
+package gr.tonygnk.sudokubeyond.ui.app_crash
 
 import android.content.Intent
 import android.os.Bundle
@@ -62,16 +62,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.MainActivity
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.GITHUB_NEW_ISSUE
-import com.kaajjo.libresudoku.core.GITHUB_REPOSITORY
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.TELEGRAM_CHANNEL
-import com.kaajjo.libresudoku.core.utils.GlobalExceptionHandler.Companion.getExceptionString
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
-import com.kaajjo.libresudoku.ui.theme.icons.ExteraGram
+import gr.tonygnk.sudokubeyond.MainActivity
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.GITHUB_NEW_ISSUE
+import gr.tonygnk.sudokubeyond.core.GITHUB_REPOSITORY
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.TELEGRAM_CHANNEL
+import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler.Companion.getExceptionString
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
 import com.materialkolor.PaletteStyle
 import dagger.hilt.android.AndroidEntryPoint
 

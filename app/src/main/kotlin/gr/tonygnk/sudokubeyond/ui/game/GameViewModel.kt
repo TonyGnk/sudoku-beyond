@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game
+package gr.tonygnk.sudokubeyond.ui.game
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -26,32 +26,32 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.Cage
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.QQWingController
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHint
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHintData
-import com.kaajjo.libresudoku.core.utils.GameState
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.core.utils.SudokuUtils
-import com.kaajjo.libresudoku.core.utils.UndoRedoManager
-import com.kaajjo.libresudoku.core.utils.toFormattedString
-import com.kaajjo.libresudoku.data.database.model.Record
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
-import com.kaajjo.libresudoku.domain.usecase.board.GetBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.UpdateBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.record.GetAllRecordsUseCase
-import com.kaajjo.libresudoku.navArgs
-import com.kaajjo.libresudoku.ui.game.components.ToolBarItem
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.Cage
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHint
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintData
+import gr.tonygnk.sudokubeyond.core.utils.GameState
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
+import gr.tonygnk.sudokubeyond.core.utils.UndoRedoManager
+import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.domain.usecase.board.GetBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.record.GetAllRecordsUseCase
+import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

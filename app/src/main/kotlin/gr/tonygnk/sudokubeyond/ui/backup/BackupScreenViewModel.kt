@@ -16,24 +16,24 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.backup
+package gr.tonygnk.sudokubeyond.ui.backup
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.BuildConfig
-import com.kaajjo.libresudoku.data.backup.BackupData
-import com.kaajjo.libresudoku.data.backup.SettingsBackup
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.repository.DatabaseRepository
-import com.kaajjo.libresudoku.domain.repository.FolderRepository
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.data.backup.BackupData
+import gr.tonygnk.sudokubeyond.data.backup.SettingsBackup
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
+import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted

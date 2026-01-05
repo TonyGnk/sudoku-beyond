@@ -16,19 +16,19 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory
+package gr.tonygnk.sudokubeyond.ui.gameshistory
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

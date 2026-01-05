@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.update
+package gr.tonygnk.sudokubeyond.core.update
 
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.FileProvider
-import com.kaajjo.libresudoku.BuildConfig
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged

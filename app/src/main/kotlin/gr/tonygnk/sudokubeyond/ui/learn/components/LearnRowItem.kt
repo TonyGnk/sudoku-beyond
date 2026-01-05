@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.learn.components
+package gr.tonygnk.sudokubeyond.ui.learn.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
+import gr.tonygnk.sudokubeyond.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

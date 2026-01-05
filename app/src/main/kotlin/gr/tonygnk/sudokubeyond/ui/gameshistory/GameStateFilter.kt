@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory
+package gr.tonygnk.sudokubeyond.ui.gameshistory
 
-import com.kaajjo.libresudoku.R
+import gr.tonygnk.sudokubeyond.R
 
 enum class GameStateFilter(val resName: Int) {
     All(R.string.filter_all),

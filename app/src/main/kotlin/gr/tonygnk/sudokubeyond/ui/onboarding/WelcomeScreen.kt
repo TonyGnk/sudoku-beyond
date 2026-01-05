@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.onboarding
+package gr.tonygnk.sudokubeyond.ui.onboarding
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -67,17 +67,17 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.destinations.BackupScreenDestination
-import com.kaajjo.libresudoku.destinations.HomeScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsCategoriesScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsLanguageScreenDestination
-import com.kaajjo.libresudoku.ui.components.board.Board
-import com.kaajjo.libresudoku.ui.util.getCurrentLocaleString
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsLanguageScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.board.Board
+import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dagger.hilt.android.lifecycle.HiltViewModel

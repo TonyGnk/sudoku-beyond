@@ -16,22 +16,22 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.folders
+package gr.tonygnk.sudokubeyond.ui.folders
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.parser.SdmParser
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.domain.usecase.board.GetGamesInFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.CountPuzzlesFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.DeleteFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.GetFoldersUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.GetLastSavedGamesAnyFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.InsertFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.UpdateFolderUseCase
+import gr.tonygnk.sudokubeyond.core.parser.SdmParser
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.domain.usecase.board.GetGamesInFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.CountPuzzlesFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.DeleteFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetLastSavedGamesAnyFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.UpdateFolderUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku
+package gr.tonygnk.sudokubeyond
 
 import android.app.Application
 import android.content.Context

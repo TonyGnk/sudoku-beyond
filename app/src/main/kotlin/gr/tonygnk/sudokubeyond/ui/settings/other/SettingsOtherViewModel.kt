@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.other
+package gr.tonygnk.sudokubeyond.ui.settings.other
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.data.database.AppDatabase
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.TipCardsDataStore
+import gr.tonygnk.sudokubeyond.data.database.AppDatabase
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

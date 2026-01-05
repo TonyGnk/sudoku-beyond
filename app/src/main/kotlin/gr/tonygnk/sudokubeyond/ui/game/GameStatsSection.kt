@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game
+package gr.tonygnk.sudokubeyond.ui.game
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
@@ -41,12 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.toFormattedString
-import com.kaajjo.libresudoku.data.database.model.Record
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.data.database.model.Record
 import kotlin.time.toKotlinDuration
 
 @OptIn(ExperimentalLayoutApi::class)

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database
+package gr.tonygnk.sudokubeyond.data.database
 
 import android.content.Context
 import androidx.room.AutoMigration
@@ -24,19 +24,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.kaajjo.libresudoku.data.database.converters.DurationConverter
-import com.kaajjo.libresudoku.data.database.converters.GameDifficultyConverter
-import com.kaajjo.libresudoku.data.database.converters.GameTypeConverter
-import com.kaajjo.libresudoku.data.database.converters.ZonedDateTimeConverter
-import com.kaajjo.libresudoku.data.database.dao.BoardDao
-import com.kaajjo.libresudoku.data.database.dao.DatabaseDao
-import com.kaajjo.libresudoku.data.database.dao.FolderDao
-import com.kaajjo.libresudoku.data.database.dao.RecordDao
-import com.kaajjo.libresudoku.data.database.dao.SavedGameDao
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.Record
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.database.converters.DurationConverter
+import gr.tonygnk.sudokubeyond.data.database.converters.GameDifficultyConverter
+import gr.tonygnk.sudokubeyond.data.database.converters.GameTypeConverter
+import gr.tonygnk.sudokubeyond.data.database.converters.ZonedDateTimeConverter
+import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
+import gr.tonygnk.sudokubeyond.data.database.dao.DatabaseDao
+import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
+import gr.tonygnk.sudokubeyond.data.database.dao.RecordDao
+import gr.tonygnk.sudokubeyond.data.database.dao.SavedGameDao
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 
 @Database(
     entities = [Record::class, SudokuBoard::class, SavedGame::class, Folder::class],

@@ -16,24 +16,24 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.home
+package gr.tonygnk.sudokubeyond.ui.home
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.qqwing.Cage
-import com.kaajjo.libresudoku.core.qqwing.CageGenerator
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.QQWingController
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.qqwing.Cage
+import gr.tonygnk.sudokubeyond.core.qqwing.CageGenerator
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted

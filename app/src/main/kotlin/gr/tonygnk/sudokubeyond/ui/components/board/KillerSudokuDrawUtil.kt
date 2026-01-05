@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.board
+package gr.tonygnk.sudokubeyond.ui.components.board
 
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.qqwing.Cage
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.qqwing.Cage
 
 fun DrawScope.drawKillerCage(
     cage: Cage,

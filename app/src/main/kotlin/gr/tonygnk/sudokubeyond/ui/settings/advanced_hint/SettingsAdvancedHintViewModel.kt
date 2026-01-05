@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.advanced_hint
+package gr.tonygnk.sudokubeyond.ui.settings.advanced_hint
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHintSettings
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

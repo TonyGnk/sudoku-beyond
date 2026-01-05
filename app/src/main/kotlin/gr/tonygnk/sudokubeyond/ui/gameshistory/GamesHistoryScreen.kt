@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory
+package gr.tonygnk.sudokubeyond.ui.gameshistory
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
@@ -75,20 +75,20 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.toFormattedString
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.destinations.SavedGameScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedIconFilterChip
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.EmptyScreen
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.components.board.BoardPreview
-import com.kaajjo.libresudoku.ui.util.disableSplitMotionEvents
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedIconFilterChip
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
+import gr.tonygnk.sudokubeyond.ui.util.disableSplitMotionEvents
 import com.materialkolor.ktx.harmonize
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator

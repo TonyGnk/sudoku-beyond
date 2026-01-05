@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components
+package gr.tonygnk.sudokubeyond.ui.components
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
@@ -43,9 +43,9 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
-import com.kaajjo.libresudoku.ui.util.LightDarkPreview
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

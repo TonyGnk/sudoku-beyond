@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.learn
+package gr.tonygnk.sudokubeyond.ui.learn
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -44,10 +44,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.learn.learnapp.LearnAppScreen
-import com.kaajjo.libresudoku.ui.learn.learnsudoku.LearnSudokuScreen
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.learn.learnapp.LearnAppScreen
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

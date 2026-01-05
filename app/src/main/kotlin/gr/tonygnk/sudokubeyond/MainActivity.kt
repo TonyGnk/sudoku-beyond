@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku
+package gr.tonygnk.sudokubeyond
 
 import android.content.Intent
 import android.os.Bundle
@@ -48,24 +48,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.update.Release
-import com.kaajjo.libresudoku.core.update.UpdateUtil
-import com.kaajjo.libresudoku.core.utils.GlobalExceptionHandler
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.destinations.HomeScreenDestination
-import com.kaajjo.libresudoku.destinations.ImportFromFileScreenDestination
-import com.kaajjo.libresudoku.destinations.MoreScreenDestination
-import com.kaajjo.libresudoku.destinations.StatisticsScreenDestination
-import com.kaajjo.libresudoku.destinations.WelcomeScreenDestination
-import com.kaajjo.libresudoku.ui.app_crash.CrashActivity
-import com.kaajjo.libresudoku.ui.components.navigation_bar.NavigationBarComponent
-import com.kaajjo.libresudoku.ui.settings.autoupdate.UpdateChannel
-import com.kaajjo.libresudoku.ui.theme.BoardColors
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
-import com.kaajjo.libresudoku.ui.theme.SudokuBoardColorsImpl
-import com.kaajjo.libresudoku.ui.util.findActivity
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.update.Release
+import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
+import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.StatisticsScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.WelcomeScreenDestination
+import gr.tonygnk.sudokubeyond.ui.app_crash.CrashActivity
+import gr.tonygnk.sudokubeyond.ui.components.navigation_bar.NavigationBarComponent
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
+import gr.tonygnk.sudokubeyond.ui.util.findActivity
 import com.materialkolor.PaletteStyle
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.DeepLink

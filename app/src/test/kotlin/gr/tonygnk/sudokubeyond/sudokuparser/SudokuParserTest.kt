@@ -16,11 +16,11 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.sudokuparser
+package gr.tonygnk.sudokubeyond.sudokuparser
 
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
 import org.junit.Test
 
 class SudokuParserTest {

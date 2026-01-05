@@ -16,21 +16,21 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.statistics
+package gr.tonygnk.sudokubeyond.ui.statistics
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.database.model.Record
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.TipCardsDataStore
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

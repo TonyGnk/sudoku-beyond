@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory.savedgame
+package gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,20 +26,20 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.qqwing.Cage
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.core.utils.SudokuUtils
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
-import com.kaajjo.libresudoku.domain.usecase.folder.GetFolderUseCase
-import com.kaajjo.libresudoku.navArgs
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.qqwing.Cage
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
+import gr.tonygnk.sudokubeyond.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.language
+package gr.tonygnk.sudokubeyond.ui.settings.language
 
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
@@ -56,16 +56,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.WEBLATE_ENGAGE
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.components.locale_emoji.LocaleEmoji
-import com.kaajjo.libresudoku.ui.settings.SettingsScaffoldLazyColumn
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
-import com.kaajjo.libresudoku.ui.util.findActivity
-import com.kaajjo.libresudoku.ui.util.getCurrentLocaleTag
-import com.kaajjo.libresudoku.ui.util.getLangs
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.WEBLATE_ENGAGE
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.components.locale_emoji.LocaleEmoji
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.ui.util.findActivity
+import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleTag
+import gr.tonygnk.sudokubeyond.ui.util.getLangs
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

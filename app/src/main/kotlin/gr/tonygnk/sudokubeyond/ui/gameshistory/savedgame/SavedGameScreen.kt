@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory.savedgame
+package gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame
 
 import android.os.Build.VERSION.SDK_INT
 import android.widget.Toast
@@ -81,17 +81,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.core.utils.toFormattedString
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.destinations.ExploreFolderScreenDestination
-import com.kaajjo.libresudoku.destinations.GameScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.EmptyScreen
-import com.kaajjo.libresudoku.ui.components.board.Board
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.ExploreFolderScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
+import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

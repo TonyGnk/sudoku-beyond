@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.domain.repository
+package gr.tonygnk.sudokubeyond.domain.repository
 
 interface DatabaseRepository {
     suspend fun resetDb()

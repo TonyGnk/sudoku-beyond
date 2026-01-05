@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.learn.learnsudoku
+package gr.tonygnk.sudokubeyond.ui.learn.learnsudoku
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -30,15 +30,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.board.Board
-import com.kaajjo.libresudoku.ui.learn.components.TutorialBase
-import com.kaajjo.libresudoku.ui.learn.components.TutorialBottomContent
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.board.Board
+import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBase
+import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBottomContent
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

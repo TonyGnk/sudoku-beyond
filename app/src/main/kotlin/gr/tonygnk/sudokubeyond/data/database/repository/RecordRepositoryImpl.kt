@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.repository
+package gr.tonygnk.sudokubeyond.data.database.repository
 
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.database.dao.RecordDao
-import com.kaajjo.libresudoku.data.database.model.Record
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.dao.RecordDao
+import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import kotlinx.coroutines.flow.Flow
 
 class RecordRepositoryImpl(

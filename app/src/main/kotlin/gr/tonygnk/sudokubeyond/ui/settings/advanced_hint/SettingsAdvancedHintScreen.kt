@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.advanced_hint
+package gr.tonygnk.sudokubeyond.ui.settings.advanced_hint
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,17 +43,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHintSettings
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.PreferenceRow
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.gameshistory.ColorfulBadge
-import com.kaajjo.libresudoku.ui.settings.SettingsCategory
-import com.kaajjo.libresudoku.ui.settings.SettingsScaffoldLazyColumn
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.blend
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.gameshistory.ColorfulBadge
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.blend
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.model
+package gr.tonygnk.sudokubeyond.data.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.kaajjo.libresudoku.data.backup.serializer.ZonedDateTimeLongSerializer
+import gr.tonygnk.sudokubeyond.data.backup.serializer.ZonedDateTimeLongSerializer
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 

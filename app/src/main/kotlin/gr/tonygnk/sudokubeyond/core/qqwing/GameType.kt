@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing
+package gr.tonygnk.sudokubeyond.core.qqwing
 
-import com.kaajjo.libresudoku.R
+import gr.tonygnk.sudokubeyond.R
 
 enum class GameType(
     val size: Int,

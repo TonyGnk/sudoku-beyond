@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.import_from_file
+package gr.tonygnk.sudokubeyond.ui.import_from_file
 
 import android.net.Uri
 import androidx.compose.runtime.getValue
@@ -27,16 +27,16 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.parser.GsudokuParser
-import com.kaajjo.libresudoku.core.parser.OpenSudokuParser
-import com.kaajjo.libresudoku.core.parser.SdmParser
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.usecase.folder.InsertFolderUseCase
-import com.kaajjo.libresudoku.navArgs
+import gr.tonygnk.sudokubeyond.core.parser.GsudokuParser
+import gr.tonygnk.sudokubeyond.core.parser.OpenSudokuParser
+import gr.tonygnk.sudokubeyond.core.parser.SdmParser
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
+import gr.tonygnk.sudokubeyond.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

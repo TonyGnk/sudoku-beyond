@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.components
+package gr.tonygnk.sudokubeyond.ui.settings.components
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
@@ -60,8 +60,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.kaajjo.color_picker.picker.selector.SelectorRectSaturationValueHSV
 import com.kaajjo.color_picker.picker.ui.slider.SliderHueHSV
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 
 @Composable
 fun ColorSelection(

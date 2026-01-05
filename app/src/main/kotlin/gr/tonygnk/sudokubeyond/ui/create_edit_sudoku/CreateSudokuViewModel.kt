@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.create_edit_sudoku
+package gr.tonygnk.sudokubeyond.ui.create_edit_sudoku
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,23 +25,23 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.QQWingController
-import com.kaajjo.libresudoku.core.utils.GameState
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.core.utils.SudokuUtils
-import com.kaajjo.libresudoku.core.utils.UndoRedoManager
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.usecase.board.GetBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.InsertBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.UpdateBoardUseCase
-import com.kaajjo.libresudoku.navArgs
-import com.kaajjo.libresudoku.ui.game.components.ToolBarItem
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
+import gr.tonygnk.sudokubeyond.core.utils.GameState
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
+import gr.tonygnk.sudokubeyond.core.utils.UndoRedoManager
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.usecase.board.GetBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.InsertBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
+import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted

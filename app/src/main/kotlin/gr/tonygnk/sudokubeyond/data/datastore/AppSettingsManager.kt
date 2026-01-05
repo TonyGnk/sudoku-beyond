@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.datastore
+package gr.tonygnk.sudokubeyond.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -27,11 +27,11 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.advanced_hint.AdvancedHintSettings
-import com.kaajjo.libresudoku.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 import java.time.ZoneId

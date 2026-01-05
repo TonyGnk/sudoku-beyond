@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.autoupdate
+package gr.tonygnk.sudokubeyond.ui.settings.autoupdate
 
 import android.Manifest
 import android.content.Intent
@@ -98,18 +98,18 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.BuildConfig
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.update.DownloadStatus
-import com.kaajjo.libresudoku.core.update.Release
-import com.kaajjo.libresudoku.core.update.UpdateUtil
-import com.kaajjo.libresudoku.core.update.Version
-import com.kaajjo.libresudoku.core.update.toVersion
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTitle
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTopAppBar
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
-import com.kaajjo.libresudoku.ui.theme.RoundedPolygonShape
+import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.update.DownloadStatus
+import gr.tonygnk.sudokubeyond.core.update.Release
+import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
+import gr.tonygnk.sudokubeyond.core.update.Version
+import gr.tonygnk.sudokubeyond.core.update.toVersion
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
+import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
 import com.ramcosta.composedestinations.annotation.Destination

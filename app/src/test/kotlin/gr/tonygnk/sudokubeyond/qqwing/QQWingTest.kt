@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.qqwing
+package gr.tonygnk.sudokubeyond.qqwing
 
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.QQWing
-import com.kaajjo.libresudoku.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWing
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
 import org.junit.Test
 
 class QQWingTest {

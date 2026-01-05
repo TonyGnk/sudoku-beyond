@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings
+package gr.tonygnk.sudokubeyond.ui.settings
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -41,10 +41,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.util.isScrolledToEnd
-import com.kaajjo.libresudoku.ui.util.isScrolledToStart
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 
 @Composable
 fun SelectionDialog(

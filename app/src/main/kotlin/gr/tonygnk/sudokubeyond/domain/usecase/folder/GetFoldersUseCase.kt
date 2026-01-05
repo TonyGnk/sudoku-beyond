@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.domain.usecase.folder
+package gr.tonygnk.sudokubeyond.domain.usecase.folder
 
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.domain.repository.FolderRepository
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

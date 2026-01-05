@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.repository
+package gr.tonygnk.sudokubeyond.data.database.repository
 
-import com.kaajjo.libresudoku.data.database.AppDatabase
-import com.kaajjo.libresudoku.domain.repository.DatabaseRepository
+import gr.tonygnk.sudokubeyond.data.database.AppDatabase
+import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import kotlinx.coroutines.runBlocking
 
 class DatabaseRepositoryImpl(

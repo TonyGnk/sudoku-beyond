@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing
+package gr.tonygnk.sudokubeyond.core.qqwing
 
 enum class Action {
     NONE, GENERATE, SOLVE

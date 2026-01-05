@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.repository
+package gr.tonygnk.sudokubeyond.data.database.repository
 
-import com.kaajjo.libresudoku.data.database.dao.SavedGameDao
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.data.database.dao.SavedGameDao
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import kotlinx.coroutines.flow.Flow
 
 class SavedGameRepositoryImpl(

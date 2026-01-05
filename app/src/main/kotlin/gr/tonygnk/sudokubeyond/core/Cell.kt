@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core
+package gr.tonygnk.sudokubeyond.core
 
 import kotlinx.serialization.Serializable
 

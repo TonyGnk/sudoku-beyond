@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing.advanced_hint
+package gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint
 
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.SudokuUtils
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
 
 
 /**

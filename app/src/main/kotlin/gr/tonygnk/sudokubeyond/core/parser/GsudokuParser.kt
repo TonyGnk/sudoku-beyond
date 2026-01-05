@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.parser
+package gr.tonygnk.sudokubeyond.core.parser
 
 import android.util.Log
 import org.xmlpull.v1.XmlPullParser

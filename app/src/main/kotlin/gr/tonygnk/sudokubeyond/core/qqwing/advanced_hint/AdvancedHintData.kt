@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing.advanced_hint
+package gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint
 
-import com.kaajjo.libresudoku.core.Cell
+import gr.tonygnk.sudokubeyond.core.Cell
 
 /**
  * Data that [AdvancedHint] returns

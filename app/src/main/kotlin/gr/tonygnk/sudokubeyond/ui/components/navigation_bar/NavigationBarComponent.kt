@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.navigation_bar
+package gr.tonygnk.sudokubeyond.ui.components.navigation_bar
 
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -28,10 +28,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import com.kaajjo.libresudoku.NavGraphs
-import com.kaajjo.libresudoku.appCurrentDestinationAsState
-import com.kaajjo.libresudoku.destinations.MoreScreenDestination
-import com.kaajjo.libresudoku.startAppDestination
+import gr.tonygnk.sudokubeyond.NavGraphs
+import gr.tonygnk.sudokubeyond.appCurrentDestinationAsState
+import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
+import gr.tonygnk.sudokubeyond.startAppDestination
 import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 
 @Composable

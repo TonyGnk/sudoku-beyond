@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.util
+package gr.tonygnk.sudokubeyond.util
 
-import com.kaajjo.libresudoku.BuildConfig
+import gr.tonygnk.sudokubeyond.BuildConfig
 
 object FlavorUtil {
     fun isFoss(): Boolean  = BuildConfig.FLAVOR == "foss"

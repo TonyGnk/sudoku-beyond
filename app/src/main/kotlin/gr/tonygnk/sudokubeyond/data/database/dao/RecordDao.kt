@@ -16,16 +16,16 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.dao
+package gr.tonygnk.sudokubeyond.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.database.model.Record
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.model.Record
 import kotlinx.coroutines.flow.Flow
 
 @Dao

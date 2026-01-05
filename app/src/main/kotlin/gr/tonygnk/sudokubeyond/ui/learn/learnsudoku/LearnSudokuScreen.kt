@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.learn.learnsudoku
+package gr.tonygnk.sudokubeyond.ui.learn.learnsudoku
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,13 +24,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.destinations.LearnBasicDestination
-import com.kaajjo.libresudoku.destinations.LearnHiddenPairsDestination
-import com.kaajjo.libresudoku.destinations.LearnNakedPairsDestination
-import com.kaajjo.libresudoku.destinations.LearnSudokuRulesDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.learn.components.LearnRowItem
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.destinations.LearnBasicDestination
+import gr.tonygnk.sudokubeyond.destinations.LearnHiddenPairsDestination
+import gr.tonygnk.sudokubeyond.destinations.LearnNakedPairsDestination
+import gr.tonygnk.sudokubeyond.destinations.LearnSudokuRulesDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.learn.components.LearnRowItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

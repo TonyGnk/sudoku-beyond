@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.datastore
+package gr.tonygnk.sudokubeyond.data.datastore
 
 import android.content.Context
 import android.os.Build.VERSION.SDK_INT
@@ -29,7 +29,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import com.kaajjo.libresudoku.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import com.materialkolor.PaletteStyle
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map

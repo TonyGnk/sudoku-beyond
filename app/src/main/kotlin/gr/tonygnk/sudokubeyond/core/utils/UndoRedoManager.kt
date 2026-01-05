@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.utils
+package gr.tonygnk.sudokubeyond.core.utils
 
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
 
 class UndoRedoManager(private val initialState: GameState) {
     private var states: MutableList<GameState> = mutableListOf(initialState)

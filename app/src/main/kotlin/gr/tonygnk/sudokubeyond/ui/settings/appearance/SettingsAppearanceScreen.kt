@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.appearance
+package gr.tonygnk.sudokubeyond.ui.settings.appearance
 
 import android.os.Build
 import android.widget.Toast
@@ -58,23 +58,23 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.destinations.SettingsBoardThemeDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.PreferenceRow
-import com.kaajjo.libresudoku.ui.components.PreferenceRowSwitch
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.settings.AppThemeItem
-import com.kaajjo.libresudoku.ui.settings.DateFormatDialog
-import com.kaajjo.libresudoku.ui.settings.SelectionDialog
-import com.kaajjo.libresudoku.ui.settings.SetDateFormatPatternDialog
-import com.kaajjo.libresudoku.ui.settings.SettingsScaffoldLazyColumn
-import com.kaajjo.libresudoku.ui.settings.components.AppThemePreviewItem
-import com.kaajjo.libresudoku.ui.settings.components.ColorPickerDialog
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.SettingsBoardThemeDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.settings.AppThemeItem
+import gr.tonygnk.sudokubeyond.ui.settings.DateFormatDialog
+import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
+import gr.tonygnk.sudokubeyond.ui.settings.SetDateFormatPatternDialog
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
+import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
+import gr.tonygnk.sudokubeyond.ui.settings.components.ColorPickerDialog
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
 import com.ramcosta.composedestinations.annotation.Destination

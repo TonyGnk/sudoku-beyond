@@ -16,14 +16,14 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.model
+package gr.tonygnk.sudokubeyond.data.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 import kotlinx.serialization.Serializable
 
 @Serializable

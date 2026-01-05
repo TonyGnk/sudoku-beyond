@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.statistics
+package gr.tonygnk.sudokubeyond.ui.statistics
 
 import android.text.format.DateUtils
 import androidx.compose.animation.AnimatedVisibility
@@ -76,15 +76,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.destinations.GamesHistoryScreenDestination
-import com.kaajjo.libresudoku.destinations.SavedGameScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.EmptyScreen
-import com.kaajjo.libresudoku.ui.components.HelpCard
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.destinations.GamesHistoryScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
+import gr.tonygnk.sudokubeyond.ui.components.HelpCard
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.Duration

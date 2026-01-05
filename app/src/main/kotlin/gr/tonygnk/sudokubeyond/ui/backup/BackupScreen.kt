@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.backup
+package gr.tonygnk.sudokubeyond.ui.backup
 
 import android.content.Intent
 import android.net.Uri
@@ -84,23 +84,23 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.PreferencesConstants
-import com.kaajjo.libresudoku.data.backup.BackupData
-import com.kaajjo.libresudoku.data.backup.BackupWorker
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.GrantPermissionCard
-import com.kaajjo.libresudoku.ui.components.PreferenceRow
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.components.SelectionDialog
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTitle
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTopAppBar
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
-import com.kaajjo.libresudoku.ui.settings.SettingsCategory
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
-import com.kaajjo.libresudoku.ui.util.isScrolledToEnd
-import com.kaajjo.libresudoku.ui.util.isScrolledToStart
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
+import gr.tonygnk.sudokubeyond.data.backup.BackupData
+import gr.tonygnk.sudokubeyond.data.backup.BackupWorker
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.GrantPermissionCard
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.components.SelectionDialog
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.parser
+package gr.tonygnk.sudokubeyond.core.parser
 
 import android.util.Log
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 
 /**
  * .sdm - is a very simple format.

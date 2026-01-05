@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.parser
+package gr.tonygnk.sudokubeyond.core.parser
 
 interface FileImportParser {
     fun toBoards(content: String): Pair<Boolean, List<String>>

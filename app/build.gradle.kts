@@ -27,11 +27,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kaajjo.libresudoku"
+    namespace = "gr.tonygnk.sudokubeyond"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.kaajjo.libresudoku"
+        applicationId = "gr.tonygnk.sudokubeyond"
         minSdk = 26
         targetSdk = 35
         versionCode = 22

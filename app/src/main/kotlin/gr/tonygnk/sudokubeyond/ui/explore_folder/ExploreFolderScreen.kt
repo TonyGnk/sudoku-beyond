@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.explore_folder
+package gr.tonygnk.sudokubeyond.ui.explore_folder
 
 import android.net.Uri
 import androidx.activity.compose.BackHandler
@@ -117,26 +117,26 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.utils.toFormattedString
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.destinations.CreateSudokuScreenDestination
-import com.kaajjo.libresudoku.destinations.GameScreenDestination
-import com.kaajjo.libresudoku.destinations.ImportFromFileScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.EmptyScreen
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.components.board.BoardPreview
-import com.kaajjo.libresudoku.ui.create_edit_sudoku.DifficultyMenu
-import com.kaajjo.libresudoku.ui.create_edit_sudoku.GameTypeMenu
-import com.kaajjo.libresudoku.ui.gameshistory.ColorfulBadge
-import com.kaajjo.libresudoku.ui.util.isScrolledToEnd
-import com.kaajjo.libresudoku.ui.util.isScrolledToStart
-import com.kaajjo.libresudoku.ui.util.isScrollingUp
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.destinations.CreateSudokuScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
+import gr.tonygnk.sudokubeyond.ui.create_edit_sudoku.DifficultyMenu
+import gr.tonygnk.sudokubeyond.ui.create_edit_sudoku.GameTypeMenu
+import gr.tonygnk.sudokubeyond.ui.gameshistory.ColorfulBadge
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
+import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

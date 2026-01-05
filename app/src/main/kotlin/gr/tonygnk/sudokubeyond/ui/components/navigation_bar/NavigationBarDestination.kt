@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.navigation_bar
+package gr.tonygnk.sudokubeyond.ui.components.navigation_bar
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
@@ -24,10 +24,10 @@ import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.ui.graphics.vector.ImageVector
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.destinations.HomeScreenDestination
-import com.kaajjo.libresudoku.destinations.MoreScreenDestination
-import com.kaajjo.libresudoku.destinations.StatisticsScreenDestination
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.StatisticsScreenDestination
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
 sealed class NavigationBarDestination(

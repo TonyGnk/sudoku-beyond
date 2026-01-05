@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.theme
+package gr.tonygnk.sudokubeyond.ui.theme
 
 import android.os.Build
 import androidx.compose.animation.core.FastOutSlowInEasing

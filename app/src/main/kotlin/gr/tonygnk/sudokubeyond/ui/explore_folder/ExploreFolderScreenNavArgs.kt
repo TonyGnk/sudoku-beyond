@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.explore_folder
+package gr.tonygnk.sudokubeyond.ui.explore_folder
 
 data class ExploreFolderScreenNavArgs(
     val folderUid: Long

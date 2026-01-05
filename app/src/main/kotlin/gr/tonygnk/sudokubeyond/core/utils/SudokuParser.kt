@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.utils
+package gr.tonygnk.sudokubeyond.core.utils
 
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.qqwing.Cage
-import com.kaajjo.libresudoku.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.qqwing.Cage
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

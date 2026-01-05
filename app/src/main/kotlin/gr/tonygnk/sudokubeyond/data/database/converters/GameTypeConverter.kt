@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.converters
+package gr.tonygnk.sudokubeyond.data.database.converters
 
 import androidx.room.TypeConverter
-import com.kaajjo.libresudoku.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 
 /**
  * Converts GameType

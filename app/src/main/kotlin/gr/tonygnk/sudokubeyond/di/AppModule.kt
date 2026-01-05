@@ -16,27 +16,27 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.di
+package gr.tonygnk.sudokubeyond.di
 
 import android.app.Application
 import android.content.Context
-import com.kaajjo.libresudoku.data.database.AppDatabase
-import com.kaajjo.libresudoku.data.database.dao.BoardDao
-import com.kaajjo.libresudoku.data.database.dao.FolderDao
-import com.kaajjo.libresudoku.data.database.dao.RecordDao
-import com.kaajjo.libresudoku.data.database.dao.SavedGameDao
-import com.kaajjo.libresudoku.data.database.repository.BoardRepositoryImpl
-import com.kaajjo.libresudoku.data.database.repository.DatabaseRepositoryImpl
-import com.kaajjo.libresudoku.data.database.repository.FolderRepositoryImpl
-import com.kaajjo.libresudoku.data.database.repository.RecordRepositoryImpl
-import com.kaajjo.libresudoku.data.database.repository.SavedGameRepositoryImpl
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.repository.DatabaseRepository
-import com.kaajjo.libresudoku.domain.repository.FolderRepository
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.data.database.AppDatabase
+import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
+import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
+import gr.tonygnk.sudokubeyond.data.database.dao.RecordDao
+import gr.tonygnk.sudokubeyond.data.database.dao.SavedGameDao
+import gr.tonygnk.sudokubeyond.data.database.repository.BoardRepositoryImpl
+import gr.tonygnk.sudokubeyond.data.database.repository.DatabaseRepositoryImpl
+import gr.tonygnk.sudokubeyond.data.database.repository.FolderRepositoryImpl
+import gr.tonygnk.sudokubeyond.data.database.repository.RecordRepositoryImpl
+import gr.tonygnk.sudokubeyond.data.database.repository.SavedGameRepositoryImpl
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
+import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

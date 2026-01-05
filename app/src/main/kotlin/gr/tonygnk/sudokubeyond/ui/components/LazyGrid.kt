@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components
+package gr.tonygnk.sudokubeyond.ui.components
 
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -30,7 +30,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.ui.util.drawVerticalScrollbar
+import gr.tonygnk.sudokubeyond.ui.util.drawVerticalScrollbar
 
 @Composable
 fun ScrollbarLazyVerticalGrid(

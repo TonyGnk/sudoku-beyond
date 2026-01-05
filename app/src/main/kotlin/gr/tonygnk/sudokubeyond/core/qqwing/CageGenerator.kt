@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing
+package gr.tonygnk.sudokubeyond.core.qqwing
 
-import com.kaajjo.libresudoku.core.Cell
+import gr.tonygnk.sudokubeyond.core.Cell
 import kotlin.random.Random
 
 class CageGenerator(

@@ -16,12 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.repository
+package gr.tonygnk.sudokubeyond.data.database.repository
 
-import com.kaajjo.libresudoku.data.database.dao.FolderDao
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.domain.repository.FolderRepository
+import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import kotlinx.coroutines.flow.Flow
 
 class FolderRepositoryImpl(

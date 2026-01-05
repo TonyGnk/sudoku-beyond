@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing.advanced_hint
+package gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint
 
 /**
  * With this, you can enable or disable techniques for advanced hint

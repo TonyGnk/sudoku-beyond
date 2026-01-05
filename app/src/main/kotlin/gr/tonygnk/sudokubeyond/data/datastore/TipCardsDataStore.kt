@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.datastore
+package gr.tonygnk.sudokubeyond.data.datastore
 
 import android.content.Context
 import androidx.datastore.core.DataStore

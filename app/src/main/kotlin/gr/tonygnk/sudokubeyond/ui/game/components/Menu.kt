@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.game.components
+package gr.tonygnk.sudokubeyond.ui.game.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
@@ -31,7 +31,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.kaajjo.libresudoku.R
+import gr.tonygnk.sudokubeyond.R
 
 @Composable
 fun GameMenu(

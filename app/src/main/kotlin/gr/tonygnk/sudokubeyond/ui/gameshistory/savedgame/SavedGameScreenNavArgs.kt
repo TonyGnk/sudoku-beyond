@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.gameshistory.savedgame
+package gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame
 
 data class SavedGameScreenNavArgs(
     val gameUid: Long

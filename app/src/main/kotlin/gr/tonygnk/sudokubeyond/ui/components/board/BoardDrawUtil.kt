@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.board
+package gr.tonygnk.sudokubeyond.ui.components.board
 
 import android.graphics.Paint
 import androidx.compose.ui.geometry.CornerRadius
@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
 import kotlin.math.floor
 import kotlin.math.sqrt
 

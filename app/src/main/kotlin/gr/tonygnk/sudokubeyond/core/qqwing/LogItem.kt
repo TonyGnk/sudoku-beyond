@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.qqwing
+package gr.tonygnk.sudokubeyond.core.qqwing
 
-import com.kaajjo.libresudoku.core.qqwing.QQWing.Companion.cellToColumn
-import com.kaajjo.libresudoku.core.qqwing.QQWing.Companion.cellToRow
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWing.Companion.cellToColumn
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWing.Companion.cellToRow
 
 // @formatter:off
 /*

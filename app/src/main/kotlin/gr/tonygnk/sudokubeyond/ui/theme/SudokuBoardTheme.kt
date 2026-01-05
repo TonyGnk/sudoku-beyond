@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.theme
+package gr.tonygnk.sudokubeyond.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.blend
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.blend
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 
 object BoardColors {
     inline val foregroundColor: Color

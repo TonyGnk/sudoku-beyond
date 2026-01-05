@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.more.about
+package gr.tonygnk.sudokubeyond.ui.more.about
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -61,25 +61,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.BuildConfig
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.CARD_MIR
-import com.kaajjo.libresudoku.core.CRYPTO_BTC
-import com.kaajjo.libresudoku.core.CRYPTO_TON
-import com.kaajjo.libresudoku.core.CRYPTO_USDT_TRC20
-import com.kaajjo.libresudoku.core.GITHUB_REPOSITORY
-import com.kaajjo.libresudoku.core.TELEGRAM_CHANNEL
-import com.kaajjo.libresudoku.core.WEBLATE_ENGAGE
-import com.kaajjo.libresudoku.destinations.AboutLibrariesScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.theme.ColorUtils.harmonizeWithPrimary
-import com.kaajjo.libresudoku.ui.theme.icons.Bitcoin
-import com.kaajjo.libresudoku.ui.theme.icons.ExteraGram
-import com.kaajjo.libresudoku.ui.theme.icons.LibreSudokuIconAlt
-import com.kaajjo.libresudoku.ui.theme.icons.Mir
-import com.kaajjo.libresudoku.ui.theme.icons.Ton
-import com.kaajjo.libresudoku.ui.theme.icons.Usdt
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.CARD_MIR
+import gr.tonygnk.sudokubeyond.core.CRYPTO_BTC
+import gr.tonygnk.sudokubeyond.core.CRYPTO_TON
+import gr.tonygnk.sudokubeyond.core.CRYPTO_USDT_TRC20
+import gr.tonygnk.sudokubeyond.core.GITHUB_REPOSITORY
+import gr.tonygnk.sudokubeyond.core.TELEGRAM_CHANNEL
+import gr.tonygnk.sudokubeyond.core.WEBLATE_ENGAGE
+import gr.tonygnk.sudokubeyond.destinations.AboutLibrariesScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
+import gr.tonygnk.sudokubeyond.ui.theme.icons.Bitcoin
+import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
+import gr.tonygnk.sudokubeyond.ui.theme.icons.LibreSudokuIconAlt
+import gr.tonygnk.sudokubeyond.ui.theme.icons.Mir
+import gr.tonygnk.sudokubeyond.ui.theme.icons.Ton
+import gr.tonygnk.sudokubeyond.ui.theme.icons.Usdt
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.utils
+package gr.tonygnk.sudokubeyond.core.utils
 
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import com.kaajjo.libresudoku.core.Cell
-import com.kaajjo.libresudoku.core.Note
-import com.kaajjo.libresudoku.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 
 class SudokuUtils {
 

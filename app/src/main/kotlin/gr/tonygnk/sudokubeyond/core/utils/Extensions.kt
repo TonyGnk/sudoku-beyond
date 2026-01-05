@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core.utils
+package gr.tonygnk.sudokubeyond.core.utils
 
 import kotlin.time.Duration
 

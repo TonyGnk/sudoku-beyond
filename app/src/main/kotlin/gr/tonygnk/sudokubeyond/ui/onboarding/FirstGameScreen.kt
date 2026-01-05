@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.onboarding
+package gr.tonygnk.sudokubeyond.ui.onboarding
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -49,10 +49,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.game.components.NotesMenu
-import com.kaajjo.libresudoku.ui.game.components.ToolbarItem
-import com.kaajjo.libresudoku.ui.theme.LibreSudokuTheme
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.game.components.NotesMenu
+import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
+import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 
 @Composable
 fun FirstGameDialog(

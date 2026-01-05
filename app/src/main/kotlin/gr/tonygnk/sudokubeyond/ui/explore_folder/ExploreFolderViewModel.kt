@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.explore_folder
+package gr.tonygnk.sudokubeyond.ui.explore_folder
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,20 +24,20 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.core.qqwing.QQWingController
-import com.kaajjo.libresudoku.core.utils.SudokuParser
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.domain.usecase.UpdateManyBoardsUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.DeleteBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.DeleteBoardsUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.GetBoardsInFolderWithSavedUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.InsertBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.board.UpdateBoardUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.GetFolderUseCase
-import com.kaajjo.libresudoku.domain.usecase.folder.GetFoldersUseCase
-import com.kaajjo.libresudoku.navArgs
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
+import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.usecase.UpdateManyBoardsUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.DeleteBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.DeleteBoardsUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.GetBoardsInFolderWithSavedUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.InsertBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
+import gr.tonygnk.sudokubeyond.navArgs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.domain.usecase
+package gr.tonygnk.sudokubeyond.domain.usecase
 
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import javax.inject.Inject
 
 class UpdateManyBoardsUseCase @Inject constructor(

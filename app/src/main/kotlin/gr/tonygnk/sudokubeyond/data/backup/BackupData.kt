@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.backup
+package gr.tonygnk.sudokubeyond.data.backup
 
-import com.kaajjo.libresudoku.data.backup.serializer.ZonedDateTimeLongSerializer
-import com.kaajjo.libresudoku.data.database.model.Folder
-import com.kaajjo.libresudoku.data.database.model.Record
-import com.kaajjo.libresudoku.data.database.model.SavedGame
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.data.backup.serializer.ZonedDateTimeLongSerializer
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter

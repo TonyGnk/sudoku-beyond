@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.locale_emoji
+package gr.tonygnk.sudokubeyond.ui.components.locale_emoji
 
 import android.util.Log
 

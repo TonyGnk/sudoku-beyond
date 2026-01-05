@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.create_edit_sudoku
+package gr.tonygnk.sudokubeyond.ui.create_edit_sudoku
 
 
 data class CreateSudokuScreenNavArgs(

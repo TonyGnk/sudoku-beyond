@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components.board
+package gr.tonygnk.sudokubeyond.ui.components.board
 
-import com.kaajjo.libresudoku.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 
 fun getNoteColumnNumber(number: Int, size: Int): Int {
     if (size == 9 || size == 6) {

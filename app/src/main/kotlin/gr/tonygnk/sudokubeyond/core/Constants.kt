@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.core
+package gr.tonygnk.sudokubeyond.core
 
 const val GITHUB_REPOSITORY = "https://github.com/kaajjo/Libre-Sudoku"
 const val GITHUB_NEW_ISSUE = "https://github.com/kaajjo/Libre-Sudoku/issues/new"

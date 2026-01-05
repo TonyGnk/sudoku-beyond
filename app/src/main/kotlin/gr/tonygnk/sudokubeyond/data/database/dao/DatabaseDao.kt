@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.database.dao
+package gr.tonygnk.sudokubeyond.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query

@@ -16,11 +16,11 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.domain.usecase.record
+package gr.tonygnk.sudokubeyond.domain.usecase.record
 
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.core.qqwing.GameType
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import javax.inject.Inject
 
 class GetAllRecordsUseCase @Inject constructor(

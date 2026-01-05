@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings
+package gr.tonygnk.sudokubeyond.ui.settings
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
@@ -54,23 +54,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.destinations.AutoUpdateScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsAdvancedHintScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsAppearanceScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsAssistanceScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsGameplayScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsLanguageScreenDestination
-import com.kaajjo.libresudoku.destinations.SettingsOtherScreenDestination
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.PreferenceRow
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyColumn
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTitle
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.CollapsingTopAppBar
-import com.kaajjo.libresudoku.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
-import com.kaajjo.libresudoku.ui.settings.components.AppThemePreviewItem
-import com.kaajjo.libresudoku.ui.util.getCurrentLocaleString
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.destinations.AutoUpdateScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsAdvancedHintScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsAppearanceScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsAssistanceScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsGameplayScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsLanguageScreenDestination
+import gr.tonygnk.sudokubeyond.destinations.SettingsOtherScreenDestination
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
+import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
+import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
+import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

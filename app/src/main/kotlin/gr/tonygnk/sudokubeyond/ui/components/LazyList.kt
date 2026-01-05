@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.components
+package gr.tonygnk.sudokubeyond.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -28,7 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.ui.util.drawVerticalScrollbar
+import gr.tonygnk.sudokubeyond.ui.util.drawVerticalScrollbar
 
 @Composable
 fun ScrollbarLazyColumn(

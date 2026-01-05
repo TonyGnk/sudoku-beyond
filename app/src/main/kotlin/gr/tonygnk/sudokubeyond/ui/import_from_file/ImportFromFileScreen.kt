@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.import_from_file
+package gr.tonygnk.sudokubeyond.ui.import_from_file
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
@@ -84,14 +84,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.core.qqwing.GameDifficulty
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.components.ScrollbarLazyVerticalGrid
-import com.kaajjo.libresudoku.ui.components.board.BoardPreview
-import com.kaajjo.libresudoku.ui.util.findActivity
-import com.kaajjo.libresudoku.ui.util.isScrolledToStart
-import com.kaajjo.libresudoku.ui.util.isScrollingUp
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyVerticalGrid
+import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
+import gr.tonygnk.sudokubeyond.ui.util.findActivity
+import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
+import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch

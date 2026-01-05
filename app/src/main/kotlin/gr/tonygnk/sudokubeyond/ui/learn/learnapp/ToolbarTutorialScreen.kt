@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.learn.learnapp
+package gr.tonygnk.sudokubeyond.ui.learn.learnapp
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -24,10 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.kaajjo.libresudoku.R
-import com.kaajjo.libresudoku.ui.components.AnimatedNavigation
-import com.kaajjo.libresudoku.ui.learn.components.TutorialBase
-import com.kaajjo.libresudoku.ui.onboarding.FirstGameScreen
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBase
+import gr.tonygnk.sudokubeyond.ui.onboarding.FirstGameScreen
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 

@@ -16,10 +16,10 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.domain.usecase.board
+package gr.tonygnk.sudokubeyond.domain.usecase.board
 
-import com.kaajjo.libresudoku.data.database.model.SudokuBoard
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import javax.inject.Inject
 
 class DeleteBoardsUseCase @Inject constructor(

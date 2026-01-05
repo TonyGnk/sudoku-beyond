@@ -16,7 +16,7 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.data.backup
+package gr.tonygnk.sudokubeyond.data.backup
 
 import android.content.Context
 import android.util.Log
@@ -28,14 +28,14 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
-import com.kaajjo.libresudoku.BuildConfig
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
-import com.kaajjo.libresudoku.data.datastore.ThemeSettingsManager
-import com.kaajjo.libresudoku.domain.repository.BoardRepository
-import com.kaajjo.libresudoku.domain.repository.FolderRepository
-import com.kaajjo.libresudoku.domain.repository.RecordRepository
-import com.kaajjo.libresudoku.domain.repository.SavedGameRepository
-import com.kaajjo.libresudoku.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
+import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
+import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first

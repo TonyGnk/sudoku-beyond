@@ -16,13 +16,13 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.util
+package gr.tonygnk.sudokubeyond.ui.util
 
 import android.content.Context
 import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
-import com.kaajjo.libresudoku.R
+import gr.tonygnk.sudokubeyond.R
 import org.xmlpull.v1.XmlPullParser
 import java.util.Locale
 

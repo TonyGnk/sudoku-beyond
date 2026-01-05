@@ -16,11 +16,11 @@
  * GNU General Public License for more details.
  */
 
-package com.kaajjo.libresudoku.ui.settings.gameplay
+package gr.tonygnk.sudokubeyond.ui.settings.gameplay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kaajjo.libresudoku.data.datastore.AppSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
