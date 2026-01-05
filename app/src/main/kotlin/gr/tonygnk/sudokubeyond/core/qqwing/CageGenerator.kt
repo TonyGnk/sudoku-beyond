@@ -1,0 +1,133 @@
+/*
+ * Copyright (C) 2022-2025 kaajjo
+ * Copyright (C) 2026 TonyGnk
+ *
+ * This file is part of Sudoku Beyond.
+ * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+package gr.tonygnk.sudokubeyond.core.qqwing
+
+import gr.tonygnk.sudokubeyond.core.Cell
+import kotlin.random.Random
+
+class CageGenerator(
+    private val board: List<List<Cell>>,
+    private val type: GameType
+) {
+    private var unusedCells: MutableList<Cell> = board.flatten().toMutableList()
+
+    private fun generateCage(startCell: Cell, requiredSize: Int = 2, id: Int = 0): Cage? {
+        if (unusedCells.isEmpty() || !unusedCells.contains(startCell)) {
+            return null
+        }
+        unusedCells.remove(startCell)
+
+        var cage = Cage(
+            id = id,
+            cells = listOf(startCell)
+        )
+
+        if(getUnusedNeighbors(startCell).isEmpty()) {
+            return cage
+        }
+
+        while (cage.size() < requiredSize) {
+            var neighbors = emptyList<Cell>()
+
+            val cageCells = cage.cells.toMutableList()
+            // searching for any cell with at lest 1 unused neighbor
+            for (i in cageCells.indices) {
+                val cell = cageCells.random()
+                cageCells.remove(cell)
+                neighbors = getUnusedNeighbors(cell)
+
+                if (neighbors.isNotEmpty()) {
+                    break
+                }
+            }
+
+            if (neighbors.isEmpty()) {
+                return cage
+            }
+
+            var cell: Cell? = null
+            for(i in neighbors) {
+                // select a random neighbor to add in a cage
+                val tempCell = neighbors.random()
+                if (cage.cells.all { it.value != tempCell.value } && unusedCells.contains(tempCell)) {
+                    cell = tempCell
+                }
+            }
+            if (cell != null) {
+                unusedCells.remove(cell)
+                cage = cage.copy(
+                    cells = cage.cells + cell
+                )
+            } else {
+                break
+            }
+        }
+
+        return cage
+    }
+
+
+    fun generate(minSize: Int = 2, maxSize: Int = 6): List<Cage> {
+        val cages = mutableListOf<Cage>()
+
+        var id = 0
+        while (unusedCells.isNotEmpty()) {
+            val cage = generateCage(
+                startCell = unusedCells.random(),
+                requiredSize = Random.nextInt(minSize, maxSize + 1),
+                id = id
+            )
+            if (cage != null) {
+                // calculating total sum
+                // sorting cells by min row and min col
+                cages.add(
+                    cage.copy(
+                        sum = cage.cells.sumOf { it.value },
+                        cells = cage.cells.sortedWith(compareBy<Cell> { it.row }.thenBy { it.col })
+                    )
+                )
+            }
+            id += 1
+        }
+        return cages.toList()
+    }
+
+    private fun getUnusedNeighbors(cell: Cell): List<Cell> {
+        val neighbors = mutableListOf<Cell>()
+        val row = cell.row
+        val col = cell.col
+
+        if (row > 0) {
+            neighbors.add(board[row - 1][col])
+        }
+        if (col > 0) {
+            neighbors.add(board[row][col - 1])
+        }
+        if (col < type.size - 1) {
+            neighbors.add(board[row][col + 1])
+        }
+        if (row < type.size - 1) {
+            neighbors.add(board[row + 1][col])
+        }
+
+        return neighbors
+            .toList()
+            .filter { unusedCells.contains(it) }
+    }
+}

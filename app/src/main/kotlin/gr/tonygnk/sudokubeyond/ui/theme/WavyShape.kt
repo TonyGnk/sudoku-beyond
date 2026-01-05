@@ -1,0 +1,64 @@
+/*
+ * Copyright (C) 2022-2025 kaajjo
+ * Copyright (C) 2026 TonyGnk
+ *
+ * This file is part of Sudoku Beyond.
+ * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+package gr.tonygnk.sudokubeyond.ui.theme
+
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import kotlin.math.ceil
+
+class WavyShape(
+    private val period: Dp,
+    private val amplitude: Dp,
+    private val shift: Float,
+) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density,
+    ) = Outline.Generic(Path().apply {
+        val halfPeriod = with(density) { period.toPx() } / 2
+        val amplitude = with(density) { amplitude.toPx() }
+
+        val wavyPath = Path().apply {
+            moveTo(x = 0f, y = 0f)
+            lineTo(size.width - amplitude, -halfPeriod * 2.5f + halfPeriod * 2 * shift)
+            repeat(ceil(size.height / halfPeriod + 3).toInt()) { i ->
+                relativeQuadraticTo(
+                    dx1 = 2 * amplitude * (if (i % 2 == 0) 1 else -1),
+                    dy1 = halfPeriod / 2,
+                    dx2 = 0f,
+                    dy2 = halfPeriod
+                )
+            }
+            lineTo(0f, size.height)
+        }
+        val boundsPath = Path().apply {
+            addRect(Rect(offset = Offset.Zero, size = size))
+        }
+        op(wavyPath, boundsPath, PathOperation.Intersect)
+    })
+}

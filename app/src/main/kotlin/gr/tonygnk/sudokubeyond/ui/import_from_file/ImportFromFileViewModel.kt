@@ -1,0 +1,149 @@
+/*
+ * Copyright (C) 2022-2025 kaajjo
+ * Copyright (C) 2026 TonyGnk
+ *
+ * This file is part of Sudoku Beyond.
+ * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+package gr.tonygnk.sudokubeyond.ui.import_from_file
+
+import android.net.Uri
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.core.parser.GsudokuParser
+import gr.tonygnk.sudokubeyond.core.parser.OpenSudokuParser
+import gr.tonygnk.sudokubeyond.core.parser.SdmParser
+import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudokubeyond.data.database.model.Folder
+import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
+import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
+import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
+import gr.tonygnk.sudokubeyond.navArgs
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.time.ZonedDateTime
+import javax.inject.Inject
+
+@HiltViewModel
+class ImportFromFileViewModel @Inject constructor(
+    private val insertFolderUseCase: InsertFolderUseCase,
+    private val boardRepository: BoardRepository,
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
+
+    private val _navArgs: ImportFromFileScreenNavArgs = savedStateHandle.navArgs()
+    var fileUri: Uri? by mutableStateOf(_navArgs.fileUri?.toUri())
+
+
+    // uid of the folder where to add the imported sudoku.
+    // If uid = -1, a new folder will be created (ask the user for the folder name)
+    val folderUid by mutableLongStateOf(_navArgs.folderUid)
+
+    var isLoading by mutableStateOf(true)
+    var isSaved by mutableStateOf(false)
+    var isSaving by mutableStateOf(false)
+
+    private val _sudokuListToImport = MutableStateFlow(emptyList<String>())
+    val sudokuListToImport = _sudokuListToImport.asStateFlow()
+
+    var difficultyForImport by mutableStateOf(GameDifficulty.Easy)
+
+    private val _importingError = MutableStateFlow(false)
+    val importError = _importingError.asStateFlow()
+
+    fun readData(inputStream: InputStreamReader) {
+        viewModelScope.launch(Dispatchers.Default) {
+            var toImport = listOf<String>()
+            try {
+                BufferedReader(inputStream).use { bufferRead ->
+                    val contentText = bufferRead.readText()
+
+                    val parser = when {
+                        contentText.contains("<opensudoku") -> OpenSudokuParser()
+
+                        contentText.contains("<onegravitysudoku") -> GsudokuParser()
+
+                        else -> SdmParser()
+                    }
+                    val result = parser.toBoards(contentText)
+                    toImport = result.second
+                    _importingError.emit(!result.first)
+                    isLoading = false
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _importingError.emit(true)
+            } finally {
+                withContext(Dispatchers.IO) {
+                    inputStream.close()
+                }
+                if (!_importingError.value) {
+                    _sudokuListToImport.emit(toImport.toList())
+                }
+            }
+        }
+    }
+
+    fun saveImported(folderName: String? = null) {
+        viewModelScope.launch {
+            isSaving = true
+            var folderUidToImport = folderUid
+
+            if (folderUidToImport == -1L) {
+                folderUidToImport = insertFolderUseCase(
+                    Folder(
+                        uid = 0,
+                        name = folderName ?: sudokuListToImport.value.size.toString(),
+                        createdAt = ZonedDateTime.now()
+                    )
+                )
+            }
+
+            val sudokuBoardsToImport = mutableListOf<SudokuBoard>()
+            sudokuListToImport.value.forEach {
+                sudokuBoardsToImport.add(
+                    SudokuBoard(
+                        uid = 0,
+                        initialBoard = it,
+                        solvedBoard = "",
+                        difficulty = difficultyForImport,
+                        type = GameType.Default9x9,
+                        folderId = folderUidToImport
+                    )
+                )
+            }
+            boardRepository.insert(sudokuBoardsToImport)
+            _sudokuListToImport.emit(emptyList())
+            isSaving = false
+            isSaved = true
+        }
+    }
+
+    fun setDifficulty(difficulty: GameDifficulty) {
+        difficultyForImport = difficulty
+    }
+}
