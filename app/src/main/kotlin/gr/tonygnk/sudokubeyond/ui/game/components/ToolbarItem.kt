@@ -55,6 +55,7 @@ fun ToolbarItem(
     modifier: Modifier = Modifier,
     painter: Painter,
     toggled: Boolean = false,
+    enabled: Boolean = true,
     onClick: () -> Unit = { },
     onLongClick: () -> Unit = { }
 ) {
@@ -63,6 +64,7 @@ fun ToolbarItem(
             .clip(MaterialTheme.shapes.large)
             .background(if (toggled) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceColorAtElevation(2.dp))
             .combinedClickable(
+                enabled = enabled,
                 onClick = onClick,
                 onLongClick = onLongClick
             ),
@@ -77,7 +79,11 @@ fun ToolbarItem(
             Icon(
                 painter = painter,
                 contentDescription = null,
-                tint = if (toggled) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                tint = if (enabled) {
+                    if (toggled) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
+                } else {
+                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)
+                }
             )
         }
     }

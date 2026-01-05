@@ -500,6 +500,7 @@ fun GameScreen(
                                                 ToolbarItem(
                                                     modifier = Modifier.weight(1f),
                                                     painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                    enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
                                                     onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
                                                 )
                                             }
@@ -772,6 +773,7 @@ fun GameScreen(
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
                                                 painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
                                                 onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
                                             )
                                         }
