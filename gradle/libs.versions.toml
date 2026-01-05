@@ -30,15 +30,20 @@ foundationAndroid = "1.7.5"
 graphicsShape = "1.0.1"
 okhttp = "5.0.0-alpha.14"
 composeMarkdown = "0.5.4"
+desugarJdkLibs = "2.1.5"
+
+compileSdk = "36"
+minSdk = "24"
+targetSdk = "36"
 
 [libraries]
 # Android App
-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose"}
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx"}
-documentFile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentFile"}
-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime"}
-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime"}
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+documentFile = { group = "androidx.documentfile", name = "documentfile", version.ref = "documentFile" }
+lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime" }
+lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "lifecycle-runtime" }
 
 # Compose
 ui = { group = "androidx.compose.ui", name = "ui", version.ref = "compose" }
@@ -89,8 +94,9 @@ serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serializ
 
 # Other
 aboutLibraries = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "aboutLibraries" }
-composeMarkdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "composeMarkdown"}
+composeMarkdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "composeMarkdown" }
 materialKolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdkLibs" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
