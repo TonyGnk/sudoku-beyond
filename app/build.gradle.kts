@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  * Copyright (C) 2022-2025 kaajjo
  * Copyright (C) 2026 TonyGnk
@@ -40,10 +42,10 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+    }
 
-        ksp {
-            arg("room.schemaLocation", "${projectDir}/schemas")
-        }
+    ksp {
+        arg("room.schemaLocation", "${projectDir}/schemas")
     }
 
     // F-Droid
@@ -73,15 +75,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
     }
     packaging {
         resources {
@@ -93,6 +89,12 @@ android {
 aboutLibraries {
     // Remove the "generated" timestamp to allow for reproducible builds
     excludeFields = arrayOf("generated")
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_17)
+    }
 }
 
 dependencies {
