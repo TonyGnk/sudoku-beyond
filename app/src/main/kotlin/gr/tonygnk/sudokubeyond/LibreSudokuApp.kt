@@ -22,20 +22,27 @@ import android.app.Application
 import android.content.Context
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import gr.tonygnk.sudokubeyond.di.AppModule
+import gr.tonygnk.sudokubeyond.di.AppModuleImpl
 
-@HiltAndroidApp
-class LibreSudokuApp : Application(), Configuration.Provider {
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
-    }
-
-    @Inject
+internal class LibreSudokuApp : Application(), Configuration.Provider {
     lateinit var hiltWorkerFactory: HiltWorkerFactory
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
             .setWorkerFactory(hiltWorkerFactory)
             .build()
 
+    override fun attachBaseContext(base: Context?) {
+        super.attachBaseContext(base)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        appModule = AppModuleImpl(this)
+    }
+
+    companion object {
+        lateinit var appModule: AppModule
+            private set
+    }
 }

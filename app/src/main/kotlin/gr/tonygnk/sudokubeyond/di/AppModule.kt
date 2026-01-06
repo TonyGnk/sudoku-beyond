@@ -20,6 +20,11 @@ package gr.tonygnk.sudokubeyond.di
 
 import android.app.Application
 import android.content.Context
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.components.SingletonComponent
 import gr.tonygnk.sudokubeyond.data.database.AppDatabase
 import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
 import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
@@ -37,26 +42,19 @@ import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+class AppModuleHilt {
 
     @Provides
     @Singleton
-    fun provideDatabaseRepository(appDatabase: AppDatabase): DatabaseRepository
-        = DatabaseRepositoryImpl(appDatabase)
+    fun provideDatabaseRepository(appDatabase: AppDatabase): DatabaseRepository = DatabaseRepositoryImpl(appDatabase)
 
     @Provides
     @Singleton
-    fun provideFolderRepository(folderDao: FolderDao): FolderRepository
-        = FolderRepositoryImpl(folderDao)
+    fun provideFolderRepository(folderDao: FolderDao): FolderRepository = FolderRepositoryImpl(folderDao)
 
     @Provides
     @Singleton
@@ -103,4 +101,71 @@ class AppModule {
     @Singleton
     @Provides
     fun provideAppDatabase(app: Application): AppDatabase = AppDatabase.getInstance(context = app)
+}
+
+internal interface AppModule {
+    val databaseRepository: DatabaseRepository
+    val folderRepository: FolderRepository
+    val folderDao: FolderDao
+    val recordRepository: RecordRepository
+    val recordDao: RecordDao
+    val boardRepository: BoardRepository
+    val boardDao: BoardDao
+    val savedGameRepository: SavedGameRepository
+    val savedGameDao: SavedGameDao
+    val appSettingsManager: AppSettingsManager
+    val themeSettingsManager: ThemeSettingsManager
+    val appDatabase: AppDatabase
+}
+
+internal class AppModuleImpl(
+    private val context: Application,
+) : AppModule {
+    override val databaseRepository: DatabaseRepository by lazy {
+        DatabaseRepositoryImpl(appDatabase)
+    }
+
+    override val folderRepository: FolderRepository by lazy {
+        FolderRepositoryImpl(folderDao)
+    }
+
+    override val folderDao: FolderDao by lazy {
+        appDatabase.folderDao()
+    }
+
+    override val recordRepository: RecordRepository by lazy {
+        RecordRepositoryImpl(recordDao)
+    }
+
+    override val recordDao: RecordDao by lazy {
+        appDatabase.recordDao()
+    }
+
+    override val boardRepository: BoardRepository by lazy {
+        BoardRepositoryImpl(boardDao)
+    }
+
+    override val boardDao: BoardDao by lazy {
+        appDatabase.boardDao()
+    }
+
+    override val savedGameRepository: SavedGameRepository by lazy {
+        SavedGameRepositoryImpl(savedGameDao)
+    }
+
+    override val savedGameDao: SavedGameDao by lazy {
+        appDatabase.savedGameDao()
+    }
+
+    override val appSettingsManager: AppSettingsManager by lazy {
+        AppSettingsManager(context)
+    }
+
+    override val themeSettingsManager: ThemeSettingsManager by lazy {
+        ThemeSettingsManager(context)
+    }
+
+    override val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstance(context)
+    }
 }
