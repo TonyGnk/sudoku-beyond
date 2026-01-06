@@ -25,7 +25,7 @@ jetbrainsKotlinxSerializationJson = "1.9.0"
 jeziellagoComposeMarkdown = "0.5.4"
 junit = "4.13.2"
 materialKolor = "2.0.0"
-mikepenzAboutLibraries = '10.6.1'
+mikepenzAboutLibraries = '13.2.1'
 raamcostaComposeDestinations = "1.11.6"
 squareupOkhttp3 = "5.0.0-alpha.14"
 
@@ -88,4 +88,4 @@ google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDev
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlin" }
 jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrainsKotlin" }
 jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "jetbrainsKotlin" }
-mikepenz-aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "mikepenzAboutLibraries" }
+mikepenz-aboutLibraries = { id = "com.mikepenz.aboutlibraries.plugin.android", version.ref = "mikepenzAboutLibraries" }

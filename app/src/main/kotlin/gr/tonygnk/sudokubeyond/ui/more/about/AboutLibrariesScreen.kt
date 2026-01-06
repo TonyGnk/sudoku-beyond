@@ -20,26 +20,38 @@ package gr.tonygnk.sudokubeyond.ui.more.about
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import com.mikepenz.aboutlibraries.ui.compose.DefaultChipColors
 import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
+import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
+import com.mikepenz.aboutlibraries.ui.compose.libraryColors
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 
 @Destination(style = AnimatedNavigation::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutLibrariesScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val libraries = produceLibraries()
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -59,14 +71,28 @@ fun AboutLibrariesScreen(
         },
     ) { innerPadding ->
         LibrariesContainer(
+            libraries = libraries.value,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding),
             colors = LibraryDefaults.libraryColors(
-                backgroundColor = MaterialTheme.colorScheme.background,
-                contentColor = MaterialTheme.colorScheme.onBackground,
-                badgeBackgroundColor = MaterialTheme.colorScheme.primary,
-                badgeContentColor = MaterialTheme.colorScheme.onPrimary
+                libraryBackgroundColor = MaterialTheme.colorScheme.background,
+                libraryContentColor = MaterialTheme.colorScheme.onBackground,
+                versionChipColors = DefaultChipColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    contentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
+                licenseChipColors = DefaultChipColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                ),
+                fundingChipColors = DefaultChipColors(
+                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer
+                ),
+                dialogBackgroundColor = MaterialTheme.colorScheme.surface,
+                dialogContentColor = MaterialTheme.colorScheme.onSurface,
+                dialogConfirmButtonColor = MaterialTheme.colorScheme.primary
             )
         )
     }
