@@ -19,10 +19,9 @@
 package gr.tonygnk.sudokubeyond.domain.usecase.folder
 
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
-import javax.inject.Inject
 
-class GetLastSavedGamesAnyFolderUseCase @Inject constructor(
-    private val folderRepository: FolderRepository
+class GetLastSavedGamesAnyFolderUseCase(
+    private val folderRepository: FolderRepository,
 ) {
     operator fun invoke(gamesCount: Int) = folderRepository.getLastSavedGamesAnyFolder(gamesCount)
 }

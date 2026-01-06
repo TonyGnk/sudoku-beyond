@@ -96,8 +96,12 @@ import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.materialkolor.ktx.blend
+import com.materialkolor.ktx.harmonize
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import dev.jeziellago.compose.markdowntext.MarkdownText
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.update.DownloadStatus
@@ -110,11 +114,7 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitl
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
-import com.materialkolor.ktx.blend
-import com.materialkolor.ktx.harmonize
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -124,7 +124,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun AutoUpdateScreen(
     navigator: DestinationsNavigator,
-    viewModel: AutoUpdateViewModel = hiltViewModel()
+    viewModel: AutoUpdateViewModel = rememberViewModel(AutoUpdateViewModel.builder),
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -410,7 +410,7 @@ fun UpdateChannelItem(
     defaultColor: Color = MaterialTheme.colorScheme.surfaceContainer,
     selectedColor: Color = with(MaterialTheme.colorScheme) {
         Color.Green.harmonize(primary).copy(alpha = 0.45f)
-    }
+    },
 ) {
     val containerColor by animateColorAsState(
         if (selected) selectedColor else defaultColor,
@@ -453,7 +453,7 @@ fun NewUpdateContainer(
     currentVersion: Version,
     newVersion: Version,
     downloadStatus: DownloadStatus,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition()
     val topStartShapeRotation by infiniteTransition.animateFloat(
@@ -608,7 +608,7 @@ fun CheckingUpdateContainer(
         primaryContainer
     },
     icon: ImageVector? = null,
-    action: @Composable ColumnScope.() -> Unit = { }
+    action: @Composable ColumnScope.() -> Unit = { },
 ) {
     Box(
         modifier = modifier

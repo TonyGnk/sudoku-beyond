@@ -73,8 +73,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.materialkolor.ktx.harmonize
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -89,9 +91,7 @@ import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
 import gr.tonygnk.sudokubeyond.ui.util.disableSplitMotionEvents
-import com.materialkolor.ktx.harmonize
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -102,8 +102,8 @@ import kotlin.time.toKotlinDuration
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GamesHistoryScreen(
-    viewModel: HistoryViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: HistoryViewModel = rememberViewModel(HistoryViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -324,7 +324,7 @@ fun SudokuHistoryItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = { },
     dateTimeFormatter: DateTimeFormatter,
-    date: ZonedDateTime?
+    date: ZonedDateTime?,
 ) {
     Box(
         modifier = modifier
@@ -401,7 +401,7 @@ fun ColorfulBadge(
     foreground: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     background: Color = MaterialTheme.colorScheme.primaryContainer.harmonize(other = Color.Green),
     style: TextStyle = MaterialTheme.typography.labelSmall,
-    shape: Shape = MaterialTheme.shapes.medium
+    shape: Shape = MaterialTheme.shapes.medium,
 ) {
     Box(
         modifier = modifier

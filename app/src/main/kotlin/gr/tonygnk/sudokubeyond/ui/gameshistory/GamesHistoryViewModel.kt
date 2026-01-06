@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -29,12 +30,9 @@ import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 
-@HiltViewModel
-class HistoryViewModel
-@Inject constructor(
+class HistoryViewModel(
     savedGameRepository: SavedGameRepository,
     appSettingsManager: AppSettingsManager
 ) : ViewModel(
@@ -134,6 +132,15 @@ class HistoryViewModel
 
     private inline fun <T, R : Comparable<R>> Iterable<T>.sortedBy(descending: Boolean = false, crossinline selector: (T) -> R?): List<T> {
         return if (descending) sortedWith(compareByDescending(selector)) else sortedWith(compareBy(selector))
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            HistoryViewModel(
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
+        }
     }
 }
 

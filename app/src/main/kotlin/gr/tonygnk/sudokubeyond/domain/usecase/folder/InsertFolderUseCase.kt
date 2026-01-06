@@ -20,10 +20,9 @@ package gr.tonygnk.sudokubeyond.domain.usecase.folder
 
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
-import javax.inject.Inject
 
-class InsertFolderUseCase @Inject constructor(
-    private val folderRepository: FolderRepository
+class InsertFolderUseCase(
+    private val folderRepository: FolderRepository,
 ) {
     suspend operator fun invoke(folder: Folder) = folderRepository.insert(folder)
 }

@@ -21,10 +21,9 @@ package gr.tonygnk.sudokubeyond.domain.usecase.folder
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
-class GetFoldersUseCase @Inject constructor(
-    private val folderRepository: FolderRepository
+class GetFoldersUseCase(
+    private val folderRepository: FolderRepository,
 ) {
     operator fun invoke(): Flow<List<Folder>> = folderRepository.getAll()
 }

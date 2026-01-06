@@ -42,8 +42,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
@@ -51,16 +52,15 @@ import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 
 @Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsOtherScreen(
-    viewModel: SettingsOtherViewModel = hiltViewModel(),
+    viewModel: SettingsOtherViewModel = rememberViewModel(SettingsOtherViewModel.builder),
     navigator: DestinationsNavigator,
-    launchedFromGame: Boolean = false
+    launchedFromGame: Boolean = false,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()

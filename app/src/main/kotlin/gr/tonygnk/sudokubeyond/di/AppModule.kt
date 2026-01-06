@@ -19,12 +19,6 @@
 package gr.tonygnk.sudokubeyond.di
 
 import android.app.Application
-import android.content.Context
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
 import gr.tonygnk.sudokubeyond.data.database.AppDatabase
 import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
 import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
@@ -37,71 +31,12 @@ import gr.tonygnk.sudokubeyond.data.database.repository.RecordRepositoryImpl
 import gr.tonygnk.sudokubeyond.data.database.repository.SavedGameRepositoryImpl
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-class AppModuleHilt {
-
-    @Provides
-    @Singleton
-    fun provideDatabaseRepository(appDatabase: AppDatabase): DatabaseRepository = DatabaseRepositoryImpl(appDatabase)
-
-    @Provides
-    @Singleton
-    fun provideFolderRepository(folderDao: FolderDao): FolderRepository = FolderRepositoryImpl(folderDao)
-
-    @Provides
-    @Singleton
-    fun provideFolderDao(appDatabase: AppDatabase): FolderDao = appDatabase.folderDao()
-
-    @Singleton
-    @Provides
-    fun provideRecordRepository(recordDao: RecordDao): RecordRepository =
-        RecordRepositoryImpl(recordDao)
-
-    @Singleton
-    @Provides
-    fun provideRecordDao(appDatabase: AppDatabase): RecordDao = appDatabase.recordDao()
-
-    @Singleton
-    @Provides
-    fun provideBoardRepository(boardDao: BoardDao): BoardRepository = BoardRepositoryImpl(boardDao)
-
-    @Singleton
-    @Provides
-    fun provideBoardDao(appDatabase: AppDatabase): BoardDao = appDatabase.boardDao()
-
-
-    @Singleton
-    @Provides
-    fun provideSavedGameRepository(savedGameDao: SavedGameDao): SavedGameRepository =
-        SavedGameRepositoryImpl(savedGameDao)
-
-    @Singleton
-    @Provides
-    fun provideSavedGameDao(appDatabase: AppDatabase): SavedGameDao = appDatabase.savedGameDao()
-
-
-    @Provides
-    @Singleton
-    fun provideAppSettingsManager(@ApplicationContext context: Context) =
-        AppSettingsManager(context)
-
-    @Provides
-    @Singleton
-    fun provideThemeSettingsManager(@ApplicationContext context: Context) =
-        ThemeSettingsManager(context)
-
-    @Singleton
-    @Provides
-    fun provideAppDatabase(app: Application): AppDatabase = AppDatabase.getInstance(context = app)
-}
 
 internal interface AppModule {
     val databaseRepository: DatabaseRepository
@@ -115,6 +50,7 @@ internal interface AppModule {
     val savedGameDao: SavedGameDao
     val appSettingsManager: AppSettingsManager
     val themeSettingsManager: ThemeSettingsManager
+    val tipCardsDataStore: TipCardsDataStore
     val appDatabase: AppDatabase
 }
 
@@ -163,6 +99,10 @@ internal class AppModuleImpl(
 
     override val themeSettingsManager: ThemeSettingsManager by lazy {
         ThemeSettingsManager(context)
+    }
+
+    override val tipCardsDataStore: TipCardsDataStore by lazy {
+        TipCardsDataStore(context)
     }
 
     override val appDatabase: AppDatabase by lazy {

@@ -41,8 +41,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
@@ -54,14 +55,13 @@ import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.blend
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
 @Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsAdvancedHintScreen(
-    viewModel: SettingsAdvancedHintViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: SettingsAdvancedHintViewModel = rememberViewModel(SettingsAdvancedHintViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val advancedHintEnabled by viewModel.advancedHintEnabled.collectAsStateWithLifecycle(
         PreferencesConstants.DEFAULT_ADVANCED_HINT
@@ -177,7 +177,7 @@ fun SettingsAdvancedHintScreen(
 private fun BigCardSwitch(
     checked: Boolean,
     onClick: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -214,7 +214,7 @@ fun TechniqueItem(
     title: String,
     checked: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     PreferenceRow(
         modifier = modifier,

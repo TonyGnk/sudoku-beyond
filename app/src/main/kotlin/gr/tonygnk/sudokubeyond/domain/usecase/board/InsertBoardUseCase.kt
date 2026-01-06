@@ -20,10 +20,9 @@ package gr.tonygnk.sudokubeyond.domain.usecase.board
 
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
-import javax.inject.Inject
 
-class InsertBoardUseCase @Inject constructor(
-    private val boardRepository: BoardRepository
+class InsertBoardUseCase(
+    private val boardRepository: BoardRepository,
 ) {
     suspend operator fun invoke(board: SudokuBoard) = boardRepository.insert(board)
 }

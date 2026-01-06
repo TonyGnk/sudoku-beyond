@@ -19,45 +19,38 @@
 package gr.tonygnk.sudokubeyond.ui.settings.appearance
 
 import android.os.Build
-import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Contrast
 import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.EditCalendar
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Tag
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.materialkolor.PaletteStyle
+import com.materialkolor.rememberDynamicColorScheme
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
@@ -74,10 +67,7 @@ import gr.tonygnk.sudokubeyond.ui.settings.SetDateFormatPatternDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
-import com.materialkolor.PaletteStyle
-import com.materialkolor.rememberDynamicColorScheme
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import java.time.ZonedDateTime
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
@@ -89,8 +79,8 @@ import java.util.Locale
 @OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun SettingsAppearanceScreen(
-    viewModel: SettingsAppearanceViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: SettingsAppearanceViewModel = rememberViewModel(SettingsAppearanceViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current
 
@@ -301,11 +291,11 @@ fun SettingsAppearanceScreen(
                 "${dateFormatEntry.ifEmpty { stringResource(R.string.label_default) }} ($dateString)"
             },
             customDateFormatText =
-            if (!DateFormats.contains(dateFormat))
-                "$dateFormat (${
-                    ZonedDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat))
-                })"
-            else stringResource(R.string.pref_date_format_custom_label),
+                if (!DateFormats.contains(dateFormat))
+                    "$dateFormat (${
+                        ZonedDateTime.now().format(DateTimeFormatter.ofPattern(dateFormat))
+                    })"
+                else stringResource(R.string.pref_date_format_custom_label),
             selected = dateFormat,
             onSelect = { format ->
                 if (format == "custom") {

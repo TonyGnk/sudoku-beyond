@@ -82,8 +82,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.backup.BackupData
@@ -101,8 +102,7 @@ import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 
 private val autoBackupIntervalEntries = mapOf(
@@ -117,7 +117,7 @@ private val autoBackupIntervalEntries = mapOf(
 @Composable
 fun BackupScreen(
     navigator: DestinationsNavigator,
-    viewModel: BackupScreenViewModel = hiltViewModel()
+    viewModel: BackupScreenViewModel = rememberViewModel(BackupScreenViewModel.builder),
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -541,7 +541,7 @@ fun BackupScreen(
 fun CardRow(
     text: String,
     icon: ImageVector,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier

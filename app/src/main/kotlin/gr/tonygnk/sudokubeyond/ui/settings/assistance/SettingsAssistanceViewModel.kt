@@ -20,14 +20,13 @@ package gr.tonygnk.sudokubeyond.ui.settings.assistance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsAssistanceViewModel @Inject constructor(
+class SettingsAssistanceViewModel(
     private val settings: AppSettingsManager,
 ) : ViewModel() {
     val remainingUse = settings.remainingUse
@@ -54,6 +53,14 @@ class SettingsAssistanceViewModel @Inject constructor(
     fun updateMistakesHighlight(index: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             settings.setHighlightMistakes(index)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsAssistanceViewModel(
+                settings = LibreSudokuApp.appModule.appSettingsManager
+            )
         }
     }
 }

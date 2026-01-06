@@ -21,10 +21,9 @@ package gr.tonygnk.sudokubeyond.domain.usecase.record
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
-import javax.inject.Inject
 
-class GetAllRecordsUseCase @Inject constructor(
-    private val recordRepository: RecordRepository
+class GetAllRecordsUseCase(
+    private val recordRepository: RecordRepository,
 ) {
     operator fun invoke(difficulty: GameDifficulty, type: GameType) = recordRepository.getAll(difficulty, type)
 }

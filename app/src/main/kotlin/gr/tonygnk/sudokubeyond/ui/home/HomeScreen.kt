@@ -69,8 +69,10 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -80,9 +82,7 @@ import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.ZonedDateTime
 import kotlin.math.sqrt
@@ -93,8 +93,8 @@ import kotlin.time.toKotlinDuration
 @RootNavGraph(start = true)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
+    viewModel: HomeViewModel = rememberViewModel(HomeViewModel.builder),
 ) {
     var continueGameDialog by rememberSaveable { mutableStateOf(false) }
     var lastGamesBottomSheet by rememberSaveable {
@@ -280,7 +280,7 @@ fun HomeScreen(
 @Composable
 fun GeneratingDialog(
     onDismiss: () -> Unit,
-    text: String
+    text: String,
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -316,7 +316,7 @@ fun HorizontalPicker(
     modifier: Modifier = Modifier,
     text: String,
     onLeftClick: () -> Unit,
-    onRightClick: () -> Unit
+    onRightClick: () -> Unit,
 ) {
     Row(
         modifier = modifier
@@ -353,7 +353,7 @@ fun SavedSudokuPreview(
     type: String,
     savedGame: SavedGame,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = { }
+    onClick: () -> Unit = { },
 ) {
     Box(
         modifier = modifier

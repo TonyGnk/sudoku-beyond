@@ -19,10 +19,9 @@
 package gr.tonygnk.sudokubeyond.domain.usecase.folder
 
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
-import javax.inject.Inject
 
-class GetFolderUseCase @Inject constructor(
-    private val folderRepository: FolderRepository
+class GetFolderUseCase(
+    private val folderRepository: FolderRepository,
 ) {
     operator fun invoke(uid: Long) = folderRepository.get(uid)
 }

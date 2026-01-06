@@ -18,8 +18,10 @@
 package gr.tonygnk.sudokubeyond.ui.util
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 fun <VM : ViewModel> viewModelBuilder(initializer: () -> VM): ViewModelBuilder<VM> {
@@ -32,10 +34,21 @@ fun <VM : ViewModel> viewModelBuilder(initializer: () -> VM): ViewModelBuilder<V
     return ViewModelBuilder(factory)
 }
 
+@Composable
+internal inline fun <reified VM : ViewModel> rememberViewModel(builder: ViewModelBuilder<VM>): VM {
+    return viewModel(factory = builder.delegate)
+}
 
 @Composable
-internal inline fun <reified VM : ViewModel> viewModel(builder: ViewModelBuilder<VM>): VM {
-    return viewModel(factory = builder.delegate)
+inline fun <reified VM : ViewModel> rememberSavedStateViewModel(noinline builder: (SavedStateHandle) -> VM): VM {
+    val factory = object : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>, extras: androidx.lifecycle.viewmodel.CreationExtras): T {
+            val savedStateHandle = extras.createSavedStateHandle()
+            @Suppress("UNCHECKED_CAST")
+            return builder(savedStateHandle) as T
+        }
+    }
+    return viewModel<VM>(factory = factory)
 }
 
 class ViewModelBuilder<out VM : ViewModel>(val delegate: ViewModelProvider.Factory)

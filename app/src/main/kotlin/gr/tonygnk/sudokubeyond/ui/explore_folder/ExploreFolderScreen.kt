@@ -115,8 +115,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -137,8 +138,7 @@ import gr.tonygnk.sudokubeyond.ui.gameshistory.ColorfulBadge
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 import kotlin.time.toKotlinDuration
@@ -152,7 +152,7 @@ import kotlin.time.toKotlinDuration
 )
 @Composable
 fun ExploreFolderScreen(
-    viewModel: ExploreFolderViewModel = hiltViewModel(),
+    viewModel: ExploreFolderViewModel = rememberSavedStateViewModel(ExploreFolderViewModel.builder),
     navigator: DestinationsNavigator,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -474,7 +474,8 @@ fun ExploreFolderScreen(
                                     R.string.generating_number_of,
                                     generatedNumber,
                                     numberToGenerate
-                                ))
+                                )
+                            )
                             LinearProgressIndicator(
                                 progress = {
                                     generatedNumber.toFloat() / numberToGenerate.toFloat()
@@ -664,10 +665,10 @@ fun GameInFolderWidget(
                         IconWithText(
                             imageVector = Icons.Rounded.PlayArrow,
                             text =
-                            if (savedGame == null || !savedGame.canContinue)
-                                stringResource(R.string.action_play)
-                            else
-                                stringResource(R.string.action_continue),
+                                if (savedGame == null || !savedGame.canContinue)
+                                    stringResource(R.string.action_play)
+                                else
+                                    stringResource(R.string.action_continue),
                             onClick = onPlayClick,
                             enabled = savedGame?.canContinue ?: true
                         )
@@ -694,7 +695,7 @@ private fun IconWithText(
     imageVector: ImageVector,
     text: String,
     enabled: Boolean = true,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -717,7 +718,7 @@ private fun IconWithText(
 private fun DefaultTopAppBar(
     title: @Composable () -> Unit,
     navigateBack: () -> Unit,
-    onImportMenuClick: () -> Unit
+    onImportMenuClick: () -> Unit,
 ) {
     TopAppBar(
         title = title,
@@ -772,7 +773,7 @@ private fun SelectionTopAppbar(
     onCloseClick: () -> Unit,
     onClickMoveSelected: () -> Unit,
     onClickDeleteSelected: () -> Unit,
-    onClickSelectAll: () -> Unit
+    onClickSelectAll: () -> Unit,
 ) {
     TopAppBar(
         title = title,
@@ -812,7 +813,7 @@ private fun MoveSudokuToFolderDialog(
     availableFolders: List<Folder>,
     onDismiss: () -> Unit,
     onConfirmMove: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         modifier = modifier,

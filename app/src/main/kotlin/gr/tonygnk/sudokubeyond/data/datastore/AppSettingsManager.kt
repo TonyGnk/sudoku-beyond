@@ -41,9 +41,7 @@ import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.util.Locale
-import javax.inject.Singleton
 
-@Singleton
 class AppSettingsManager(context: Context) {
     private val Context.createDataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     private val dataStore = context.createDataStore
@@ -302,7 +300,7 @@ class AppSettingsManager(context: Context) {
 
     suspend fun setLastSelectedGameDifficultyType(
         difficulty: GameDifficulty,
-        type: GameType
+        type: GameType,
     ) {
         dataStore.edit { settings ->
             var difficultyAndType = when (difficulty) {
@@ -390,7 +388,7 @@ class AppSettingsManager(context: Context) {
     }
 
     suspend fun setLastBackupDate(date: ZonedDateTime) {
-        dataStore.edit {  settings ->
+        dataStore.edit { settings ->
             settings[lastBackupDateKey] = date.toInstant().epochSecond
         }
     }
@@ -405,9 +403,6 @@ class AppSettingsManager(context: Context) {
         } else {
             null
         }
-
-
-
     }
 
     val advancedHintEnabled = dataStore.data.map { settings ->

@@ -60,8 +60,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.materialkolor.PaletteStyle
 import gr.tonygnk.sudokubeyond.MainActivity
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.GITHUB_NEW_ISSUE
@@ -72,10 +72,8 @@ import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler.Companion.getEx
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
-import com.materialkolor.PaletteStyle
-import dagger.hilt.android.AndroidEntryPoint
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
-@AndroidEntryPoint
 class CrashActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +81,7 @@ class CrashActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val viewModel: CrashViewModel = hiltViewModel()
+            val viewModel = rememberViewModel(CrashViewModel.builder)
             val dynamicColors by viewModel.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
             val darkTheme by viewModel.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
             val amoledBlack by viewModel.amoledBlack.collectAsStateWithLifecycle(

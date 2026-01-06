@@ -64,9 +64,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -78,18 +80,16 @@ import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.SettingsLanguageScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @Destination
 @Composable
 fun WelcomeScreen(
-    viewModel: WelcomeViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: WelcomeViewModel = rememberViewModel(WelcomeViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current
     val currentLanguage by remember {
@@ -187,7 +187,7 @@ fun ItemRowBigIcon(
     subtitleStyle: TextStyle = MaterialTheme.typography.titleSmall.copy(fontSize = 12.sp),
     containerColor: Color = MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp),
     iconBackground: Color = MaterialTheme.colorScheme.secondaryContainer,
-    iconSize: Dp = 42.dp
+    iconSize: Dp = 42.dp,
 ) {
     Row(
         modifier = modifier
@@ -241,10 +241,8 @@ fun ItemRowBigIcon(
     }
 }
 
-@HiltViewModel
-class WelcomeViewModel
-@Inject constructor(
-    private val settingsDataManager: AppSettingsManager
+class WelcomeViewModel(
+    private val settingsDataManager: AppSettingsManager,
 ) : ViewModel() {
     var selectedCell by mutableStateOf(Cell(-1, -1, 0))
 
@@ -267,6 +265,14 @@ class WelcomeViewModel
     fun setFirstLaunch(value: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsDataManager.setFirstLaunch(value)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            WelcomeViewModel(
+                settingsDataManager = LibreSudokuApp.appModule.appSettingsManager
+            )
         }
     }
 }

@@ -20,16 +20,15 @@ package gr.tonygnk.sudokubeyond
 
 import android.app.Application
 import android.content.Context
-import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import gr.tonygnk.sudokubeyond.di.AppModule
 import gr.tonygnk.sudokubeyond.di.AppModuleImpl
+import gr.tonygnk.sudokubeyond.di.AppWorkerFactory
 
 internal class LibreSudokuApp : Application(), Configuration.Provider {
-    lateinit var hiltWorkerFactory: HiltWorkerFactory
     override val workManagerConfiguration: Configuration
         get() = Configuration.Builder()
-            .setWorkerFactory(hiltWorkerFactory)
+            .setWorkerFactory(AppWorkerFactory())
             .build()
 
     override fun attachBaseContext(base: Context?) {

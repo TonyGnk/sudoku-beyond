@@ -77,8 +77,10 @@ import androidx.compose.ui.unit.dp
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.materialkolor.ktx.blend
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
@@ -92,10 +94,8 @@ import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
-import com.materialkolor.ktx.blend
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -103,7 +103,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun MoreScreen(
     navigator: DestinationsNavigator,
-    viewModel: MoreViewModel = hiltViewModel()
+    viewModel: MoreViewModel = rememberViewModel(MoreViewModel.builder),
 ) {
     val autoUpdateChannel by viewModel.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
     val updateDismissedName by viewModel.updateDismissedName.collectAsStateWithLifecycle("")
@@ -209,7 +209,7 @@ fun UpdateFoundBox(
     modifier: Modifier = Modifier,
     containerColor: Color = with(MaterialTheme.colorScheme) {
         primaryContainer
-    }
+    },
 ) {
     Box(
         modifier = modifier

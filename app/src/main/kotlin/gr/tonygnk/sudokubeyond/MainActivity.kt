@@ -42,12 +42,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.materialkolor.PaletteStyle
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.annotation.DeepLink
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
@@ -66,22 +70,14 @@ import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
 import gr.tonygnk.sudokubeyond.ui.util.findActivity
-import com.materialkolor.PaletteStyle
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.annotation.DeepLink
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 val LocalBoardColors = staticCompositionLocalOf { SudokuBoardColorsImpl() }
 
-@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    @Inject
     lateinit var settings: AppSettingsManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,7 +88,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setContent {
-            val mainViewModel: MainActivityViewModel = hiltViewModel()
+            val mainViewModel = rememberViewModel(MainActivityViewModel.builder)
 
             val dynamicColors by mainViewModel.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
             val darkTheme by mainViewModel.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
@@ -203,11 +199,9 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@HiltViewModel
-class MainActivityViewModel
-@Inject constructor(
+class MainActivityViewModel(
     themeSettingsManager: ThemeSettingsManager,
-    appSettingsManager: AppSettingsManager
+    appSettingsManager: AppSettingsManager,
 ) : ViewModel() {
     val dc = themeSettingsManager.dynamicColors
     val darkTheme = themeSettingsManager.darkTheme
@@ -218,6 +212,15 @@ class MainActivityViewModel
     val paletteStyle = themeSettingsManager.themePaletteStyle
     val autoUpdateChannel = appSettingsManager.autoUpdateChannel
     val updateDismissedName = appSettingsManager.updateDismissedName
+
+    companion object {
+        val builder = viewModelBuilder {
+            MainActivityViewModel(
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
+        }
+    }
 }
 
 @Destination(
@@ -231,7 +234,7 @@ class MainActivityViewModel
 )
 @Composable
 fun HandleImportFromFileDeepLink(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {

@@ -20,18 +20,16 @@ package gr.tonygnk.sudokubeyond.ui.settings.boardtheme
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-
-@HiltViewModel
-class SettingsBoardThemeViewModel @Inject constructor(
+class SettingsBoardThemeViewModel(
     private val themeSettingsManager: ThemeSettingsManager,
-    private val appSettingsManager: AppSettingsManager
+    private val appSettingsManager: AppSettingsManager,
 ) : ViewModel() {
     val monetSudokuBoard = themeSettingsManager.monetSudokuBoard
     val positionLines = appSettingsManager.positionLines
@@ -60,6 +58,15 @@ class SettingsBoardThemeViewModel @Inject constructor(
     fun updateFontSize(value: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             appSettingsManager.setFontSize(value)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsBoardThemeViewModel(
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            )
         }
     }
 }

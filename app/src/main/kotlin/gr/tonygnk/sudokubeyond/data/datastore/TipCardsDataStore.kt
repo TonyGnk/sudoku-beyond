@@ -24,13 +24,9 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class TipCardsDataStore @Inject constructor(@ApplicationContext context: Context) {
+class TipCardsDataStore(context: Context) {
     private val Context.createDataStore: DataStore<Preferences> by preferencesDataStore(name = "tip_card")
     private val dataStore = context.createDataStore
 

@@ -20,21 +20,28 @@ package gr.tonygnk.sudokubeyond.ui.settings.autoupdate
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AutoUpdateViewModel @Inject constructor(
-    private val appSettingsManager: AppSettingsManager
+class AutoUpdateViewModel(
+    private val appSettingsManager: AppSettingsManager,
 ) : ViewModel() {
     val updateChannel = appSettingsManager.autoUpdateChannel
 
     fun updateAutoUpdateChannel(channel: UpdateChannel) {
         viewModelScope.launch(Dispatchers.IO) {
             appSettingsManager.setAutoUpdateChannel(channel)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            AutoUpdateViewModel(
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            )
         }
     }
 }

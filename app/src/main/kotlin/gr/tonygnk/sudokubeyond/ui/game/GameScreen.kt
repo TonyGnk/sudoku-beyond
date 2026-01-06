@@ -79,12 +79,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
@@ -105,8 +106,7 @@ import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
 import gr.tonygnk.sudokubeyond.ui.game.components.UndoRedoMenu
 import gr.tonygnk.sudokubeyond.ui.onboarding.FirstGameDialog
 import gr.tonygnk.sudokubeyond.ui.util.ReverseArrangement
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 
 @Destination(
     style = AnimatedNavigation::class,
@@ -115,8 +115,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: GameViewModel = rememberSavedStateViewModel(GameViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val localView = LocalView.current // vibration
     val clipboardManager = LocalClipboardManager.current
@@ -958,7 +958,7 @@ fun GameScreen(
 @Composable
 fun TopBoardSection(
     text: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier,
