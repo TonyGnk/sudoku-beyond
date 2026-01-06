@@ -24,9 +24,6 @@ androidxHiltWork = "1.2.0"
 androidxHilt = "1.2.0"
 materialKolor = "2.0.0"
 junit = "4.13.2"
-androidxTestExtJunit = "1.2.1"
-androidxTestEspressoCore = "3.6.1"
-androidxComposeFoundation = "1.10.0"
 androidxGraphicsShape = "1.1.0"
 squareupOkhttp3 = "5.0.0-alpha.14"
 jeziellagoComposeMarkdown = "0.5.4"
@@ -52,10 +49,8 @@ androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graph
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "androidxCompose" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview", version.ref = "androidxCompose" }
 androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "androidxCompose" }
-androidx-compose-material = { group = "androidx.compose.material", name = "material", version.ref = "androidxCompose" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3", version.ref = "androidxComposeMaterial3" }
 androidx-compose-material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "androidxComposeMaterialIconsExtended" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "androidxComposeFoundation" }
 androidx-graphics-shape = { group = "androidx.graphics", name = "graphics-shapes", version.ref = "androidxGraphicsShape" }
 raamcosta-compose-destinations = { group = "io.github.raamcosta.compose-destinations", name = "animations-core", version.ref = "raamcostaComposeDestinations" }
 raamcosta-compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "raamcostaComposeDestinations" }
@@ -63,8 +58,6 @@ google-accompanist-pager-indicators = { group = "com.google.accompanist", name =
 google-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "googleAccompanistSystemuicontroller" }
 
 # Tests
-androidx-test-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidxTestEspressoCore" }
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxTestExtJunit" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 # DI Hilt
