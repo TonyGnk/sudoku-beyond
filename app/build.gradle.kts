@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.google.dagger.hilt.android)
     alias(libs.plugins.google.devtools.ksp)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose)
@@ -112,10 +111,6 @@ dependencies {
     implementation(libs.google.accompanist.systemuicontroller)
     implementation(libs.google.accompanist.pager.indicators)
 
-    implementation(libs.google.dagger.hilt)
-    implementation(libs.androidx.hilt.navigation.compose)
-    ksp(libs.google.dagger.hilt.compiler)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -132,10 +127,7 @@ dependencies {
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.documentFile)
     implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.hilt.work)
-    implementation(libs.androidx.hilt.common)
-    ksp(libs.androidx.hilt.compiler)
-    ksp(libs.androidx.hilt.work)
+
     implementation(libs.materialKolor.material.kolor)
 
     implementation(libs.squareup.okhttp3)
