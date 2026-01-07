@@ -99,12 +99,14 @@ class MainActivity : AppCompatActivity() {
             val autoUpdateChannel by mainViewModel.autoUpdateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
             val updateDismissedName by mainViewModel.updateDismissedName.collectAsStateWithLifecycle("")
 
+            val isDarkMode = when (darkTheme) {
+                1 -> false
+                2 -> true
+                else -> isSystemInDarkTheme()
+            }
+
             LibreSudokuTheme(
-                darkTheme = when (darkTheme) {
-                    1 -> false
-                    2 -> true
-                    else -> isSystemInDarkTheme()
-                },
+                darkTheme = isDarkMode,
                 dynamicColor = dynamicColors,
                 amoled = amoledBlack,
                 colorSeed = colorSeed,

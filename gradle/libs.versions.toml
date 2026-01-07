@@ -14,7 +14,6 @@ androidxLifecycleRuntime = "2.10.0"
 androidxRoom = "2.8.4"
 androidxWorkRuntime = "2.11.0"
 googleAccompanistPager = "0.28.0"
-googleAccompanistSystemuicontroller = "0.28.0"
 googleDevtoolsKsp = "2.3.4"
 jetbrainsKotlin = "2.3.0"
 jetbrainsKotlinxSerializationJson = "1.9.0"
@@ -56,7 +55,6 @@ androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx"
 
 # Google
 google-accompanist-pager-indicators = { group = "com.google.accompanist", name = "accompanist-pager-indicators", version.ref = "googleAccompanistPager" }
-google-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "googleAccompanistSystemuicontroller" }
 
 # JetBrains
 jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
