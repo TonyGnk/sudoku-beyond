@@ -108,8 +108,6 @@ dependencies {
     testImplementation(libs.junit)
     implementation(libs.androidx.graphics.shape)
 
-    implementation(libs.google.accompanist.pager.indicators)
-
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)

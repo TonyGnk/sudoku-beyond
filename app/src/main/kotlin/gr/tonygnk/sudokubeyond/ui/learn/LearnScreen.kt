@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -41,26 +43,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.rememberPagerState
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.learn.learnapp.LearnAppScreen
 import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuScreen
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 
 @Destination(style = AnimatedNavigation::class)
 @Composable
-@OptIn(ExperimentalPagerApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 fun LearnScreen(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.learn_screen_title)) },
+            TopAppBar(
+                title = { Text(stringResource(R.string.learn_screen_title)) },
                 navigationIcon = {
                     IconButton(onClick = { navigator.popBackStack() }) {
                         Icon(
@@ -78,7 +78,6 @@ fun LearnScreen(
                 .padding(innerPadding)
         ) {
             val context = LocalContext.current
-            val pagerState = rememberPagerState()
             val pages by remember {
                 mutableStateOf(
                     listOf(
@@ -87,14 +86,16 @@ fun LearnScreen(
                     )
                 )
             }
+            val pagerState = rememberPagerState(pageCount = { pages.size })
             val coroutineScope = rememberCoroutineScope()
+
             TabRow(selectedTabIndex = pagerState.currentPage) {
                 pages.forEachIndexed { index, title ->
                     Tab(
                         selected = pagerState.currentPage == index,
                         onClick = {
                             coroutineScope.launch {
-                                pagerState.animateScrollToPage(index, 0f)
+                                pagerState.animateScrollToPage(index)
                             }
                         },
                         text = {
@@ -108,9 +109,7 @@ fun LearnScreen(
                 }
             }
             HorizontalPager(
-                modifier = Modifier
-                    .fillMaxHeight(),
-                count = pages.size,
+                modifier = Modifier.fillMaxHeight(),
                 state = pagerState,
                 verticalAlignment = Alignment.Top
             ) { page ->
