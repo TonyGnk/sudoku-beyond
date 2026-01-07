@@ -19,7 +19,6 @@
 package gr.tonygnk.sudokubeyond.di
 
 import android.app.Application
-import android.content.Context
 import gr.tonygnk.sudokubeyond.data.database.AppDatabase
 import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
 import gr.tonygnk.sudokubeyond.data.database.dao.FolderDao
@@ -32,75 +31,81 @@ import gr.tonygnk.sudokubeyond.data.database.repository.RecordRepositoryImpl
 import gr.tonygnk.sudokubeyond.data.database.repository.SavedGameRepositoryImpl
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
-class AppModule {
+internal interface AppModule {
+    val databaseRepository: DatabaseRepository
+    val folderRepository: FolderRepository
+    val folderDao: FolderDao
+    val recordRepository: RecordRepository
+    val recordDao: RecordDao
+    val boardRepository: BoardRepository
+    val boardDao: BoardDao
+    val savedGameRepository: SavedGameRepository
+    val savedGameDao: SavedGameDao
+    val appSettingsManager: AppSettingsManager
+    val themeSettingsManager: ThemeSettingsManager
+    val tipCardsDataStore: TipCardsDataStore
+    val appDatabase: AppDatabase
+}
 
-    @Provides
-    @Singleton
-    fun provideDatabaseRepository(appDatabase: AppDatabase): DatabaseRepository
-        = DatabaseRepositoryImpl(appDatabase)
+internal class AppModuleImpl(
+    private val context: Application,
+) : AppModule {
+    override val databaseRepository: DatabaseRepository by lazy {
+        DatabaseRepositoryImpl(appDatabase)
+    }
 
-    @Provides
-    @Singleton
-    fun provideFolderRepository(folderDao: FolderDao): FolderRepository
-        = FolderRepositoryImpl(folderDao)
+    override val folderRepository: FolderRepository by lazy {
+        FolderRepositoryImpl(folderDao)
+    }
 
-    @Provides
-    @Singleton
-    fun provideFolderDao(appDatabase: AppDatabase): FolderDao = appDatabase.folderDao()
+    override val folderDao: FolderDao by lazy {
+        appDatabase.folderDao()
+    }
 
-    @Singleton
-    @Provides
-    fun provideRecordRepository(recordDao: RecordDao): RecordRepository =
+    override val recordRepository: RecordRepository by lazy {
         RecordRepositoryImpl(recordDao)
+    }
 
-    @Singleton
-    @Provides
-    fun provideRecordDao(appDatabase: AppDatabase): RecordDao = appDatabase.recordDao()
+    override val recordDao: RecordDao by lazy {
+        appDatabase.recordDao()
+    }
 
-    @Singleton
-    @Provides
-    fun provideBoardRepository(boardDao: BoardDao): BoardRepository = BoardRepositoryImpl(boardDao)
+    override val boardRepository: BoardRepository by lazy {
+        BoardRepositoryImpl(boardDao)
+    }
 
-    @Singleton
-    @Provides
-    fun provideBoardDao(appDatabase: AppDatabase): BoardDao = appDatabase.boardDao()
+    override val boardDao: BoardDao by lazy {
+        appDatabase.boardDao()
+    }
 
-
-    @Singleton
-    @Provides
-    fun provideSavedGameRepository(savedGameDao: SavedGameDao): SavedGameRepository =
+    override val savedGameRepository: SavedGameRepository by lazy {
         SavedGameRepositoryImpl(savedGameDao)
+    }
 
-    @Singleton
-    @Provides
-    fun provideSavedGameDao(appDatabase: AppDatabase): SavedGameDao = appDatabase.savedGameDao()
+    override val savedGameDao: SavedGameDao by lazy {
+        appDatabase.savedGameDao()
+    }
 
-
-    @Provides
-    @Singleton
-    fun provideAppSettingsManager(@ApplicationContext context: Context) =
+    override val appSettingsManager: AppSettingsManager by lazy {
         AppSettingsManager(context)
+    }
 
-    @Provides
-    @Singleton
-    fun provideThemeSettingsManager(@ApplicationContext context: Context) =
+    override val themeSettingsManager: ThemeSettingsManager by lazy {
         ThemeSettingsManager(context)
+    }
 
-    @Singleton
-    @Provides
-    fun provideAppDatabase(app: Application): AppDatabase = AppDatabase.getInstance(context = app)
+    override val tipCardsDataStore: TipCardsDataStore by lazy {
+        TipCardsDataStore(context)
+    }
+
+    override val appDatabase: AppDatabase by lazy {
+        AppDatabase.getInstance(context)
+    }
 }

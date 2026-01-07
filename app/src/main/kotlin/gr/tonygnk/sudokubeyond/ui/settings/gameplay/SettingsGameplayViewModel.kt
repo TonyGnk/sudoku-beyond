@@ -20,14 +20,13 @@ package gr.tonygnk.sudokubeyond.ui.settings.gameplay
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsGameplayViewModel @Inject constructor(
+class SettingsGameplayViewModel(
     private val settings: AppSettingsManager
 ) : ViewModel() {
     val inputMethod = settings.inputMethod
@@ -66,6 +65,14 @@ class SettingsGameplayViewModel @Inject constructor(
     fun updateFunKeyboardOverNum(enabled: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             settings.setFunKeyboardOverNum(enabled)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsGameplayViewModel(
+                settings = LibreSudokuApp.appModule.appSettingsManager
+            )
         }
     }
 }

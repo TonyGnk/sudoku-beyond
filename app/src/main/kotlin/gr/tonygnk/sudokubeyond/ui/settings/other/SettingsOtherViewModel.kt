@@ -20,16 +20,15 @@ package gr.tonygnk.sudokubeyond.ui.settings.other
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.database.AppDatabase
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsOtherViewModel @Inject constructor(
+class SettingsOtherViewModel(
     private val settings: AppSettingsManager,
     private val tipCardsDataStore: TipCardsDataStore,
     private val appDatabase: AppDatabase
@@ -57,6 +56,16 @@ class SettingsOtherViewModel @Inject constructor(
     fun deleteAllTables() {
         viewModelScope.launch(Dispatchers.IO) {
             appDatabase.clearAllTables()
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsOtherViewModel(
+                settings = LibreSudokuApp.appModule.appSettingsManager,
+                tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
+                appDatabase = LibreSudokuApp.appModule.appDatabase
+            )
         }
     }
 }

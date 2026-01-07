@@ -82,8 +82,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
@@ -92,8 +93,7 @@ import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
 import gr.tonygnk.sudokubeyond.ui.util.findActivity
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 
@@ -104,9 +104,9 @@ import java.io.InputStreamReader
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportFromFileScreen(
-    viewModel: ImportFromFileViewModel = hiltViewModel(),
+    viewModel: ImportFromFileViewModel = rememberSavedStateViewModel(ImportFromFileViewModel.builder),
     navigator: DestinationsNavigator,
-    navArgs: ImportFromFileScreenNavArgs
+    navArgs: ImportFromFileScreenNavArgs,
 ) {
     BackHandler {
         navigator.popBackStack()
@@ -376,7 +376,7 @@ fun ImportFromFileScreen(
 private fun ImportDifficultyMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    onClick: (GameDifficulty) -> Unit
+    onClick: (GameDifficulty) -> Unit,
 ) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.large)) {
         DropdownMenu(

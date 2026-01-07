@@ -60,8 +60,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
@@ -72,8 +73,7 @@ import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
 import gr.tonygnk.sudokubeyond.ui.util.ReverseArrangement
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 
 @Destination(
     style = AnimatedNavigation::class,
@@ -82,8 +82,8 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateSudokuScreen(
-    viewModel: CreateSudokuViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: CreateSudokuViewModel = rememberSavedStateViewModel(CreateSudokuViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     var importStringDialog by remember { mutableStateOf(false) }
     Scaffold(
@@ -334,7 +334,7 @@ fun GameTypeMenu(
         GameType.Default6x6,
         GameType.Default12x12,
     ),
-    onClick: (GameType) -> Unit
+    onClick: (GameType) -> Unit,
 ) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.large)) {
         DropdownMenu(
@@ -362,7 +362,7 @@ private fun ImportStringSudokuDialog(
     onTextChange: (String) -> Unit,
     isError: Boolean,
     onConfirm: () -> Unit,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     val focusRequester = FocusRequester()
     LaunchedEffect(Unit) {
@@ -417,7 +417,7 @@ fun DifficultyMenu(
         GameDifficulty.Challenge,
         GameDifficulty.Custom,
     ),
-    onClick: (GameDifficulty) -> Unit
+    onClick: (GameDifficulty) -> Unit,
 ) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.large)) {
         DropdownMenu(

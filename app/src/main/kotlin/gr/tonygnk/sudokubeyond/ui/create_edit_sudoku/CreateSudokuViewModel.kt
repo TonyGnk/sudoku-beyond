@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
@@ -42,22 +43,19 @@ import gr.tonygnk.sudokubeyond.domain.usecase.board.InsertBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.navArgs
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-@HiltViewModel
-class CreateSudokuViewModel @Inject constructor(
+class CreateSudokuViewModel(
     appSettingsManager: AppSettingsManager,
     themeSettingsManager: ThemeSettingsManager,
     private val getBoardUseCase: GetBoardUseCase,
     private val updateBoardUseCase: UpdateBoardUseCase,
     private val insertBoardUseCase: InsertBoardUseCase,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _navArgs: CreateSudokuScreenNavArgs = savedStateHandle.navArgs()
     val gameUid = _navArgs.gameUid
@@ -180,7 +178,7 @@ class CreateSudokuViewModel @Inject constructor(
     private fun setValueCell(
         value: Int,
         row: Int = currCell.row,
-        col: Int = currCell.col
+        col: Int = currCell.col,
     ): List<List<Cell>> {
         val new = getBoardNoRef()
         new[row][col].value = value
@@ -362,5 +360,24 @@ class CreateSudokuViewModel @Inject constructor(
             }
         }
         gameBoard = new
+    }
+
+    companion object {
+        val builder: (SavedStateHandle) -> CreateSudokuViewModel = { savedStateHandle ->
+            CreateSudokuViewModel(
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                getBoardUseCase = GetBoardUseCase(
+                    boardRepository = LibreSudokuApp.appModule.boardRepository
+                ),
+                updateBoardUseCase = UpdateBoardUseCase(
+                    boardRepository = LibreSudokuApp.appModule.boardRepository
+                ),
+                insertBoardUseCase = InsertBoardUseCase(
+                    boardRepository = LibreSudokuApp.appModule.boardRepository
+                ),
+                savedStateHandle = savedStateHandle
+            )
+        }
     }
 }

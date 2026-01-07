@@ -20,15 +20,14 @@ package gr.tonygnk.sudokubeyond.ui.more
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class MoreViewModel @Inject constructor(
+class MoreViewModel(
     private val appSettingsManager: AppSettingsManager
 ) : ViewModel() {
     val updateChannel = appSettingsManager.autoUpdateChannel
@@ -40,4 +39,11 @@ class MoreViewModel @Inject constructor(
         }
     }
 
+    companion object {
+        val builder = viewModelBuilder {
+            MoreViewModel(
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
+        }
+    }
 }

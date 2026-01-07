@@ -29,15 +29,11 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import com.materialkolor.PaletteStyle
-import dagger.hilt.android.qualifiers.ApplicationContext
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ThemeSettingsManager @Inject constructor(@ApplicationContext context: Context) {
+class ThemeSettingsManager(context: Context) {
     private val Context.createDataStore: DataStore<Preferences> by preferencesDataStore(name = "app_theme")
     private val dataStore = context.createDataStore
 

@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gr.tonygnk.sudokubeyond.BuildConfig
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.backup.BackupData
 import gr.tonygnk.sudokubeyond.data.backup.SettingsBackup
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
@@ -33,30 +34,26 @@ import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.io.OutputStream
 import java.time.ZonedDateTime
-import javax.inject.Inject
 
-
-@HiltViewModel
-class BackupScreenViewModel @Inject constructor(
+class BackupScreenViewModel(
     private val appSettingsManager: AppSettingsManager,
     private val themeSettingsManager: ThemeSettingsManager,
     private val boardRepository: BoardRepository,
     private val folderRepository: FolderRepository,
     private val recordRepository: RecordRepository,
     private val savedGameRepository: SavedGameRepository,
-    private val databaseRepository: DatabaseRepository
+    private val databaseRepository: DatabaseRepository,
 ) : ViewModel() {
     val backupUri = appSettingsManager.backupUri.stateIn(
         viewModelScope,
@@ -76,7 +73,7 @@ class BackupScreenViewModel @Inject constructor(
 
     fun createBackup(
         backupSettings: Boolean,
-        onCreated: (Boolean) -> Unit
+        onCreated: (Boolean) -> Unit,
     ) {
         try {
             val boards = runBlocking { boardRepository.getAll().first() }
@@ -117,7 +114,7 @@ class BackupScreenViewModel @Inject constructor(
 
     fun prepareBackupToRestore(
         backupString: String,
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
     ) {
         try {
             val json = Json { ignoreUnknownKeys = true }
@@ -131,7 +128,7 @@ class BackupScreenViewModel @Inject constructor(
 
     fun saveBackupTo(
         outputStream: OutputStream?,
-        onComplete: (Throwable?) -> Unit
+        onComplete: (Throwable?) -> Unit,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             backupJson?.let { backup ->
@@ -152,7 +149,7 @@ class BackupScreenViewModel @Inject constructor(
     }
 
     fun restoreBackup(
-        onComplete: () -> Unit
+        onComplete: () -> Unit,
     ) {
         backupData?.let { backup ->
             viewModelScope.launch(Dispatchers.IO) {
@@ -186,6 +183,20 @@ class BackupScreenViewModel @Inject constructor(
     fun setAutoBackupInterval(hours: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             appSettingsManager.setAutoBackupInterval(hours)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            BackupScreenViewModel(
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                boardRepository = LibreSudokuApp.appModule.boardRepository,
+                folderRepository = LibreSudokuApp.appModule.folderRepository,
+                recordRepository = LibreSudokuApp.appModule.recordRepository,
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+                databaseRepository = LibreSudokuApp.appModule.databaseRepository
+            )
         }
     }
 }

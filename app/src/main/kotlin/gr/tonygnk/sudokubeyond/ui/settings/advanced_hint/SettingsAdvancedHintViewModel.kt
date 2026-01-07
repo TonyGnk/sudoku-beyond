@@ -20,15 +20,14 @@ package gr.tonygnk.sudokubeyond.ui.settings.advanced_hint
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsAdvancedHintViewModel @Inject constructor(
+class SettingsAdvancedHintViewModel(
     private val settingsManager: AppSettingsManager
 ) : ViewModel() {
     val advancedHintEnabled = settingsManager.advancedHintEnabled
@@ -43,6 +42,14 @@ class SettingsAdvancedHintViewModel @Inject constructor(
     fun updateAdvancedHintSettings(settings: AdvancedHintSettings) {
         viewModelScope.launch(Dispatchers.IO) {
             settingsManager.updateAdvancedHintSettings(settings)
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsAdvancedHintViewModel(
+                settingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
         }
     }
 }

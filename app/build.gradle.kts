@@ -19,13 +19,12 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  */
 
 plugins {
-    alias(libs.plugins.androidApplication)
-    alias(libs.plugins.kotlinAndroid)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.aboutLibraries)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.serialization)
-    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.google.devtools.ksp)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.mikepenz.aboutLibraries)
 }
 
 android {
@@ -86,11 +85,6 @@ android {
     }
 }
 
-aboutLibraries {
-    // Remove the "generated" timestamp to allow for reproducible builds
-    excludeFields = arrayOf("generated")
-}
-
 kotlin {
     compilerOptions {
         jvmTarget.set(JvmTarget.JVM_17)
@@ -98,51 +92,41 @@ kotlin {
 }
 
 dependencies {
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
-    implementation(libs.core.ktx)
-    implementation(libs.lifecycle.runtime.ktx)
-    implementation(libs.lifecycle.runtime.compose)
-    implementation(libs.activity.compose)
-    implementation(libs.ui)
-    implementation(libs.ui.util)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3)
-    implementation(libs.material.icons.extended)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    coreLibraryDesugaring(libs.android.tools.desugar.jdk.libs)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.util)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
+    debugImplementation(libs.androidx.compose.ui.tooling)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     testImplementation(libs.junit)
-    implementation(libs.graphics.shape)
+    implementation(libs.androidx.graphics.shape)
 
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.pager.indicators)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
-    implementation(libs.hilt)
-    implementation(libs.hilt.navigation)
-    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.datastore.preferences)
 
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+    implementation(libs.androidx.appcompat)
 
-    implementation(libs.datastore.preferences)
+    implementation(libs.mikepenz.aboutLibraries.compose)
 
-    implementation(libs.appcompat)
+    implementation(libs.raamcosta.compose.destinations)
+    ksp(libs.raamcosta.compose.destinations.ksp)
 
-    implementation(libs.aboutLibraries)
+    implementation(libs.jetbrains.kotlinx.serialization.json)
+    implementation(libs.androidx.documentFile)
+    implementation(libs.androidx.work.runtime.ktx)
 
-    implementation(libs.compose.destinations)
-    ksp(libs.compose.destinations.ksp)
+    implementation(libs.materialKolor.material.kolor)
 
-    implementation(libs.serialization.json)
-    implementation(libs.documentFile)
-    implementation(libs.workRuntimeKtx)
-    implementation(libs.hilt.work)
-    implementation(libs.hilt.common)
-    ksp(libs.hilt.common.compiler)
-    ksp(libs.hilt.work)
-    implementation(libs.materialKolor)
-
-    implementation(libs.okhttp)
-    implementation(libs.composeMarkdown)
+    implementation(libs.squareup.okhttp3)
+    implementation(libs.jeziellago.compose.markdown)
 }

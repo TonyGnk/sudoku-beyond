@@ -19,6 +19,10 @@
 package gr.tonygnk.sudokubeyond.ui.theme
 
 import android.os.Build
+import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
+import androidx.activity.compose.LocalActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -28,7 +32,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.materialkolor.DynamicMaterialTheme
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicMaterialThemeState
@@ -64,7 +67,6 @@ fun LibreSudokuTheme(
             else -> dynamicLightColorScheme(context)
         }
     }
-    val systemUiController = rememberSystemUiController()
 
     materialThemeState = rememberDynamicMaterialThemeState(
         seedColor = colorSeed,
@@ -83,10 +85,20 @@ fun LibreSudokuTheme(
         ),
         typography = Typography,
         content = {
+            val activity = LocalActivity.current as ComponentActivity
+
             SideEffect {
-                systemUiController.setSystemBarsColor(
-                    color = Color.Transparent,
-                    darkIcons = !darkTheme
+                activity.enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(
+                        lightScrim = android.graphics.Color.TRANSPARENT,
+                        darkScrim = android.graphics.Color.TRANSPARENT,
+                        detectDarkMode = { _ -> darkTheme },
+                    ),
+                    navigationBarStyle = SystemBarStyle.auto(
+                        lightScrim = android.graphics.Color.TRANSPARENT,
+                        darkScrim = android.graphics.Color.TRANSPARENT,
+                        detectDarkMode = { _ -> darkTheme },
+                    )
                 )
             }
 

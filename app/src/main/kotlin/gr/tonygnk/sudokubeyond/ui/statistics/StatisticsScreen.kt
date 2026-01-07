@@ -74,8 +74,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
@@ -85,8 +86,7 @@ import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.HelpCard
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -96,8 +96,8 @@ import kotlin.math.roundToInt
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
-    viewModel: StatisticsViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: StatisticsViewModel = rememberViewModel(StatisticsViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(initialValue = "")
@@ -319,7 +319,7 @@ fun ShowDeleteDialog(
     modifier: Modifier = Modifier,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
-    index: Int
+    index: Int,
 ) {
     AlertDialog(
         modifier = modifier,
@@ -351,7 +351,7 @@ fun ShowDeleteDialog(
 @Composable
 fun OverallStatistics(
     modifier: Modifier = Modifier,
-    statsRow: List<List<String>>
+    statsRow: List<List<String>>,
 ) {
     StatisticsSection(
         modifier = modifier,
@@ -366,7 +366,7 @@ fun StatisticsSection(
     modifier: Modifier = Modifier,
     title: String,
     painter: Painter,
-    statRows: List<List<String>>
+    statRows: List<List<String>>,
 ) {
     Column(
         modifier = modifier
@@ -408,7 +408,7 @@ fun StatisticsSection(
 fun StatsSectionName(
     modifier: Modifier = Modifier,
     title: String,
-    painter: Painter
+    painter: Painter,
 ) {
     Row(
         modifier = modifier
@@ -433,7 +433,7 @@ fun StatsSectionName(
 fun StatRow(
     startText: String,
     endText: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -456,7 +456,7 @@ fun ChipRowType(
     modifier: Modifier = Modifier,
     types: List<Pair<GameType, String>>,
     selected: GameType,
-    onSelected: (GameType) -> Unit
+    onSelected: (GameType) -> Unit,
 ) {
     LazyRow(
         modifier = modifier,
@@ -489,7 +489,7 @@ fun ChipRowDifficulty(
     items: List<GameDifficulty>,
     selected: GameDifficulty,
     onSelected: (GameDifficulty) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyRow(
         modifier = modifier,
@@ -533,7 +533,7 @@ fun RecordItem(
     type: String,
     dateFormat: String,
     onClick: () -> Unit = { },
-    onLongClick: () -> Unit = { }
+    onLongClick: () -> Unit = { },
 ) {
     Box(
         modifier = modifier

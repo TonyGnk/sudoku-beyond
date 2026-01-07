@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.Note
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
@@ -52,7 +53,8 @@ import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.record.GetAllRecordsUseCase
 import gr.tonygnk.sudokubeyond.navArgs
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -64,7 +66,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.time.ZonedDateTime
 import java.util.Timer
-import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlin.time.Duration
 import kotlin.time.DurationUnit
@@ -72,8 +73,7 @@ import kotlin.time.toDuration
 import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration
 
-@HiltViewModel
-class GameViewModel @Inject constructor(
+class GameViewModel(
     private val savedGameRepository: SavedGameRepository,
     private val appSettingsManager: AppSettingsManager,
     private val recordRepository: RecordRepository,
@@ -81,7 +81,7 @@ class GameViewModel @Inject constructor(
     private val getBoardUseCase: GetBoardUseCase,
     themeSettingsManager: ThemeSettingsManager,
     private val savedStateHandle: SavedStateHandle,
-    private val getAllRecordsUseCase: GetAllRecordsUseCase
+    private val getAllRecordsUseCase: GetAllRecordsUseCase,
 ) : ViewModel() {
     init {
         val navArgs: GameScreenNavArgs = savedStateHandle.navArgs()
@@ -259,7 +259,7 @@ class GameViewModel @Inject constructor(
     private fun clearNotesAtCell(
         notes: List<Note>,
         row: Int = currCell.row,
-        col: Int = currCell.col
+        col: Int = currCell.col,
     ): List<Note> {
         return notes.minus(
             notes.filter { note ->
@@ -291,7 +291,7 @@ class GameViewModel @Inject constructor(
     private fun setValueCell(
         value: Int,
         row: Int = currCell.row,
-        col: Int = currCell.col
+        col: Int = currCell.col,
     ): List<List<Cell>> {
         var new = getBoardNoRef()
 
@@ -574,7 +574,7 @@ class GameViewModel @Inject constructor(
 
     private fun isValidCell(
         board: List<List<Cell>> = getBoardNoRef(),
-        cell: Cell
+        cell: Cell,
     ): List<List<Cell>> {
         if (solvedBoard.isNotEmpty()) {
             board[cell.row][cell.col].error =
@@ -846,6 +846,21 @@ class GameViewModel @Inject constructor(
                 processInput(cell, true)
                 cancelAdvancedHint()
             }
+        }
+    }
+
+    companion object {
+        val builder: (SavedStateHandle) -> GameViewModel = { savedStateHandle ->
+            GameViewModel(
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+                recordRepository = LibreSudokuApp.appModule.recordRepository,
+                updateBoardUseCase = UpdateBoardUseCase(LibreSudokuApp.appModule.boardRepository),
+                getBoardUseCase = GetBoardUseCase(LibreSudokuApp.appModule.boardRepository),
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                savedStateHandle = savedStateHandle,
+                getAllRecordsUseCase = GetAllRecordsUseCase(LibreSudokuApp.appModule.recordRepository)
+            )
         }
     }
 }

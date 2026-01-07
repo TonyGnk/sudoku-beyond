@@ -50,8 +50,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
@@ -66,15 +67,14 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitl
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsBoardTheme(
-    viewModel: SettingsBoardThemeViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: SettingsBoardThemeViewModel = rememberViewModel(SettingsBoardThemeViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val scrollBehavior = rememberTopAppBarScrollBehavior()
     val positionLines by viewModel.positionLines.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_POSITION_LINES)
@@ -100,7 +100,7 @@ fun SettingsBoardTheme(
             SudokuUtils().getFontSize(selectedBoardType, fontSizeFactor)
         )
     }
-    
+
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
@@ -222,7 +222,7 @@ private fun BoardPreviewTheme(
     fontSize: TextUnit,
     gameType: GameType,
     modifier: Modifier = Modifier,
-    autoFontSize: Boolean = false
+    autoFontSize: Boolean = false,
 ) {
     val previewBoard = SudokuParser().parseBoard(
         board = when (gameType) {

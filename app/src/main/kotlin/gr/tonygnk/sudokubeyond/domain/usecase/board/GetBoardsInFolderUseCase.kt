@@ -19,10 +19,9 @@
 package gr.tonygnk.sudokubeyond.domain.usecase.board
 
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
-import javax.inject.Inject
 
-class GetBoardsInFolderUseCase @Inject constructor(
-    private val boardRepository: BoardRepository
+class GetBoardsInFolderUseCase(
+    private val boardRepository: BoardRepository,
 ) {
     operator fun invoke(uid: Long) = boardRepository.getBoardsInFolder(uid)
 }

@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.qqwing.Cage
 import gr.tonygnk.sudokubeyond.core.qqwing.CageGenerator
@@ -34,7 +35,7 @@ import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -42,15 +43,11 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
-
-@HiltViewModel
-class HomeViewModel
-@Inject constructor(
+class HomeViewModel(
     private val appSettingsManager: AppSettingsManager,
     private val boardRepository: BoardRepository,
-    private val savedGameRepository: SavedGameRepository
+    private val savedGameRepository: SavedGameRepository,
 ) : ViewModel() {
 
     val lastSavedGame = savedGameRepository.getLast()
@@ -191,6 +188,16 @@ class HomeViewModel
                     )
                 }
             }
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            HomeViewModel(
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+                boardRepository = LibreSudokuApp.appModule.boardRepository,
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository
+            )
         }
     }
 }

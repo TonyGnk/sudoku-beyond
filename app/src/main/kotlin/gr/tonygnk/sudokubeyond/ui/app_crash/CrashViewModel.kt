@@ -19,15 +19,14 @@
 package gr.tonygnk.sudokubeyond.ui.app_crash
 
 import androidx.lifecycle.ViewModel
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 
-@HiltViewModel
-class CrashViewModel @Inject constructor(
+class CrashViewModel(
     themeSettingsManager: ThemeSettingsManager,
-    appSettingsManager: AppSettingsManager
+    appSettingsManager: AppSettingsManager,
 ) : ViewModel() {
     val dc = themeSettingsManager.dynamicColors
     val darkTheme = themeSettingsManager.darkTheme
@@ -36,4 +35,13 @@ class CrashViewModel @Inject constructor(
     val monetSudokuBoard = themeSettingsManager.monetSudokuBoard
     val colorSeed = themeSettingsManager.themeColorSeed
     val paletteStyle = themeSettingsManager.themePaletteStyle
+
+    companion object {
+        val builder = viewModelBuilder {
+            CrashViewModel(
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            )
+        }
+    }
 }

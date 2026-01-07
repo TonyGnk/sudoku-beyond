@@ -27,6 +27,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.parser.GsudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.OpenSudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.SdmParser
@@ -37,7 +38,8 @@ import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
 import gr.tonygnk.sudokubeyond.navArgs
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,13 +48,11 @@ import kotlinx.coroutines.withContext
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.ZonedDateTime
-import javax.inject.Inject
 
-@HiltViewModel
-class ImportFromFileViewModel @Inject constructor(
+class ImportFromFileViewModel(
     private val insertFolderUseCase: InsertFolderUseCase,
     private val boardRepository: BoardRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val _navArgs: ImportFromFileScreenNavArgs = savedStateHandle.navArgs()
@@ -145,5 +145,15 @@ class ImportFromFileViewModel @Inject constructor(
 
     fun setDifficulty(difficulty: GameDifficulty) {
         difficultyForImport = difficulty
+    }
+
+    companion object {
+        val builder: (SavedStateHandle) -> ImportFromFileViewModel = { savedStateHandle ->
+            ImportFromFileViewModel(
+                insertFolderUseCase = InsertFolderUseCase(LibreSudokuApp.appModule.folderRepository),
+                boardRepository = LibreSudokuApp.appModule.boardRepository,
+                savedStateHandle = savedStateHandle
+            )
+        }
     }
 }

@@ -21,16 +21,15 @@ package gr.tonygnk.sudokubeyond.ui.settings.appearance
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
-@HiltViewModel
-class SettingsAppearanceViewModel @Inject constructor(
+class SettingsAppearanceViewModel(
     private val themeSettings: ThemeSettingsManager,
     private val settings: AppSettingsManager
 ) : ViewModel() {
@@ -87,6 +86,15 @@ class SettingsAppearanceViewModel @Inject constructor(
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            SettingsAppearanceViewModel(
+                themeSettings = LibreSudokuApp.appModule.themeSettingsManager,
+                settings = LibreSudokuApp.appModule.appSettingsManager
+            )
         }
     }
 }

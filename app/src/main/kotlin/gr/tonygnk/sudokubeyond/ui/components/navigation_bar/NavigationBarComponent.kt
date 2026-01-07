@@ -28,11 +28,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
+import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 import gr.tonygnk.sudokubeyond.NavGraphs
 import gr.tonygnk.sudokubeyond.appCurrentDestinationAsState
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
 import gr.tonygnk.sudokubeyond.startAppDestination
-import com.ramcosta.composedestinations.utils.toDestinationsNavigator
 
 @Composable
 fun NavigationBarComponent(

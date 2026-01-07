@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
 import gr.tonygnk.sudokubeyond.core.qqwing.GameType
 import gr.tonygnk.sudokubeyond.data.database.model.Record
@@ -31,19 +32,16 @@ import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class StatisticsViewModel
-@Inject constructor(
+class StatisticsViewModel(
     private val recordRepository: RecordRepository,
     private val tipCardsDataStore: TipCardsDataStore,
     savedGameRepository: SavedGameRepository,
-    appSettingsManager: AppSettingsManager
+    appSettingsManager: AppSettingsManager,
 ) : ViewModel() {
     var showDeleteDialog by mutableStateOf(false)
     var selectedDifficulty by mutableStateOf(GameDifficulty.Unspecified)
@@ -137,4 +135,14 @@ class StatisticsViewModel
             .toFloat()
     }
 
+    companion object {
+        val builder = viewModelBuilder {
+            StatisticsViewModel(
+                recordRepository = LibreSudokuApp.appModule.recordRepository,
+                tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
+        }
+    }
 }

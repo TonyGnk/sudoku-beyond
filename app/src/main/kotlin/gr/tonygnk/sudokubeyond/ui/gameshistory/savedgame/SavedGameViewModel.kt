@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.Note
 import gr.tonygnk.sudokubeyond.core.qqwing.Cage
@@ -40,25 +41,23 @@ import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
 import gr.tonygnk.sudokubeyond.navArgs
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 import kotlin.math.pow
 
-@HiltViewModel
-class SavedGameViewModel
-@Inject constructor(
+class SavedGameViewModel(
     private val boardRepository: BoardRepository,
     private val savedGameRepository: SavedGameRepository,
     private val getFolderUseCase: GetFolderUseCase,
     appSettingsManager: AppSettingsManager,
     themeSettingsManager: ThemeSettingsManager,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val navArgs: SavedGameScreenNavArgs = savedStateHandle.navArgs()
     val boardUid = navArgs.gameUid
@@ -148,5 +147,18 @@ class SavedGameViewModel
             return sudokuUtils.getFontSize(it.type, factor)
         }
         return 24.sp
+    }
+
+    companion object {
+        val builder: (SavedStateHandle) -> SavedGameViewModel = { savedStateHandle ->
+            SavedGameViewModel(
+                boardRepository = LibreSudokuApp.appModule.boardRepository,
+                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+                getFolderUseCase = GetFolderUseCase(LibreSudokuApp.appModule.folderRepository),
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                savedStateHandle = savedStateHandle
+            )
+        }
     }
 }

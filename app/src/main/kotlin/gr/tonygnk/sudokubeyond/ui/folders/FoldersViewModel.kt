@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.parser.SdmParser
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.domain.usecase.board.GetGamesInFolderUseCase
@@ -32,23 +33,21 @@ import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetLastSavedGamesAnyFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.UpdateFolderUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
+import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
-import javax.inject.Inject
 
-@HiltViewModel
-class FoldersViewModel @Inject constructor(
+class FoldersViewModel(
     getFoldersUseCase: GetFoldersUseCase,
     private val insertFolderUseCase: InsertFolderUseCase,
     private val updateFolderUseCase: UpdateFolderUseCase,
     private val deleteFolderUseCase: DeleteFolderUseCase,
     private val getGamesInFolderUseCase: GetGamesInFolderUseCase,
     private val countPuzzlesFolderUseCase: CountPuzzlesFolderUseCase,
-    getLastSavedGamesAnyFolderUseCase: GetLastSavedGamesAnyFolderUseCase
+    getLastSavedGamesAnyFolderUseCase: GetLastSavedGamesAnyFolderUseCase,
 ) : ViewModel() {
     val folders = getFoldersUseCase()
 
@@ -108,5 +107,33 @@ class FoldersViewModel @Inject constructor(
 
         val sdmParser = SdmParser()
         return sdmParser.boardsToSdm(gamesInFolder).toByteArray()
+    }
+
+    companion object {
+        val builder = viewModelBuilder {
+            FoldersViewModel(
+                getFoldersUseCase = GetFoldersUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository
+                ),
+                insertFolderUseCase = InsertFolderUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository
+                ),
+                updateFolderUseCase = UpdateFolderUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository
+                ),
+                deleteFolderUseCase = DeleteFolderUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository,
+                ),
+                getGamesInFolderUseCase = GetGamesInFolderUseCase(
+                    boardRepository = LibreSudokuApp.appModule.boardRepository,
+                ),
+                countPuzzlesFolderUseCase = CountPuzzlesFolderUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository,
+                ),
+                getLastSavedGamesAnyFolderUseCase = GetLastSavedGamesAnyFolderUseCase(
+                    folderRepository = LibreSudokuApp.appModule.folderRepository,
+                )
+            )
+        }
     }
 }

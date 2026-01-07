@@ -82,8 +82,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
@@ -95,8 +96,7 @@ import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import kotlin.time.toKotlinDuration
@@ -111,8 +111,8 @@ import kotlin.time.toKotlinDuration
 )
 @Composable
 fun SavedGameScreen(
-    viewModel: SavedGameViewModel = hiltViewModel(),
-    navigator: DestinationsNavigator
+    viewModel: SavedGameViewModel = rememberSavedStateViewModel(SavedGameViewModel.builder),
+    navigator: DestinationsNavigator,
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
