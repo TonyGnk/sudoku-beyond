@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022-2025 kaajjo
   ~ Copyright (C) 2026 TonyGnk
   ~
@@ -359,7 +358,7 @@
     <string name="donation_description">永无广告的免费应用。您可以通过下面支持</string>
     <string name="perf_other_summary">记住上次类型和难度，保持屏幕常亮，重置状态…</string>
     <string name="hint_wrong_value_title">错误的数值</string>
-    <string name="hint_wron_value_detail">%2$s 格内的 %1$s 错误</string>
+    <string name="hint_wrong_value_detail">%2$s 格内的 %1$s 错误</string>
     <string name="nav_back">返回</string>
     <string name="action_apply">应用</string>
     <string name="label_beta">Beta</string>

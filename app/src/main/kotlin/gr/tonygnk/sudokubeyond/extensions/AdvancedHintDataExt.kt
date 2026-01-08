@@ -16,8 +16,8 @@
 
 package gr.tonygnk.sudokubeyond.extensions
 
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.hint.AdvancedHintData
+import gr.tonygnk.sudokubeyond.R
 
 /**
  * Extension property to map AdvancedHintData string keys to Android resource IDs
@@ -34,7 +34,7 @@ val AdvancedHintData.titleRes: Int
 val AdvancedHintData.textResWithArg: Pair<Int, List<String>>
     get() {
         val resId = when (this.textKeyWithArg.first) {
-            "hint_wrong_value_detail" -> R.string.hint_wron_value_detail
+            "hint_wrong_value_detail" -> R.string.hint_wrong_value_detail
             "hint_naked_single_detail" -> R.string.hint_naked_single_detail
             "hint_full_house_group_detail" -> R.string.hint_full_house_group_detail
             "hint_hidden_single_detail" -> R.string.hint_hidden_single_detail

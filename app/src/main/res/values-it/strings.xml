@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022-2025 kaajjo
   ~ Copyright (C) 2026 TonyGnk
   ~
@@ -343,7 +342,7 @@
     <string name="hint_hidden_single_detail">La cella %1$s è l\'unica cella in questo gruppo dove %2$s può stare</string>
     <string name="advanced_hint_title">Suggerimento avanzato</string>
     <string name="hint_wrong_value_title">Valore sbagliato</string>
-    <string name="hint_wron_value_detail">Il valore %1$s nella cella %2$s è sbagliato</string>
+    <string name="hint_wrong_value_detail">Il valore %1$s nella cella %2$s è sbagliato</string>
     <string name="nav_back">Indietro</string>
     <string name="action_apply">Applica</string>
     <string name="label_beta">Beta</string>
