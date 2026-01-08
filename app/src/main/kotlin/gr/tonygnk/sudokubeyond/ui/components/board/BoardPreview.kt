@@ -46,7 +46,7 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gr.tonygnk.sudokubeyond.LocalBoardColors
-import gr.tonygnk.sudokubeyond.core.Cell
+import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColors
@@ -68,7 +68,7 @@ fun BoardPreview(
         12 -> 9.sp
         else -> 22.sp
     },
-    boardColors: SudokuBoardColors = LocalBoardColors.current
+    boardColors: SudokuBoardColors = LocalBoardColors.current,
 ) {
     BoxWithConstraints(
         modifier = modifier

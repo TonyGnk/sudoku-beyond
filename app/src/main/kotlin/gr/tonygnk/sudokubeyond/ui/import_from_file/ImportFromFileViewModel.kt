@@ -31,15 +31,13 @@ import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.parser.GsudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.OpenSudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.SdmParser
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
 import gr.tonygnk.sudokubeyond.navArgs
-import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -23,14 +23,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudoku.core.algorithm.CageGenerator
+import gr.tonygnk.sudoku.core.algorithm.QQWingController
+import gr.tonygnk.sudoku.core.model.Cage
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Easy
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Hard
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.qqwing.Cage
-import gr.tonygnk.sudokubeyond.core.qqwing.CageGenerator
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
@@ -59,12 +62,7 @@ class HomeViewModel(
 
     var insertedBoardUid = -1L
 
-    private val difficulties = listOf(
-        GameDifficulty.Easy,
-        GameDifficulty.Moderate,
-        GameDifficulty.Hard,
-        GameDifficulty.Challenge,
-    )
+    private val difficulties = listOf(Easy, Moderate, Hard, Challenge)
 
     private val types = listOf(
         GameType.Default9x9,

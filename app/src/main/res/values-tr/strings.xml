@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022-2025 kaajjo
   ~ Copyright (C) 2026 TonyGnk
   ~
@@ -364,7 +363,7 @@
     <string name="pref_board_theme_summary">Vurgu renklerini uygula, konum çizgileri, yazı tipi boyutu…</string>
     <string name="action_generate">Oluştur</string>
     <string name="generating_number_of">%1$s/%2$s oluşturuluyor</string>
-    <string name="hint_wron_value_detail">%2$s Hücresindeki %1$s değeri yanlış</string>
+    <string name="hint_wrong_value_detail">%2$s Hücresindeki %1$s değeri yanlış</string>
     <string name="nav_back">Geri</string>
     <string name="action_apply">Uygula</string>
     <string name="update_channel_beta">Beta</string>

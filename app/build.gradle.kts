@@ -92,6 +92,7 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":sudoku-core"))
     coreLibraryDesugaring(libs.android.tools.desugar.jdk.libs)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

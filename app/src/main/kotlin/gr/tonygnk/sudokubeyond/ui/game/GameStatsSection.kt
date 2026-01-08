@@ -43,10 +43,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.data.database.model.Record
+import gr.tonygnk.sudokubeyond.extensions.resName
 import kotlin.time.toKotlinDuration
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -62,7 +63,7 @@ fun AfterGameStats(
     notesTaken: Int,
     records: List<Record>,
     timeText: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
         Text(
@@ -191,7 +192,7 @@ fun AfterGameStats(
 fun StatBox(
     text: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    icon: @Composable () -> Unit = { }
+    icon: @Composable () -> Unit = { },
 ) {
     Box(
         modifier = modifier
@@ -215,7 +216,7 @@ fun StatBox(
 fun StatBoxWithBottomPadding(
     text: @Composable () -> Unit,
     modifier: Modifier = Modifier,
-    icon: @Composable () -> Unit = { }
+    icon: @Composable () -> Unit = { },
 ) {
     StatBox(
         text = text,

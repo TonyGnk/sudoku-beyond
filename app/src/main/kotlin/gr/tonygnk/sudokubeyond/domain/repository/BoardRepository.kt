@@ -18,7 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.domain.repository
 
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import kotlinx.coroutines.flow.Flow

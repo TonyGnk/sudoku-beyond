@@ -33,3 +33,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "LibreSudoku"
 include(":app")
+include(":sudoku-core")

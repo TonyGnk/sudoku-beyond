@@ -18,7 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.data.database.repository
 
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudokubeyond.data.database.dao.BoardDao
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
@@ -26,7 +26,7 @@ import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import kotlinx.coroutines.flow.Flow
 
 class BoardRepositoryImpl(
-    private val boardDao: BoardDao
+    private val boardDao: BoardDao,
 ) : BoardRepository {
     override fun getAll(): Flow<List<SudokuBoard>> =
         boardDao.getAll()

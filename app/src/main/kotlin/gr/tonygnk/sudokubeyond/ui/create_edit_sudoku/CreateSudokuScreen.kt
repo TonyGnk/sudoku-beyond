@@ -65,8 +65,17 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Custom
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Easy
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Hard
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.types.GameType.Default12x12
+import gr.tonygnk.sudoku.core.types.GameType.Default6x6
+import gr.tonygnk.sudoku.core.types.GameType.Default9x9
+import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
@@ -329,11 +338,7 @@ fun CreateSudokuScreen(
 fun GameTypeMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    types: List<GameType> = listOf(
-        GameType.Default9x9,
-        GameType.Default6x6,
-        GameType.Default12x12,
-    ),
+    types: List<GameType> = listOf(Default9x9, Default6x6, Default12x12),
     onClick: (GameType) -> Unit,
 ) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.large)) {
@@ -410,13 +415,7 @@ private fun ImportStringSudokuDialog(
 fun DifficultyMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
-    difficulties: List<GameDifficulty> = listOf(
-        GameDifficulty.Easy,
-        GameDifficulty.Moderate,
-        GameDifficulty.Hard,
-        GameDifficulty.Challenge,
-        GameDifficulty.Custom,
-    ),
+    difficulties: List<GameDifficulty> = listOf(Easy, Moderate, Hard, Challenge, Custom),
     onClick: (GameDifficulty) -> Unit,
 ) {
     MaterialTheme(shapes = MaterialTheme.shapes.copy(extraSmall = MaterialTheme.shapes.large)) {

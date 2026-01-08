@@ -19,7 +19,7 @@
 package gr.tonygnk.sudokubeyond.data.database.converters
 
 import androidx.room.TypeConverter
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty
 
 /**
  * Converts Game Difficulty

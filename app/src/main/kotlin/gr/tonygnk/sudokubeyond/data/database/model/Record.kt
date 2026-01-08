@@ -23,8 +23,8 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.Companion.CASCADE
 import androidx.room.PrimaryKey
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.data.backup.serializer.DurationLongSerializer
 import gr.tonygnk.sudokubeyond.data.backup.serializer.ZonedDateTimeLongSerializer
 import kotlinx.serialization.Serializable
@@ -48,5 +48,5 @@ data class Record(
     @Serializable(with = ZonedDateTimeLongSerializer::class)
     @ColumnInfo(name = "date") val date: ZonedDateTime,
     @Serializable(with = DurationLongSerializer::class)
-    @ColumnInfo(name = "time") val time: Duration
+    @ColumnInfo(name = "time") val time: Duration,
 )

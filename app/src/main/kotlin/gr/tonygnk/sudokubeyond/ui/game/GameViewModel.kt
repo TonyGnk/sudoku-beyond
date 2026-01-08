@@ -26,21 +26,21 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudoku.core.algorithm.QQWingController
+import gr.tonygnk.sudoku.core.hint.AdvancedHint
+import gr.tonygnk.sudoku.core.hint.AdvancedHintData
+import gr.tonygnk.sudoku.core.model.Cage
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.model.Note
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.GameState
+import gr.tonygnk.sudoku.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.utils.SudokuUtils
+import gr.tonygnk.sudoku.core.utils.UndoRedoManager
+import gr.tonygnk.sudoku.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.Note
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.Cage
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHint
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintData
-import gr.tonygnk.sudokubeyond.core.utils.GameState
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
-import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
-import gr.tonygnk.sudokubeyond.core.utils.UndoRedoManager
-import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.data.database.model.Record
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
@@ -53,8 +53,7 @@ import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.record.GetAllRecordsUseCase
 import gr.tonygnk.sudokubeyond.navArgs
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
-import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -136,7 +135,8 @@ class GameViewModel(
                     gameBoard = initialBoard
                 }
                 size = gameBoard.size
-                undoRedoManager = UndoRedoManager(GameState(gameBoard, notes))
+                undoRedoManager = UndoRedoManager()
+                undoRedoManager.addState(GameState(gameBoard, notes))
                 remainingUsesList = countRemainingUses(gameBoard)
             }
             saveGame()
@@ -214,8 +214,7 @@ class GameViewModel(
     var cages by mutableStateOf(emptyList<Cage>())
 
     var currCell by mutableStateOf(Cell(-1, -1, 0))
-    private var undoRedoManager = UndoRedoManager(GameState(gameBoard, notes))
-    private var sudokuUtils = SudokuUtils()
+    private var undoRedoManager = UndoRedoManager()
     var gameCompleted by mutableStateOf(false)
 
     // Selected number for digit first method
@@ -310,11 +309,11 @@ class GameViewModel(
         if (mistakesMethod.value == 1) {
             // rule violations
             new[row][col].error =
-                !sudokuUtils.isValidCellDynamic(new, new[row][col], boardEntity.type)
+                !SudokuUtils.isValidCellDynamic(new, new[row][col], boardEntity.type)
             new.forEach { cells ->
                 cells.forEach { cell ->
                     if (cell.value != 0 && cell.error) {
-                        cell.error = !sudokuUtils.isValidCellDynamic(new, cell, boardEntity.type)
+                        cell.error = !SudokuUtils.isValidCellDynamic(new, cell, boardEntity.type)
                     }
                 }
             }
@@ -349,7 +348,7 @@ class GameViewModel(
     private fun countRemainingUses(board: List<List<Cell>>): MutableList<Int> {
         val uses = mutableListOf<Int>()
         for (i in 0 until size) {
-            uses.add(size - sudokuUtils.countNumberInBoard(board, i + 1))
+            uses.add(size - SudokuUtils.countNumberInBoard(board, i + 1))
         }
         return uses
     }
@@ -483,7 +482,7 @@ class GameViewModel(
             when (item) {
                 ToolBarItem.Undo -> {
                     if (undoRedoManager.canUndo()) {
-                        undoRedoManager.undo().also {
+                        undoRedoManager.undo(GameState(gameBoard, notes))?.also {
                             gameBoard = it.board
                             notes = it.notes
                         }
@@ -494,7 +493,7 @@ class GameViewModel(
 
                 ToolBarItem.Redo -> {
                     if (undoRedoManager.canRedo()) {
-                        undoRedoManager.redo()?.let {
+                        undoRedoManager.redo(GameState(gameBoard, notes))?.let {
                             gameBoard = it.board
                             notes = it.notes
                         }
@@ -611,7 +610,7 @@ class GameViewModel(
     }
 
     fun computeNotes() {
-        notes = sudokuUtils.computeNotes(gameBoard, boardEntity.type)
+        notes = SudokuUtils.computeNotes(gameBoard, boardEntity.type)
         undoRedoManager.addState(GameState(gameBoard, notes))
     }
 
@@ -619,7 +618,7 @@ class GameViewModel(
         if (currCell.row < 0 || currCell.col < 0) {
             return notes
         }
-        return sudokuUtils.autoEraseNotes(board, notes, cell, boardEntity.type)
+        return SudokuUtils.autoEraseNotes(board, notes, cell, boardEntity.type)
     }
 
     private suspend fun saveGame() {
@@ -671,7 +670,7 @@ class GameViewModel(
                     if (gameBoard[i][j].value != 0 && !gameBoard[i][j].locked) {
                         if (mistakesMethod.value == 1) {
                             gameBoard[i][j].error =
-                                !sudokuUtils.isValidCellDynamic(
+                                !SudokuUtils.isValidCellDynamic(
                                     board = gameBoard,
                                     cell = gameBoard[i][j],
                                     type = boardEntity.type
@@ -730,7 +729,7 @@ class GameViewModel(
     }
 
     fun getFontSize(type: GameType = gameType, factor: Int): TextUnit {
-        return sudokuUtils.getFontSize(type, factor)
+        return SudokuUIUtils.getFontSize(type, factor)
     }
 
     fun setFirstGameFalse() {
@@ -799,7 +798,7 @@ class GameViewModel(
                         1 -> {
                             // rules violations
                             new[i][j].error =
-                                !sudokuUtils.isValidCellDynamic(new, new[i][j], boardEntity.type)
+                                !SudokuUtils.isValidCellDynamic(new, new[i][j], boardEntity.type)
                         }
 
                         2 -> {

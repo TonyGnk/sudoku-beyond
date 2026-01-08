@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022-2025 kaajjo
   ~ Copyright (C) 2026 TonyGnk
   ~
@@ -328,7 +327,7 @@
     <string name="hint_naked_single_detail">Cellen %1$s har bare en mulig verdi igjen, så du kan plassere %2$s der</string>
     <string name="advanced_hint_title">Avansert hint</string>
     <string name="hint_wrong_value_title">Feil verdi</string>
-    <string name="hint_wron_value_detail">Verdien %1$s i celle %2$s er feil</string>
+    <string name="hint_wrong_value_detail">Verdien %1$s i celle %2$s er feil</string>
     <string name="advanced_hint_summary">Et eksperimentelt hint-system</string>
     <string name="action_apply">Bruk</string>
     <string name="update_found">Ny oppdatering funnet</string>

@@ -19,7 +19,7 @@
 package gr.tonygnk.sudokubeyond.data.database.converters
 
 import androidx.room.TypeConverter
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameType
 
 /**
  * Converts GameType

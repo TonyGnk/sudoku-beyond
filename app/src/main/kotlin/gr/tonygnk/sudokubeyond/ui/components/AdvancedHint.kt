@@ -39,17 +39,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintData
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudoku.core.hint.AdvancedHintData
+import gr.tonygnk.sudokubeyond.extensions.textResWithArg
+import gr.tonygnk.sudokubeyond.extensions.titleRes
 
 @androidx.compose.runtime.Composable
 fun AdvancedHintContainer(
     advancedHintData: AdvancedHintData,
     onApplyClick: (() -> Unit)?,
     onBackClick: () -> Unit,
-    onSettingsClick: () -> Unit
+    onSettingsClick: () -> Unit,
 ) {
     Column {
         Row(

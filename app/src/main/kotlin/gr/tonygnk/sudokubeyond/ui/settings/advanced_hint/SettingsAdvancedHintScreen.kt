@@ -46,7 +46,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn

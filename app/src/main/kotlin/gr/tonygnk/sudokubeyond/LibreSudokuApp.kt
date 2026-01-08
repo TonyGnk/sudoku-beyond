@@ -21,9 +21,11 @@ package gr.tonygnk.sudokubeyond
 import android.app.Application
 import android.content.Context
 import androidx.work.Configuration
+import gr.tonygnk.sudoku.core.utils.globalLogger
 import gr.tonygnk.sudokubeyond.di.AppModule
 import gr.tonygnk.sudokubeyond.di.AppModuleImpl
 import gr.tonygnk.sudokubeyond.di.AppWorkerFactory
+import gr.tonygnk.sudokubeyond.utils.AndroidLogger
 
 internal class LibreSudokuApp : Application(), Configuration.Provider {
     override val workManagerConfiguration: Configuration
@@ -37,6 +39,8 @@ internal class LibreSudokuApp : Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        // Initialize the logger for sudoku-core module
+        globalLogger = AndroidLogger
         appModule = AppModuleImpl(this)
     }
 

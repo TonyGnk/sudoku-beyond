@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2022-2025 kaajjo
   ~ Copyright (C) 2026 TonyGnk
   ~
@@ -387,7 +386,7 @@
     <string name="hint_hidden_single_detail">The cell %1$s is the only cell in this group where %2$s can be</string>
     <string name="advanced_hint_title">Advanced hint</string>
     <string name="hint_wrong_value_title">Wrong value</string>
-    <string name="hint_wron_value_detail">The value %1$s in cell %2$s is wrong</string>
+    <string name="hint_wrong_value_detail">The value %1$s in cell %2$s is wrong</string>
     <string name="advanced_hint_summary">An experimental hint system</string>
     <string name="nav_back">Back</string>
     <string name="action_apply">Apply</string>

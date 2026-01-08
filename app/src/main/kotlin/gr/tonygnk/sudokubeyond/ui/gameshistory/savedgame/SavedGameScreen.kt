@@ -86,13 +86,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
-import gr.tonygnk.sudokubeyond.core.utils.toFormattedString
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.destinations.ExploreFolderScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
+import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.board.Board

@@ -24,8 +24,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
@@ -34,7 +34,7 @@ import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 
 class HistoryViewModel(
     savedGameRepository: SavedGameRepository,
-    appSettingsManager: AppSettingsManager
+    appSettingsManager: AppSettingsManager,
 ) : ViewModel(
 ) {
     val games = savedGameRepository.getWithBoards()
