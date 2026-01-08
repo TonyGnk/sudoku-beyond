@@ -54,11 +54,11 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gr.tonygnk.sudokubeyond.LocalBoardColors
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.Note
-import gr.tonygnk.sudokubeyond.core.qqwing.Cage
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.model.Cage
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.model.Note
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColors
@@ -126,7 +126,7 @@ fun Board(
     zoomable: Boolean = false,
     boardColors: SudokuBoardColors = LocalBoardColors.current,
     crossHighlight: Boolean = false,
-    cages: List<Cage> = emptyList()
+    cages: List<Cage> = emptyList(),
 ) {
     BoxWithConstraints(
         modifier = modifier

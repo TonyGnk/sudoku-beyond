@@ -28,9 +28,21 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Custom
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Easy
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Hard
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Simple
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.types.GameType.Default12x12
+import gr.tonygnk.sudoku.core.types.GameType.Default6x6
+import gr.tonygnk.sudoku.core.types.GameType.Default9x9
+import gr.tonygnk.sudoku.core.types.GameType.Killer12x12
+import gr.tonygnk.sudoku.core.types.GameType.Killer6x6
+import gr.tonygnk.sudoku.core.types.GameType.Killer9x9
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import kotlinx.coroutines.flow.map
 import java.time.Instant
@@ -305,22 +317,22 @@ class AppSettingsManager(context: Context) {
         dataStore.edit { settings ->
             var difficultyAndType = when (difficulty) {
                 GameDifficulty.Unspecified -> "0"
-                GameDifficulty.Simple -> "1"
-                GameDifficulty.Easy -> "2"
-                GameDifficulty.Moderate -> "3"
-                GameDifficulty.Hard -> "4"
-                GameDifficulty.Challenge -> "5"
-                GameDifficulty.Custom -> "6"
+                Simple -> "1"
+                Easy -> "2"
+                Moderate -> "3"
+                Hard -> "4"
+                Challenge -> "5"
+                Custom -> "6"
             }
             difficultyAndType += ";"
             difficultyAndType += when (type) {
                 GameType.Unspecified -> "0"
-                GameType.Default9x9 -> "1"
-                GameType.Default12x12 -> "2"
-                GameType.Default6x6 -> "3"
-                GameType.Killer9x9 -> "4"
-                GameType.Killer12x12 -> "5"
-                GameType.Killer6x6 -> "6"
+                Default9x9 -> "1"
+                Default12x12 -> "2"
+                Default6x6 -> "3"
+                Killer9x9 -> "4"
+                Killer12x12 -> "5"
+                Killer6x6 -> "6"
             }
             settings[lastSelectedGameDifficultyTypeKey] = difficultyAndType
         }
@@ -330,30 +342,30 @@ class AppSettingsManager(context: Context) {
      * Last selected difficulty and type. Returns Pair<GameDifficulty, GameType>
      */
     val lastSelectedGameDifficultyType = dataStore.data.map { prefs ->
-        var gameDifficulty = GameDifficulty.Easy
-        var gameType = GameType.Default9x9
+        var gameDifficulty = Easy
+        var gameType = Default9x9
 
         val key = prefs[lastSelectedGameDifficultyTypeKey] ?: ""
         if (key.isNotEmpty() && key.contains(";")) {
             gameDifficulty = when (key.substring(0, key.indexOf(";"))) {
                 "0" -> GameDifficulty.Unspecified
-                "1" -> GameDifficulty.Simple
-                "2" -> GameDifficulty.Easy
-                "3" -> GameDifficulty.Moderate
-                "4" -> GameDifficulty.Hard
-                "5" -> GameDifficulty.Challenge
-                "6" -> GameDifficulty.Custom
-                else -> GameDifficulty.Easy
+                "1" -> Simple
+                "2" -> Easy
+                "3" -> Moderate
+                "4" -> Hard
+                "5" -> Challenge
+                "6" -> Custom
+                else -> Easy
             }
             gameType = when (key.substring(key.indexOf(";") + 1)) {
                 "0" -> GameType.Unspecified
-                "1" -> GameType.Default9x9
-                "2" -> GameType.Default12x12
-                "3" -> GameType.Default6x6
-                "4" -> GameType.Killer9x9
-                "5" -> GameType.Killer12x12
-                "6" -> GameType.Killer6x6
-                else -> GameType.Default9x9
+                "1" -> Default9x9
+                "2" -> Default12x12
+                "3" -> Default6x6
+                "4" -> Killer9x9
+                "5" -> Killer12x12
+                "6" -> Killer6x6
+                else -> Default9x9
             }
         }
         Pair(gameDifficulty, gameType)

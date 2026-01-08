@@ -53,12 +53,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
-import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
+import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
@@ -67,6 +67,7 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitl
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
+import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -97,7 +98,7 @@ fun SettingsBoardTheme(
 
     val fontSizeValue by remember(fontSizeFactor, selectedBoardType) {
         mutableStateOf(
-            SudokuUtils().getFontSize(selectedBoardType, fontSizeFactor)
+            SudokuUIUtils.getFontSize(selectedBoardType, fontSizeFactor)
         )
     }
 

@@ -18,15 +18,15 @@
 
 package gr.tonygnk.sudokubeyond.data.database.repository
 
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.data.database.dao.RecordDao
 import gr.tonygnk.sudokubeyond.data.database.model.Record
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import kotlinx.coroutines.flow.Flow
 
 class RecordRepositoryImpl(
-    private val recordDao: RecordDao
+    private val recordDao: RecordDao,
 ) : RecordRepository {
     override suspend fun get(uid: Long): Record = recordDao.get(uid)
     override fun getAll(): Flow<List<Record>> = recordDao.getAll()

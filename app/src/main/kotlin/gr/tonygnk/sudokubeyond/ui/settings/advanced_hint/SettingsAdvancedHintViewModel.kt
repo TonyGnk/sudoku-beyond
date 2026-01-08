@@ -21,14 +21,14 @@ package gr.tonygnk.sudokubeyond.ui.settings.advanced_hint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintSettings
+import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class SettingsAdvancedHintViewModel(
-    private val settingsManager: AppSettingsManager
+    private val settingsManager: AppSettingsManager,
 ) : ViewModel() {
     val advancedHintEnabled = settingsManager.advancedHintEnabled
     val advancedHintSettings = settingsManager.advancedHintSettings

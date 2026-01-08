@@ -33,22 +33,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.Note
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.model.Note
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBase
 import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBottomContent
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Destination(style = AnimatedNavigation::class)
 @Composable
 fun LearnHiddenPairs(
-    navigator: DestinationsNavigator
+    navigator: DestinationsNavigator,
 ) {
     TutorialBase(
         title = stringResource(R.string.learn_hidden_pairs_title),

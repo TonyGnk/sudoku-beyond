@@ -70,9 +70,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination

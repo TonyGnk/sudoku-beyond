@@ -87,13 +87,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.Cell
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.qqwing.advanced_hint.AdvancedHintData
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
+import gr.tonygnk.sudoku.core.hint.AdvancedHintData
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.destinations.SettingsAdvancedHintScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
+import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.components.AdvancedHintContainer
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
@@ -395,9 +396,9 @@ fun GameScreen(
                         if (advancedHintData == null) {
                             AdvancedHintContainer(
                                 advancedHintData = AdvancedHintData(
-                                    titleRes = R.string.advanced_hint_no_hint_title,
-                                    textResWithArg = Pair(
-                                        R.string.advanced_hint_no_hint,
+                                    titleKey = stringResource(R.string.advanced_hint_no_hint_title),
+                                    textKeyWithArg = Pair(
+                                        stringResource(R.string.advanced_hint_no_hint),
                                         emptyList()
                                     ),
                                     targetCell = Cell(-1, -1, 0),
@@ -709,9 +710,9 @@ fun GameScreen(
                         if (advancedHintData == null) {
                             AdvancedHintContainer(
                                 advancedHintData = AdvancedHintData(
-                                    titleRes = R.string.advanced_hint_no_hint_title,
-                                    textResWithArg = Pair(
-                                        R.string.advanced_hint_no_hint,
+                                    titleKey = stringResource(R.string.advanced_hint_no_hint_title),
+                                    textKeyWithArg = Pair(
+                                        stringResource(R.string.advanced_hint_no_hint),
                                         emptyList()
                                     ),
                                     targetCell = Cell(-1, -1, 0),

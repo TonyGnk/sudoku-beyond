@@ -26,12 +26,11 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudoku.core.model.Cage
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.model.Note
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.Note
-import gr.tonygnk.sudokubeyond.core.qqwing.Cage
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
-import gr.tonygnk.sudokubeyond.core.utils.SudokuUtils
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
@@ -41,8 +40,7 @@ import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
 import gr.tonygnk.sudokubeyond.navArgs
-import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -143,8 +141,7 @@ class SavedGameViewModel(
 
     fun getFontSize(factor: Int): TextUnit {
         boardEntity?.let {
-            val sudokuUtils = SudokuUtils()
-            return sudokuUtils.getFontSize(it.type, factor)
+            return SudokuUIUtils.getFontSize(it.type, factor)
         }
         return 24.sp
     }

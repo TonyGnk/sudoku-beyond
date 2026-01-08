@@ -24,11 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import gr.tonygnk.sudoku.core.algorithm.QQWingController
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
-import gr.tonygnk.sudokubeyond.core.qqwing.QQWingController
-import gr.tonygnk.sudokubeyond.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.usecase.UpdateManyBoardsUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.DeleteBoardUseCase
@@ -39,8 +39,6 @@ import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
 import gr.tonygnk.sudokubeyond.navArgs
-import gr.tonygnk.sudokubeyond.ui.util.ViewModelBuilder
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow

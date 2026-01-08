@@ -86,7 +86,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Custom
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Easy
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Hard
+import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
+import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyVerticalGrid
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
@@ -383,13 +389,7 @@ private fun ImportDifficultyMenu(
             expanded = expanded,
             onDismissRequest = onDismissRequest
         ) {
-            listOf(
-                GameDifficulty.Easy,
-                GameDifficulty.Moderate,
-                GameDifficulty.Hard,
-                GameDifficulty.Challenge,
-                GameDifficulty.Custom,
-            ).forEach {
+            listOf(Easy, Moderate, Hard, Challenge, Custom).forEach {
                 DropdownMenuItem(
                     text = {
                         Text(stringResource(it.resName))

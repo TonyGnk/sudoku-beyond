@@ -22,8 +22,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.qqwing.Cage
+import gr.tonygnk.sudoku.core.model.Cage
+import gr.tonygnk.sudoku.core.model.Cell
 
 fun DrawScope.drawKillerCage(
     cage: Cage,
@@ -31,7 +31,7 @@ fun DrawScope.drawKillerCage(
     cellSize: Float,
     strokeWidth: Float,
     color: Color,
-    cornerTextPadding: Offset
+    cornerTextPadding: Offset,
 ) {
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(cellSize / 12f, cellSize / 12f))
     val padding = cellSize * 0.1f

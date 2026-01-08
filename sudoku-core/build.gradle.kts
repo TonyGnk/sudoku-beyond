@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.jetbrains.kotlin.multiplatform)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 kotlin {
@@ -27,11 +28,13 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
+//    iosSimulatorArm64()
 
     sourceSets {
         commonMain {
             dependencies {
                 implementation(libs.jetbrains.kotlin.stdlib)
+                implementation(libs.jetbrains.kotlinx.serialization.json)
             }
         }
 

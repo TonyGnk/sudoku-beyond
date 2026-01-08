@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
-import gr.tonygnk.sudokubeyond.core.Cell
-import gr.tonygnk.sudokubeyond.core.Note
+import gr.tonygnk.sudoku.core.model.Cell
+import gr.tonygnk.sudoku.core.model.Note
 import kotlin.math.floor
 import kotlin.math.sqrt
 
@@ -41,7 +41,7 @@ fun DrawScope.drawRoundCell(
     gameSize: Int,
     rect: Rect,
     color: Color,
-    cornerRadius: CornerRadius = CornerRadius.Zero
+    cornerRadius: CornerRadius = CornerRadius.Zero,
 ) {
     val path = Path().apply {
         addRoundRect(
@@ -84,7 +84,6 @@ fun DrawScope.drawNotes(
             val noteRow = getNoteRowNumber(note.value, size)
 
 
-
             val horizontalPadding =
                 if (noteRow == 0) noteTextMeasure / 3f
                 else if (noteRow == 1) 0f
@@ -119,7 +118,7 @@ fun DrawScope.drawNumbers(
     lockedTextPaint: Paint,
     textPaint: Paint,
     questions: Boolean,
-    cellSize: Float
+    cellSize: Float,
 ) {
     drawIntoCanvas { canvas ->
         for (i in 0 until size) {
@@ -153,7 +152,7 @@ fun DrawScope.drawBoardFrame(
     thickLineColor: Color,
     thickLineWidth: Float,
     maxWidth: Float,
-    cornerRadius: CornerRadius
+    cornerRadius: CornerRadius,
 ) {
     drawRoundRect(
         color = thickLineColor,
@@ -169,7 +168,7 @@ fun roundRectForCell(
     col: Int,
     gameSize: Int,
     rect: Rect,
-    cornerRadius: CornerRadius
+    cornerRadius: CornerRadius,
 ): RoundRect {
     val topLeft = if (row == 0 && col == 0) cornerRadius else CornerRadius.Zero
     val topRight = if (row == 0 && col == gameSize - 1) cornerRadius else CornerRadius.Zero
@@ -191,7 +190,7 @@ fun DrawScope.drawCrossSelection(
     sectionHeight: Int,
     sectionWidth: Int,
     color: Color,
-    cellSize: Float
+    cellSize: Float,
 ) {
     for (i in 0 until gameSize / sectionWidth) {
         for (j in 0 until gameSize / sectionHeight) {

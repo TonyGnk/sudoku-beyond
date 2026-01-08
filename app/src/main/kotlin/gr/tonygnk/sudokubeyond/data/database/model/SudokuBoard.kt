@@ -22,8 +22,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import gr.tonygnk.sudokubeyond.core.qqwing.GameDifficulty
-import gr.tonygnk.sudokubeyond.core.qqwing.GameType
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -45,5 +45,5 @@ data class SudokuBoard(
     @ColumnInfo(name = "difficulty") val difficulty: GameDifficulty,
     @ColumnInfo(name = "type") val type: GameType,
     @ColumnInfo(name = "folder_id", defaultValue = "null") val folderId: Long? = null,
-    @ColumnInfo(name = "killer_cages", defaultValue = "null") val killerCages: String? = null
+    @ColumnInfo(name = "killer_cages", defaultValue = "null") val killerCages: String? = null,
 )
