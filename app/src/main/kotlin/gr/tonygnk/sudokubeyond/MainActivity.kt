@@ -42,16 +42,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.arkivanov.decompose.defaultComponentContext
 import com.materialkolor.PaletteStyle
 import com.ramcosta.composedestinations.DestinationsNavHost
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
@@ -70,8 +71,6 @@ import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
 import gr.tonygnk.sudokubeyond.ui.util.findActivity
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -87,17 +86,17 @@ class MainActivity : AppCompatActivity() {
             GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
         }
 
-        setContent {
-            val mainViewModel = rememberViewModel(MainActivityViewModel.builder)
+        val mainActivityBloc = MainActivityBloc(defaultComponentContext())
 
-            val dynamicColors by mainViewModel.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
-            val darkTheme by mainViewModel.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
-            val amoledBlack by mainViewModel.amoledBlack.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_AMOLED_BLACK)
-            val firstLaunch by mainViewModel.firstLaunch.collectAsStateWithLifecycle(false)
-            val colorSeed by mainViewModel.colorSeed.collectAsStateWithLifecycle(initialValue = Color.Red)
-            val paletteStyle by mainViewModel.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
-            val autoUpdateChannel by mainViewModel.autoUpdateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
-            val updateDismissedName by mainViewModel.updateDismissedName.collectAsStateWithLifecycle("")
+        setContent {
+            val dynamicColors by mainActivityBloc.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
+            val darkTheme by mainActivityBloc.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
+            val amoledBlack by mainActivityBloc.amoledBlack.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_AMOLED_BLACK)
+            val firstLaunch by mainActivityBloc.firstLaunch.collectAsStateWithLifecycle(false)
+            val colorSeed by mainActivityBloc.colorSeed.collectAsStateWithLifecycle(initialValue = Color.Red)
+            val paletteStyle by mainActivityBloc.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
+            val autoUpdateChannel by mainActivityBloc.autoUpdateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
+            val updateDismissedName by mainActivityBloc.updateDismissedName.collectAsStateWithLifecycle("")
 
             val isDarkMode = when (darkTheme) {
                 1 -> false
@@ -136,7 +135,7 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
-                val monetSudokuBoard by mainViewModel.monetSudokuBoard.collectAsStateWithLifecycle(
+                val monetSudokuBoard by mainActivityBloc.monetSudokuBoard.collectAsStateWithLifecycle(
                     initialValue = PreferencesConstants.DEFAULT_MONET_SUDOKU_BOARD
                 )
 
@@ -201,10 +200,11 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-class MainActivityViewModel(
+class MainActivityBloc(
+    blocContext: BlocContext,
     themeSettingsManager: ThemeSettingsManager,
     appSettingsManager: AppSettingsManager,
-) : ViewModel() {
+) : BlocContext by blocContext {
     val dc = themeSettingsManager.dynamicColors
     val darkTheme = themeSettingsManager.darkTheme
     val amoledBlack = themeSettingsManager.amoledBlack
@@ -216,12 +216,11 @@ class MainActivityViewModel(
     val updateDismissedName = appSettingsManager.updateDismissedName
 
     companion object {
-        val builder = viewModelBuilder {
-            MainActivityViewModel(
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+        operator fun invoke(blocContext: BlocContext) = MainActivityBloc(
+            blocContext = blocContext,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }
 
