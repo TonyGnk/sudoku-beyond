@@ -130,4 +130,8 @@ dependencies {
 
     implementation(libs.squareup.okhttp3)
     implementation(libs.jeziellago.compose.markdown)
+
+    implementation(libs.arkivanov.decompose)
+    implementation(libs.arkivanov.decompose.extensions.compose.experimental)
+    implementation(libs.arkivanov.decompose.jetpack.component.context)
 }
