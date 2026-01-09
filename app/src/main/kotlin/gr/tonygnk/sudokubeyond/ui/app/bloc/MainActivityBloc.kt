@@ -17,31 +17,117 @@
 
 package gr.tonygnk.sudokubeyond.ui.app.bloc
 
+import androidx.compose.runtime.Immutable
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushToFront
+import com.arkivanov.decompose.router.stack.replaceAll
+import com.materialkolor.PaletteStyle
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
-import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
+import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
+import gr.tonygnk.sudokubeyond.domain.usecase.app.GetMainActivitySettingsUseCase
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.util.toStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.serialization.Serializable
 
 class MainActivityBloc(
     blocContext: BlocContext,
-    themeSettingsManager: ThemeSettingsManager,
-    appSettingsManager: AppSettingsManager,
+    getMainActivitySettingsUseCase: GetMainActivitySettingsUseCase,
 ) : BlocContext by blocContext {
-    val dc = themeSettingsManager.dynamicColors
-    val darkTheme = themeSettingsManager.darkTheme
-    val amoledBlack = themeSettingsManager.amoledBlack
-    val firstLaunch = appSettingsManager.firstLaunch
-    val monetSudokuBoard = themeSettingsManager.monetSudokuBoard
-    val colorSeed = themeSettingsManager.themeColorSeed
-    val paletteStyle = themeSettingsManager.themePaletteStyle
-    val autoUpdateChannel = appSettingsManager.autoUpdateChannel
-    val updateDismissedName = appSettingsManager.updateDismissedName
+    private val scope = lifecycle.coroutineScope
+
+    val settings: StateFlow<MainActivitySettings> = getMainActivitySettingsUseCase()
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = MainActivitySettings(
+                dynamicColors = false,
+                darkTheme = 0,
+                amoledBlack = false,
+                firstLaunch = false,
+                monetSudokuBoard = false,
+                colorSeed = androidx.compose.ui.graphics.Color.Red,
+                paletteStyle = PaletteStyle.TonalSpot,
+                autoUpdateChannel = UpdateChannel.Disabled,
+                updateDismissedName = "",
+            )
+        )
+
+    private val navigation = StackNavigation<PagesConfig>()
+
+    val stack: StateFlow<ChildStack<PagesConfig, PagesBloc>> = childStack(
+        source = navigation,
+        serializer = PagesConfig.serializer(),
+        initialConfiguration = PagesConfig.HomeConfig,
+    ) { config, blocContext ->
+        when (config) {
+            PagesConfig.HomeConfig -> TemporaryHomeBloc(blocContext = blocContext)
+            PagesConfig.MoreConfig -> TemporaryMoreBloc(blocContext = blocContext)
+            PagesConfig.StatisticsConfig -> TemporaryStatisticsBloc(blocContext = blocContext)
+            PagesConfig.OldNavigationGraph -> TemporaryOldNavigation(blocContext = blocContext)
+        }
+    }.toStateFlow()
+
+    fun onChildSelected(newConfig: PagesConfig) {
+        if (newConfig == PagesConfig.HomeConfig) {
+            navigation.replaceAll(newConfig)
+        } else {
+            navigation.pushToFront(newConfig)
+        }
+    }
+
+    fun onBackClicked() {
+        navigation.pop()
+    }
+
+    interface PagesBloc
+
+    @Serializable
+    @Immutable
+    sealed interface PagesConfig {
+        @Serializable
+        data object StatisticsConfig : PagesConfig
+
+        @Serializable
+        data object HomeConfig : PagesConfig
+
+        @Serializable
+        data object MoreConfig : PagesConfig
+
+        @Serializable
+        data object OldNavigationGraph : PagesConfig
+    }
 
     companion object {
         operator fun invoke(blocContext: BlocContext) = MainActivityBloc(
             blocContext = blocContext,
-            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            getMainActivitySettingsUseCase = GetMainActivitySettingsUseCase(
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
         )
     }
 }
+
+class TemporaryStatisticsBloc(
+    blocContext: BlocContext,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext
+
+class TemporaryMoreBloc(
+    blocContext: BlocContext,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext
+
+class TemporaryHomeBloc(
+    blocContext: BlocContext,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext
+
+class TemporaryOldNavigation(
+    blocContext: BlocContext,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext

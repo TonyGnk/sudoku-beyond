@@ -15,6 +15,8 @@
  *  GNU General Public License for more details.
  */
 
+@file:OptIn(ExperimentalDecomposeApi::class)
+
 package gr.tonygnk.sudokubeyond.ui.app.composable
 
 import android.util.Log
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -32,24 +35,30 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.materialkolor.PaletteStyle
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
+import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
+import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatableV2
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.essenty.backhandler.BackHandler
 import com.ramcosta.composedestinations.DestinationsNavHost
 import gr.tonygnk.sudokubeyond.LocalBoardColors
 import gr.tonygnk.sudokubeyond.NavGraphs
 import gr.tonygnk.sudokubeyond.core.BlocContext
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.StatisticsScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.WelcomeScreenDestination
+import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.components.navigation_bar.NavigationBarComponent
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
@@ -61,48 +70,31 @@ import kotlinx.coroutines.withContext
 
 @Composable
 internal fun MainActivityScreen(blocContext: BlocContext) {
-    val bloc = MainActivityBloc(blocContext)
+    val bloc = remember { MainActivityBloc(blocContext) }
 
-    val dynamicColors by bloc.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
-    val darkTheme by bloc.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
-    val amoledBlack by bloc.amoledBlack.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_AMOLED_BLACK)
-    val firstLaunch by bloc.firstLaunch.collectAsStateWithLifecycle(false)
-    val colorSeed by bloc.colorSeed.collectAsStateWithLifecycle(initialValue = Color.Red)
-    val paletteStyle by bloc.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
-    val autoUpdateChannel by bloc.autoUpdateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
-    val updateDismissedName by bloc.updateDismissedName.collectAsStateWithLifecycle("")
-    val monetSudokuBoard by bloc.monetSudokuBoard.collectAsStateWithLifecycle(
-        initialValue = PreferencesConstants.DEFAULT_MONET_SUDOKU_BOARD
-    )
+    val settings by bloc.settings.collectAsStateWithLifecycle()
+    val stack by bloc.stack.collectAsStateWithLifecycle()
 
     MainActivityContent(
-        dynamicColors = dynamicColors,
-        darkTheme = darkTheme,
-        amoledBlack = amoledBlack,
-        firstLaunch = firstLaunch,
-        colorSeed = colorSeed,
-        paletteStyle = paletteStyle,
-        autoUpdateChannel = autoUpdateChannel,
-        updateDismissedName = updateDismissedName,
-        monetSudokuBoard = monetSudokuBoard
+        settings = settings,
+        stack = stack,
+        onChildSelected = bloc::onChildSelected,
+        backHandler = blocContext.backHandler,
+        onBackClicked = bloc::onBackClicked,
     )
 }
 
 
 @Composable
 private fun MainActivityContent(
-    dynamicColors: Boolean,
-    darkTheme: Int,
-    amoledBlack: Boolean,
-    firstLaunch: Boolean,
-    colorSeed: Color,
-    paletteStyle: PaletteStyle,
-    autoUpdateChannel: UpdateChannel,
-    updateDismissedName: String,
-    monetSudokuBoard: Boolean,
+    settings: MainActivitySettings,
+    stack: ChildStack<MainActivityBloc.PagesConfig, MainActivityBloc.PagesBloc>,
+    onChildSelected: (MainActivityBloc.PagesConfig) -> Unit,
+    backHandler: BackHandler,
+    onBackClicked: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val isDarkMode = when (darkTheme) {
+    val isDarkMode = when (settings.darkTheme) {
         1 -> false
         2 -> true
         else -> isSystemInDarkTheme()
@@ -110,10 +102,10 @@ private fun MainActivityContent(
 
     LibreSudokuTheme(
         darkTheme = isDarkMode,
-        dynamicColor = dynamicColors,
-        amoled = amoledBlack,
-        colorSeed = colorSeed,
-        paletteStyle = paletteStyle
+        dynamicColor = settings.dynamicColors,
+        amoled = settings.amoledBlack,
+        colorSeed = settings.colorSeed,
+        paletteStyle = settings.paletteStyle
     ) {
         val navController = rememberNavController()
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -126,8 +118,8 @@ private fun MainActivityContent(
                 else -> false
             }
         }
-        LaunchedEffect(firstLaunch) {
-            if (firstLaunch) {
+        LaunchedEffect(settings.firstLaunch) {
+            if (settings.firstLaunch) {
                 navController.navigate(
                     route = WelcomeScreenDestination.route,
                     navOptions = navOptions {
@@ -140,7 +132,7 @@ private fun MainActivityContent(
         }
 
         val boardColors =
-            if (monetSudokuBoard) {
+            if (settings.monetSudokuBoard) {
                 SudokuBoardColorsImpl(
                     foregroundColor = BoardColors.foregroundColor,
                     notesColor = BoardColors.notesColor,
@@ -162,12 +154,12 @@ private fun MainActivityContent(
                 )
             }
         var latestRelease by remember { mutableStateOf<Release?>(null) }
-        if (autoUpdateChannel != UpdateChannel.Disabled) {
+        if (settings.autoUpdateChannel != UpdateChannel.Disabled) {
             LaunchedEffect(Unit) {
                 if (latestRelease == null) {
                     withContext(Dispatchers.IO) {
                         try {
-                            latestRelease = UpdateUtil.checkForUpdate(autoUpdateChannel == UpdateChannel.Beta)
+                            latestRelease = UpdateUtil.checkForUpdate(settings.autoUpdateChannel == UpdateChannel.Beta)
                         } catch (e: Exception) {
                             Log.e("UpdateUtil", "Failed to check for update: ${e.message.toString()}")
                             e.printStackTrace()
@@ -176,24 +168,59 @@ private fun MainActivityContent(
                 }
             }
         }
+
         CompositionLocalProvider(LocalBoardColors provides boardColors) {
             Scaffold(
                 modifier = modifier,
                 bottomBar = {
-                    NavigationBarComponent(
-                        navController = navController,
-                        isVisible = bottomBarState,
-                        updateAvailable = latestRelease != null && latestRelease!!.name.toString() != updateDismissedName
+                    AppNavigationBar(
+                        activeChild = stack.active.configuration,
+                        onChildSelected = onChildSelected,
+                        updateAvailable = latestRelease != null && latestRelease!!.name.toString() != settings.updateDismissedName
                     )
                 },
                 contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
-            ) { paddingValues ->
-                DestinationsNavHost(
-                    navGraph = NavGraphs.root,
-                    navController = navController,
-                    startRoute = NavGraphs.root.startRoute,
-                    modifier = Modifier.padding(paddingValues)
-                )
+            ) { paddingValuesOuter ->
+                ChildStack(
+                    stack = stack,
+                    modifier = Modifier.padding(paddingValuesOuter),
+                    animation = stackAnimation(
+                        animator = fade(),
+                        predictiveBackParams = {
+                            PredictiveBackParams(
+                                backHandler = backHandler,
+                                onBack = onBackClicked,
+                                animatable = { backEvent -> androidPredictiveBackAnimatableV2(backEvent) },
+                            )
+                        },
+                    )
+                ) { child ->
+                    when (child.configuration) {
+                        MainActivityBloc.PagesConfig.HomeConfig -> Text("Home Screen Placeholder")
+                        MainActivityBloc.PagesConfig.MoreConfig -> Text("More Screen Placeholder")
+                        MainActivityBloc.PagesConfig.StatisticsConfig -> Text("Statistics Screen Placeholder")
+                        MainActivityBloc.PagesConfig.OldNavigationGraph -> {
+                            Scaffold(
+                                modifier = modifier,
+                                bottomBar = {
+                                    NavigationBarComponent(
+                                        navController = navController,
+                                        isVisible = bottomBarState,
+                                        updateAvailable = latestRelease != null && latestRelease!!.name.toString() != settings.updateDismissedName
+                                    )
+                                },
+                                contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
+                            ) { paddingValues ->
+                                DestinationsNavHost(
+                                    navGraph = NavGraphs.root,
+                                    navController = navController,
+                                    startRoute = NavGraphs.root.startRoute,
+                                    modifier = Modifier.padding(paddingValues)
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
     }

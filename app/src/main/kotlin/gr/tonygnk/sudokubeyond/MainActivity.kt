@@ -16,6 +16,8 @@
  * GNU General Public License for more details.
  */
 
+@file:OptIn(ExperimentalDecomposeApi::class)
+
 package gr.tonygnk.sudokubeyond
 
 import android.content.Intent
@@ -27,7 +29,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
+import com.arkivanov.decompose.DecomposeSettings
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.defaultComponentContext
+import com.arkivanov.decompose.jetpackcomponentcontext.asJetpackComponentContext
 import com.ramcosta.composedestinations.annotation.DeepLink
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -51,10 +56,13 @@ class MainActivity : AppCompatActivity() {
             GlobalExceptionHandler.initialize(applicationContext, CrashActivity::class.java)
         }
 
+        DecomposeSettings.update { currentSettings ->
+            currentSettings.copy(duplicateConfigurationsEnabled = true)
+        }
         val blocContext = defaultComponentContext()
 
         setContent {
-            MainActivityScreen(blocContext)
+            MainActivityScreen(blocContext.asJetpackComponentContext())
         }
     }
 }
