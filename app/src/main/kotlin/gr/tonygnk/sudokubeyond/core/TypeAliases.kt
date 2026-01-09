@@ -17,6 +17,8 @@
 
 package gr.tonygnk.sudokubeyond.core
 
-import com.arkivanov.decompose.ComponentContext
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.jetpackcomponentcontext.JetpackComponentContext
 
-typealias BlocContext = ComponentContext
+@OptIn(ExperimentalDecomposeApi::class)
+typealias BlocContext = JetpackComponentContext
