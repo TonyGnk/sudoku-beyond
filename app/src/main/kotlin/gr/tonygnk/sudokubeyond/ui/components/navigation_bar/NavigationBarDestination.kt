@@ -21,19 +21,17 @@ package gr.tonygnk.sudokubeyond.ui.components.navigation_bar
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.StatisticsScreenDestination
-import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 
 sealed class NavigationBarDestination(
     val direction: DirectionDestinationSpec,
     val icon: ImageVector,
-    @StringRes val label: Int
+    @StringRes val label: Int,
 ) {
     data object Home : NavigationBarDestination(
         HomeScreenDestination,
@@ -41,11 +39,11 @@ sealed class NavigationBarDestination(
         R.string.nav_bar_home
     )
 
-    data object Statistics : NavigationBarDestination(
-        StatisticsScreenDestination,
-        Icons.Rounded.Info,
-        R.string.nav_bar_statistics
-    )
+//    data object Statistics : NavigationBarDestination(
+//        StatisticsScreenDestination,
+//        Icons.Rounded.Info,
+//        R.string.nav_bar_statistics
+//    )
 
     data object More : NavigationBarDestination(
         MoreScreenDestination,

@@ -75,8 +75,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.harmonize
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.toFormattedString
@@ -84,27 +82,26 @@ import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
 import gr.tonygnk.sudokubeyond.extensions.resName
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SavedGameConfig
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedIconFilterChip
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
 import gr.tonygnk.sudokubeyond.ui.util.disableSplitMotionEvents
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.sqrt
 import kotlin.time.toKotlinDuration
 
-@Destination(style = AnimatedNavigation::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GamesHistoryScreen(
-    viewModel: HistoryViewModel = rememberViewModel(HistoryViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: GamesHistoryBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
@@ -117,7 +114,7 @@ fun GamesHistoryScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.history_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -140,8 +137,8 @@ fun GamesHistoryScreen(
             )
         },
     ) { innerPadding ->
-        val games by viewModel.games.collectAsState(initial = emptyMap())
-        val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle("")
+        val games by bloc.games.collectAsState(initial = emptyMap())
+        val dateFormat by bloc.dateFormat.collectAsStateWithLifecycle("")
 
         if (games.isNotEmpty()) {
             Column(
@@ -154,13 +151,13 @@ fun GamesHistoryScreen(
                     )
                 }
                 LaunchedEffect(
-                    viewModel.sortType,
-                    viewModel.sortEntry,
-                    viewModel.filterDifficulties,
-                    viewModel.filterGameTypes,
-                    viewModel.filterByGameState
+                    bloc.sortType,
+                    bloc.sortEntry,
+                    bloc.filterDifficulties,
+                    bloc.filterGameTypes,
+                    bloc.filterByGameState
                 ) {
-                    filteredAndSortedBoards = viewModel.applySortAndFilter(games.toList())
+                    filteredAndSortedBoards = bloc.applySortAndFilter(games.toList())
                     lazyListState.animateScrollToItem(0)
                 }
 
@@ -179,7 +176,7 @@ fun GamesHistoryScreen(
                             difficulty = stringResource(game.second.difficulty.resName),
                             type = stringResource(game.second.type.resName),
                             onClick = {
-                                navigator.navigate(SavedGameScreenDestination(gameUid = game.first.uid))
+                                navigate(SavedGameConfig(boardUid = game.first.uid))
                             },
                             dateTimeFormatter = AppSettingsManager.dateFormat(dateFormat),
                             date = game.first.startedAt
@@ -214,14 +211,14 @@ fun GamesHistoryScreen(
                 ) {
                     item {
                         val iconRotation by animateFloatAsState(
-                            if (viewModel.sortType == SortType.Descending) {
+                            if (bloc.sortType == SortType.Descending) {
                                 0f
                             } else {
                                 180f
                             }, label = ""
                         )
                         IconButton(onClick = {
-                            viewModel.sortType = if (viewModel.sortType == SortType.Ascending) SortType.Descending else SortType.Ascending
+                            bloc.sortType = if (bloc.sortType == SortType.Ascending) SortType.Descending else SortType.Ascending
                         }) {
                             Icon(
                                 modifier = Modifier.rotate(iconRotation),
@@ -232,10 +229,10 @@ fun GamesHistoryScreen(
                     }
                     items(enumValues<SortEntry>().toList()) {
                         FilterChip(
-                            selected = it == viewModel.sortEntry,
+                            selected = it == bloc.sortEntry,
                             label = { Text(stringResource(it.resName)) },
                             onClick = {
-                                viewModel.selectSortEntry(it)
+                                bloc.selectSortEntry(it)
                             }
                         )
                     }
@@ -259,10 +256,10 @@ fun GamesHistoryScreen(
                         )
                     ) {
                         AnimatedIconFilterChip(
-                            selected = viewModel.filterDifficulties.contains(it),
+                            selected = bloc.filterDifficulties.contains(it),
                             label = stringResource(it.resName),
                             onClick = {
-                                viewModel.selectFilter(it)
+                                bloc.selectFilter(it)
                             }
                         )
                     }
@@ -282,10 +279,10 @@ fun GamesHistoryScreen(
                         )
                     ) {
                         AnimatedIconFilterChip(
-                            selected = viewModel.filterGameTypes.contains(it),
+                            selected = bloc.filterGameTypes.contains(it),
                             label = stringResource(it.resName),
                             onClick = {
-                                viewModel.selectFilter(it)
+                                bloc.selectFilter(it)
                             }
                         )
                     }
@@ -302,10 +299,10 @@ fun GamesHistoryScreen(
                         )
                     ) {
                         FilterChip(
-                            selected = it == viewModel.filterByGameState,
+                            selected = it == bloc.filterByGameState,
                             label = { Text(stringResource(it.resName)) },
                             onClick = {
-                                viewModel.selectFilter(it)
+                                bloc.selectFilter(it)
                             }
                         )
                     }

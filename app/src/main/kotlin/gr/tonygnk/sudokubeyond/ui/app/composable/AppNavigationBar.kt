@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AppNavigationBar(
@@ -41,18 +42,20 @@ fun AppNavigationBar(
     onChildSelected: (MainActivityBloc.PagesConfig) -> Unit,
     updateAvailable: Boolean = false,
 ) {
-    val directions = listOf(
-        MainActivityBloc.PagesConfig.StatisticsConfig,
-        MainActivityBloc.PagesConfig.HomeConfig,
-        MainActivityBloc.PagesConfig.MoreConfig,
-        MainActivityBloc.PagesConfig.OldNavigationGraph,
+    val directions = persistentListOf(
+        MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig,
+        MainActivityBloc.PagesConfig.TopDestination.HomeConfig,
+        MainActivityBloc.PagesConfig.TopDestination.MoreConfig,
+        MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph,
     )
 
-    NavigationBar {
+    val isNavigationBarVisible: Boolean = directions.any { it == activeChild }
+
+    if (isNavigationBarVisible) NavigationBar {
         directions.forEach { destination ->
             NavigationBarItem(
                 icon = {
-                    if (destination == MainActivityBloc.PagesConfig.MoreConfig
+                    if (destination == MainActivityBloc.PagesConfig.TopDestination.MoreConfig
                         && updateAvailable
                     ) {
                         BadgedBox(
@@ -87,20 +90,20 @@ fun AppNavigationBar(
     }
 }
 
-private fun MainActivityBloc.PagesConfig.label(): Int {
+private fun MainActivityBloc.PagesConfig.TopDestination.label(): Int {
     return when (this) {
-        is MainActivityBloc.PagesConfig.HomeConfig -> R.string.nav_bar_home
-        is MainActivityBloc.PagesConfig.StatisticsConfig -> R.string.nav_bar_statistics
-        is MainActivityBloc.PagesConfig.OldNavigationGraph -> R.string.nav_bar_more
-        is MainActivityBloc.PagesConfig.MoreConfig -> R.string.nav_bar_more
+        is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> R.string.nav_bar_home
+        is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> R.string.nav_bar_statistics
+        is MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph -> R.string.nav_bar_more
+        is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> R.string.nav_bar_more
     }
 }
 
-private fun MainActivityBloc.PagesConfig.icon(): ImageVector {
+private fun MainActivityBloc.PagesConfig.TopDestination.icon(): ImageVector {
     return when (this) {
-        is MainActivityBloc.PagesConfig.HomeConfig -> Icons.Rounded.Home
-        is MainActivityBloc.PagesConfig.StatisticsConfig -> Icons.Rounded.Info
-        is MainActivityBloc.PagesConfig.MoreConfig -> Icons.Rounded.MoreHoriz
-        is MainActivityBloc.PagesConfig.OldNavigationGraph -> Icons.Rounded.Grain
+        is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> Icons.Rounded.Home
+        is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> Icons.Rounded.Info
+        is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> Icons.Rounded.MoreHoriz
+        is MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph -> Icons.Rounded.Grain
     }
 }

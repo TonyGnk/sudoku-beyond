@@ -75,33 +75,30 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.GamesHistoryScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GamesHistoryConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SavedGameConfig
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.HelpCard
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
-@Destination(style = AnimatedNavigation::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StatisticsScreen(
-    viewModel: StatisticsViewModel = rememberViewModel(StatisticsViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: StatisticsBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(initialValue = "")
+    val dateFormat by bloc.dateFormat.collectAsStateWithLifecycle(initialValue = "")
+
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -110,7 +107,7 @@ fun StatisticsScreen(
                 title = { Text(stringResource(R.string.statistics)) },
                 scrollBehavior = scrollBehavior,
                 actions = {
-                    IconButton(onClick = { navigator.navigate(GamesHistoryScreenDestination()) }) {
+                    IconButton(onClick = { navigate(GamesHistoryConfig) }) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_history_24),
                             contentDescription = null
@@ -121,8 +118,8 @@ fun StatisticsScreen(
         },
         contentWindowInsets = WindowInsets.statusBars
     ) { scaffoldPadding ->
-        val recordListState = viewModel.recordList.collectAsState(initial = emptyList())
-        val savedGameList = viewModel.savedGamesList.collectAsState(initial = emptyList())
+        val recordListState = bloc.recordList.collectAsState(initial = emptyList())
+        val savedGameList = bloc.savedGamesList.collectAsState(initial = emptyList())
 
         Column(
             modifier = Modifier
@@ -140,8 +137,8 @@ fun StatisticsScreen(
                     GameDifficulty.Challenge,
                     GameDifficulty.Custom
                 ),
-                selected = viewModel.selectedDifficulty,
-                onSelected = { viewModel.setDifficulty(it) }
+                selected = bloc.selectedDifficulty,
+                onSelected = { bloc.setDifficulty(it) }
             )
             ChipRowType(
                 types = listOf(
@@ -152,8 +149,8 @@ fun StatisticsScreen(
                     Pair(GameType.Killer6x6, stringResource(R.string.type_killer_6x6)),
                     Pair(GameType.Killer12x12, stringResource(R.string.type_killer_12x12))
                 ),
-                selected = viewModel.selectedType,
-                onSelected = { viewModel.setType(it) }
+                selected = bloc.selectedType,
+                onSelected = { bloc.setType(it) }
             )
 
             if (recordListState.value.isNotEmpty()) {
@@ -185,7 +182,7 @@ fun StatisticsScreen(
                         listOf(stringResource(R.string.average_time), averageTime),
                     )
                 )
-                if (viewModel.selectedDifficulty == GameDifficulty.Unspecified) {
+                if (bloc.selectedDifficulty == GameDifficulty.Unspecified) {
                     val context = LocalContext.current
                     val gamesStarted by remember {
                         mutableStateOf(savedGameList.value.count().toString())
@@ -202,7 +199,7 @@ fun StatisticsScreen(
                             if (savedGameList.value.isNotEmpty()) {
                                 context.getString(
                                     R.string.win_rate_percentage,
-                                    viewModel.getWinRate(savedGameList.value).roundToInt()
+                                    bloc.getWinRate(savedGameList.value).roundToInt()
                                 )
                             } else {
                                 context.getString(R.string.no_value_default)
@@ -219,12 +216,12 @@ fun StatisticsScreen(
 
                     val currentStreak by remember {
                         mutableStateOf(
-                            viewModel.getCurrentStreak(savedGameList.value).toString()
+                            bloc.getCurrentStreak(savedGameList.value).toString()
                         )
                     }
                     val maxStreak by remember {
                         mutableStateOf(
-                            viewModel.getMaxStreak(savedGameList.value).toString()
+                            bloc.getMaxStreak(savedGameList.value).toString()
                         )
                     }
 
@@ -236,24 +233,24 @@ fun StatisticsScreen(
                             listOf(stringResource(R.string.best_streak), maxStreak)
                         )
                     )
-                    val streakCard = viewModel.streakTipCard.collectAsState(initial = false)
+                    val streakCard = bloc.streakTipCard.collectAsState(initial = false)
                     AnimatedVisibility(visible = streakCard.value) {
                         HelpCard(
                             modifier = Modifier.padding(horizontal = 12.dp),
                             title = stringResource(R.string.win_streak),
                             details = stringResource(R.string.tip_card_win_streak_summ),
                             painter = painterResource(R.drawable.ic_outline_verified_24),
-                            onCloseClicked = { viewModel.setStreakTipCard(false) }
+                            onCloseClicked = { bloc.setStreakTipCard(false) }
                         )
                     }
                 }
                 StatsSectionName(
                     modifier = Modifier.padding(start = 12.dp, top = 12.dp),
                     title = stringResource(R.string.number_best_games, 5) +
-                            if (viewModel.selectedType != GameType.Unspecified && viewModel.selectedDifficulty != GameDifficulty.Unspecified
+                            if (bloc.selectedType != GameType.Unspecified && bloc.selectedDifficulty != GameDifficulty.Unspecified
                             ) {
-                                " ${stringResource(viewModel.selectedType.resName).lowercase()} " +
-                                        stringResource(viewModel.selectedDifficulty.resName).lowercase()
+                                " ${stringResource(bloc.selectedType.resName).lowercase()} " +
+                                        stringResource(bloc.selectedDifficulty.resName).lowercase()
                             } else {
                                 ""
                             },
@@ -276,19 +273,19 @@ fun StatisticsScreen(
                                 type = stringResource(record.type.resName),
                                 dateFormat = dateFormat,
                                 onClick = {
-                                    navigator.navigate(SavedGameScreenDestination(gameUid = record.board_uid))
+                                    navigate(SavedGameConfig(boardUid = record.board_uid))
                                 },
                                 onLongClick = {
                                     selectedIndex = index
-                                    viewModel.showDeleteDialog = true
+                                    bloc.showDeleteDialog = true
                                 }
                             )
                         }
-                        if (viewModel.showDeleteDialog) {
+                        if (bloc.showDeleteDialog) {
                             ShowDeleteDialog(
-                                onDismissRequest = { viewModel.showDeleteDialog = false },
+                                onDismissRequest = { bloc.showDeleteDialog = false },
                                 onConfirm = {
-                                    viewModel.deleteRecord(
+                                    bloc.deleteRecord(
                                         recordListState.value[selectedIndex]
                                     )
                                 },
@@ -297,14 +294,14 @@ fun StatisticsScreen(
                         }
                     }
                 }
-                val recordCard = viewModel.recordTipCard.collectAsState(initial = false)
+                val recordCard = bloc.recordTipCard.collectAsState(initial = false)
                 AnimatedVisibility(visible = recordCard.value) {
                     HelpCard(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                         title = stringResource(R.string.tip_card_records_list_title),
                         details = stringResource(R.string.tip_card_records_list_summ),
                         painter = painterResource(R.drawable.ic_outline_help_outline_24),
-                        onCloseClicked = { viewModel.setRecordTipCard(false) }
+                        onCloseClicked = { bloc.setRecordTipCard(false) }
                     )
                 }
             } else {

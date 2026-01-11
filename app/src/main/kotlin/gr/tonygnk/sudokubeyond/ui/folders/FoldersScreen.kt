@@ -98,7 +98,6 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.destinations.ExploreFolderScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
@@ -273,11 +272,11 @@ fun FoldersScreen(
                                             modifier = Modifier
                                                 .clip(CardDefaults.elevatedShape)
                                                 .clickable {
-                                                    navigator.navigate(
-                                                        SavedGameScreenDestination(
-                                                            gameUid = it.uid
-                                                        )
-                                                    )
+//                                                  TODO  navigator.navigate(
+//                                                        SavedGameScreenDestination(
+//                                                            gameUid = it.uid
+//                                                        )
+//                                                    )
                                                 },
                                         ) {
                                             Box(

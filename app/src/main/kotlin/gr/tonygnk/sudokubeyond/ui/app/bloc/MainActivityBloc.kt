@@ -17,8 +17,9 @@
 
 package gr.tonygnk.sudokubeyond.ui.app.bloc
 
-import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
 import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
@@ -30,13 +31,17 @@ import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.domain.usecase.app.GetMainActivitySettingsUseCase
+import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryBloc
+import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameBloc
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
 import gr.tonygnk.sudokubeyond.ui.util.toStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.serialization.Serializable
 
+@OptIn(ExperimentalDecomposeApi::class)
 class MainActivityBloc(
     blocContext: BlocContext,
     getMainActivitySettingsUseCase: GetMainActivitySettingsUseCase,
@@ -65,18 +70,20 @@ class MainActivityBloc(
     val stack: StateFlow<ChildStack<PagesConfig, PagesBloc>> = childStack(
         source = navigation,
         serializer = PagesConfig.serializer(),
-        initialConfiguration = PagesConfig.HomeConfig,
+        initialConfiguration = PagesConfig.TopDestination.HomeConfig,
     ) { config, blocContext ->
         when (config) {
-            PagesConfig.HomeConfig -> TemporaryHomeBloc(blocContext = blocContext)
-            PagesConfig.MoreConfig -> TemporaryMoreBloc(blocContext = blocContext)
-            PagesConfig.StatisticsConfig -> TemporaryStatisticsBloc(blocContext = blocContext)
-            PagesConfig.OldNavigationGraph -> TemporaryOldNavigation(blocContext = blocContext)
+            PagesConfig.TopDestination.HomeConfig -> TemporaryHomeBloc(blocContext = blocContext)
+            PagesConfig.TopDestination.MoreConfig -> TemporaryMoreBloc(blocContext = blocContext)
+            PagesConfig.TopDestination.StatisticsConfig -> StatisticsBloc(blocContext = blocContext)
+            PagesConfig.GamesHistoryConfig -> GamesHistoryBloc(blocContext = blocContext)
+            is PagesConfig.SavedGameConfig -> SavedGameBloc(blocContext, config.boardUid)
+            PagesConfig.TopDestination.OldNavigationGraph -> TemporaryOldNavigation(blocContext = blocContext)
         }
     }.toStateFlow()
 
     fun onChildSelected(newConfig: PagesConfig) {
-        if (newConfig == PagesConfig.HomeConfig) {
+        if (newConfig == PagesConfig.TopDestination.HomeConfig) {
             navigation.replaceAll(newConfig)
         } else {
             navigation.pushToFront(newConfig)
@@ -87,22 +94,32 @@ class MainActivityBloc(
         navigation.pop()
     }
 
+    @Stable
     interface PagesBloc
 
     @Serializable
-    @Immutable
+    @Stable
     sealed interface PagesConfig {
         @Serializable
-        data object StatisticsConfig : PagesConfig
+        sealed interface TopDestination : PagesConfig {
+            @Serializable
+            data object StatisticsConfig : TopDestination
+
+            @Serializable
+            data object HomeConfig : TopDestination
+
+            @Serializable
+            data object MoreConfig : TopDestination
+
+            @Serializable
+            data object OldNavigationGraph : TopDestination
+        }
 
         @Serializable
-        data object HomeConfig : PagesConfig
+        data object GamesHistoryConfig : PagesConfig
 
         @Serializable
-        data object MoreConfig : PagesConfig
-
-        @Serializable
-        data object OldNavigationGraph : PagesConfig
+        data class SavedGameConfig(val boardUid: Long) : PagesConfig
     }
 
     companion object {
@@ -115,10 +132,6 @@ class MainActivityBloc(
         )
     }
 }
-
-class TemporaryStatisticsBloc(
-    blocContext: BlocContext,
-) : MainActivityBloc.PagesBloc, BlocContext by blocContext
 
 class TemporaryMoreBloc(
     blocContext: BlocContext,

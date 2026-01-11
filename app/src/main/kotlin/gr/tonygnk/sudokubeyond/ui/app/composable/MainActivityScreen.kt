@@ -41,13 +41,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.arkivanov.decompose.extensions.compose.experimental.stack.ChildStack
-import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.PredictiveBackParams
-import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.fade
-import com.arkivanov.decompose.extensions.compose.experimental.stack.animation.stackAnimation
-import com.arkivanov.decompose.extensions.compose.stack.animation.predictiveback.androidPredictiveBackAnimatableV2
-import com.arkivanov.decompose.router.stack.ChildStack
-import com.arkivanov.essenty.backhandler.BackHandler
 import com.ramcosta.composedestinations.DestinationsNavHost
 import gr.tonygnk.sudokubeyond.LocalBoardColors
 import gr.tonygnk.sudokubeyond.NavGraphs
@@ -56,12 +49,22 @@ import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.StatisticsScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.WelcomeScreenDestination
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryHomeBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryMoreBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryOldNavigation
+import gr.tonygnk.sudokubeyond.ui.components.ChildStack
+import gr.tonygnk.sudokubeyond.ui.components.ChildStackState
 import gr.tonygnk.sudokubeyond.ui.components.navigation_bar.NavigationBarComponent
+import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryBloc
+import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryScreen
+import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameBloc
+import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameScreen
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
+import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsScreen
 import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
@@ -77,21 +80,20 @@ internal fun MainActivityScreen(blocContext: BlocContext) {
 
     MainActivityContent(
         settings = settings,
-        stack = stack,
-        onChildSelected = bloc::onChildSelected,
-        backHandler = blocContext.backHandler,
-        onBackClicked = bloc::onBackClicked,
+        stackState = ChildStackState(
+            blocContext = blocContext,
+            stack = stack,
+            onChildSelect = bloc::onChildSelected,
+            backHandler = blocContext.backHandler,
+            onBackClick = bloc::onBackClicked,
+        ),
     )
 }
-
 
 @Composable
 private fun MainActivityContent(
     settings: MainActivitySettings,
-    stack: ChildStack<MainActivityBloc.PagesConfig, MainActivityBloc.PagesBloc>,
-    onChildSelected: (MainActivityBloc.PagesConfig) -> Unit,
-    backHandler: BackHandler,
-    onBackClicked: () -> Unit,
+    stackState: ChildStackState<MainActivityBloc.PagesConfig, MainActivityBloc.PagesBloc>,
     modifier: Modifier = Modifier,
 ) {
     val isDarkMode = when (settings.darkTheme) {
@@ -114,7 +116,7 @@ private fun MainActivityContent(
 
         LaunchedEffect(navBackStackEntry) {
             bottomBarState = when (navBackStackEntry?.destination?.route) {
-                StatisticsScreenDestination.route, HomeScreenDestination.route, MoreScreenDestination.route -> true
+                HomeScreenDestination.route, MoreScreenDestination.route -> true
                 else -> false
             }
         }
@@ -174,34 +176,35 @@ private fun MainActivityContent(
                 modifier = modifier,
                 bottomBar = {
                     AppNavigationBar(
-                        activeChild = stack.active.configuration,
-                        onChildSelected = onChildSelected,
+                        activeChild = stackState.stack.active.configuration,
+                        onChildSelected = stackState.onChildSelect,
                         updateAvailable = latestRelease != null && latestRelease!!.name.toString() != settings.updateDismissedName
                     )
                 },
                 contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
             ) { paddingValuesOuter ->
-                ChildStack(
-                    stack = stack,
+                stackState.ChildStack(
                     modifier = Modifier.padding(paddingValuesOuter),
-                    animation = stackAnimation(
-                        animator = fade(),
-                        predictiveBackParams = {
-                            PredictiveBackParams(
-                                backHandler = backHandler,
-                                onBack = onBackClicked,
-                                animatable = { backEvent -> androidPredictiveBackAnimatableV2(backEvent) },
-                            )
-                        },
-                    )
                 ) { child ->
-                    when (child.configuration) {
-                        MainActivityBloc.PagesConfig.HomeConfig -> Text("Home Screen Placeholder")
-                        MainActivityBloc.PagesConfig.MoreConfig -> Text("More Screen Placeholder")
-                        MainActivityBloc.PagesConfig.StatisticsConfig -> Text("Statistics Screen Placeholder")
-                        MainActivityBloc.PagesConfig.OldNavigationGraph -> {
+                    when (val bloc = child.instance) {
+                        is TemporaryHomeBloc -> Text("Home Screen Placeholder")
+                        is TemporaryMoreBloc -> Text("More Screen Placeholder")
+                        is StatisticsBloc -> StatisticsScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                        )
+                        is GamesHistoryBloc -> GamesHistoryScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is SavedGameBloc -> SavedGameScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is TemporaryOldNavigation -> {
                             Scaffold(
-                                modifier = modifier,
                                 bottomBar = {
                                     NavigationBarComponent(
                                         navController = navController,
