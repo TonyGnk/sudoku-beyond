@@ -112,6 +112,17 @@ import kotlinx.coroutines.withContext
 @Composable
 internal fun MainActivityScreen(blocContext: BlocContext) {
     val bloc = remember { MainActivityBloc(blocContext) }
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    LaunchedEffect(Unit) {
+        val activity = context as? android.app.Activity
+        val intent = activity?.intent
+        if (intent?.action == android.content.Intent.ACTION_VIEW) {
+            intent.data?.toString()?.let { fileUri ->
+                bloc.navigateToImportFromFile(fileUri)
+            }
+        }
+    }
 
     val settings by bloc.settings.collectAsStateWithLifecycle()
     val stack by bloc.stack.collectAsStateWithLifecycle()

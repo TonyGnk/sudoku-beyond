@@ -20,6 +20,7 @@
 
 package gr.tonygnk.sudokubeyond
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -56,35 +57,9 @@ class MainActivity : AppCompatActivity() {
             MainActivityScreen(blocContext.asJetpackComponentContext())
         }
     }
-}
 
-// TODO  Handle Deeplinks
-//@Destination(
-//    deepLinks = [
-//        DeepLink(
-//            uriPattern = "content://",
-//            mimeType = "*/*",
-//            action = Intent.ACTION_VIEW
-//        )
-//    ]
-//)
-//@Composable
-//fun HandleImportFromFileDeepLink(
-//    navigator: DestinationsNavigator,
-//) {
-//    val context = LocalContext.current
-//    LaunchedEffect(Unit) {
-//        val activity = context.findActivity()
-//        if (activity != null) {
-//            val intentData = activity.intent.data
-//            if (intentData != null) {
-////              navigator.navigate(
-////                    ImportFromFileScreenDestination(
-////                        fileUri = intentData.toString(),
-////                        fromDeepLink = true
-////                    )
-////                )
-//            }
-//        }
-//    }
-//}
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+}

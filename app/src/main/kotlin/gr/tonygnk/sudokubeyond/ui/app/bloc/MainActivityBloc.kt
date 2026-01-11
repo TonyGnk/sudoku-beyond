@@ -183,6 +183,15 @@ class MainActivityBloc(
         navigation.pop()
     }
 
+    fun navigateToImportFromFile(fileUri: String) {
+        navigation.pushToFront(
+            ImportFromFileConfig(
+                fileUri = fileUri,
+                fromDeepLink = true
+            )
+        )
+    }
+
     @Stable
     interface PagesBloc
 
