@@ -19,7 +19,6 @@
 package gr.tonygnk.sudokubeyond.ui.import_from_file
 
 import android.widget.Toast
-import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -82,51 +81,44 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Custom
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Easy
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Hard
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyVerticalGrid
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
 import gr.tonygnk.sudokubeyond.ui.util.findActivity
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
-import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import java.io.InputStreamReader
 
-@Destination(
-    navArgsDelegate = ImportFromFileScreenNavArgs::class,
-    style = AnimatedNavigation::class
-)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ImportFromFileScreen(
-    viewModel: ImportFromFileViewModel = rememberSavedStateViewModel(ImportFromFileViewModel.builder),
-    navigator: DestinationsNavigator,
-    navArgs: ImportFromFileScreenNavArgs,
+    bloc: ImportFromFileBloc,
+    finish: () -> Unit,
 ) {
-    BackHandler {
-        navigator.popBackStack()
-    }
+//    BackHandler {
+//        navigator.popBackStack()
+//    }
 
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    val gamesToImport by viewModel.sudokuListToImport.collectAsStateWithLifecycle(emptyList())
+    val gamesToImport by bloc.sudokuListToImport.collectAsStateWithLifecycle(emptyList())
 
-    LaunchedEffect(viewModel.fileUri) {
-        viewModel.fileUri?.let { fileUri ->
-            val inputStream = context.contentResolver.openInputStream(fileUri)
+    LaunchedEffect(bloc.fileUri) {
+        bloc.fileUri?.let { fileUri ->
+            val inputStream = context.contentResolver.openInputStream(fileUri.toUri())
             inputStream?.let { stream ->
-                viewModel.readData(InputStreamReader(stream))
+                bloc.readData(InputStreamReader(stream))
             }
         }
     }
@@ -147,10 +139,10 @@ fun ImportFromFileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        if (navArgs.fromDeepLink) {
+                        if (bloc.fromDeepLink) {
                             context.findActivity()?.finish()
                         } else {
-                            navigator.popBackStack()
+                            finish()
                         }
                     }) {
                         Icon(
@@ -202,7 +194,7 @@ fun ImportFromFileScreen(
                         )
                         TextButton(onClick = { gameTypeMenuExpanded = !gameTypeMenuExpanded }) {
                             AnimatedContent(
-                                stringResource(viewModel.difficultyForImport.resName),
+                                stringResource(bloc.difficultyForImport.resName),
                                 label = "Animated difficultly text"
                             ) { text ->
                                 Text(text)
@@ -216,16 +208,16 @@ fun ImportFromFileScreen(
                         ImportDifficultyMenu(
                             expanded = gameTypeMenuExpanded,
                             onDismissRequest = { gameTypeMenuExpanded = false },
-                            onClick = { difficulty -> viewModel.setDifficulty(difficulty) }
+                            onClick = { difficulty -> bloc.setDifficulty(difficulty) }
                         )
                     }
                     FilledTonalButton(
                         enabled = gamesToImport.isNotEmpty(),
                         onClick = {
-                            if (viewModel.folderUid == -1L) {
+                            if (bloc.folderUidState == -1L) {
                                 setFolderNameDialog = true
                             } else {
-                                viewModel.saveImported()
+                                bloc.saveImported()
                             }
                         }) {
                         Text(stringResource(R.string.action_save))
@@ -257,7 +249,7 @@ fun ImportFromFileScreen(
                     }
                 }
             )
-            if (viewModel.isLoading) {
+            if (bloc.isLoading) {
                 Dialog(onDismissRequest = { }) {
                     Surface(
                         shape = RoundedCornerShape(28.dp),
@@ -302,7 +294,7 @@ fun ImportFromFileScreen(
                 TextButton(
                     onClick = {
                         if (value.isNotEmpty() && value.length < 128) {
-                            viewModel.saveImported(value)
+                            bloc.saveImported(value)
                             setFolderNameDialog = false
                         } else {
                             isError = true
@@ -322,7 +314,7 @@ fun ImportFromFileScreen(
         )
     }
 
-    if (viewModel.isSaving) {
+    if (bloc.isSaving) {
         Dialog(onDismissRequest = { }) {
             Surface(
                 shape = RoundedCornerShape(28.dp),
@@ -352,16 +344,16 @@ fun ImportFromFileScreen(
         }
     }
 
-    LaunchedEffect(viewModel.isSaved) {
-        if (viewModel.isSaved) {
-            if (navArgs.fromDeepLink) {
+    LaunchedEffect(bloc.isSaved) {
+        if (bloc.isSaved) {
+            if (bloc.fromDeepLink) {
                 context.findActivity()?.finish()
             } else {
-                navigator.popBackStack()
+                finish()
             }
         }
     }
-    val importError by viewModel.importError.collectAsStateWithLifecycle()
+    val importError by bloc.importError.collectAsStateWithLifecycle()
     LaunchedEffect(importError) {
         if (importError) {
             Toast.makeText(
@@ -369,10 +361,10 @@ fun ImportFromFileScreen(
                 context.getString(R.string.import_from_file_fail),
                 Toast.LENGTH_SHORT
             ).show()
-            if (navArgs.fromDeepLink) {
+            if (bloc.fromDeepLink) {
                 context.findActivity()?.finish()
             } else {
-                navigator.popBackStack()
+                finish()
             }
         }
     }

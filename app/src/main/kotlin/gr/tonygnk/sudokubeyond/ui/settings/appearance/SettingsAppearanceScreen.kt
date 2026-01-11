@@ -49,14 +49,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.PaletteStyle
 import com.materialkolor.rememberDynamicColorScheme
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.SettingsBoardThemeDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsBoardThemeConfig
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
@@ -67,7 +65,6 @@ import gr.tonygnk.sudokubeyond.ui.settings.SetDateFormatPatternDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import java.time.ZonedDateTime
 import java.time.chrono.IsoChronology
 import java.time.format.DateTimeFormatter
@@ -75,12 +72,11 @@ import java.time.format.DateTimeFormatterBuilder
 import java.time.format.FormatStyle
 import java.util.Locale
 
-@Destination(style = AnimatedNavigation::class)
-@OptIn(ExperimentalStdlibApi::class)
 @Composable
 fun SettingsAppearanceScreen(
-    viewModel: SettingsAppearanceViewModel = rememberViewModel(SettingsAppearanceViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SettingsAppearanceBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -89,13 +85,13 @@ fun SettingsAppearanceScreen(
     var customFormatDialog by rememberSaveable { mutableStateOf(false) }
     var paletteStyleDialog by rememberSaveable { mutableStateOf(false) }
 
-    val darkTheme by viewModel.darkTheme.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_DARK_THEME)
-    val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(initialValue = "")
-    val dynamicColors by viewModel.dynamicColors.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_DYNAMIC_COLORS)
-    val amoledBlack by viewModel.amoledBlack.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AMOLED_BLACK)
+    val darkTheme by bloc.darkTheme.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_DARK_THEME)
+    val dateFormat by bloc.dateFormat.collectAsStateWithLifecycle(initialValue = "")
+    val dynamicColors by bloc.dynamicColors.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_DYNAMIC_COLORS)
+    val amoledBlack by bloc.amoledBlack.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AMOLED_BLACK)
 
-    val currentPaletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
-    val currentSeedColor by viewModel.seedColor.collectAsStateWithLifecycle(
+    val currentPaletteStyle by bloc.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
+    val currentSeedColor by bloc.seedColor.collectAsStateWithLifecycle(
         initialValue = Color(
             PreferencesConstants.DEFAULT_THEME_SEED_COLOR
         )
@@ -103,7 +99,7 @@ fun SettingsAppearanceScreen(
 
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.pref_appearance),
-        navigator = navigator
+        finish = finish
     ) { paddingValues ->
         ScrollbarLazyColumn(
             modifier = Modifier
@@ -154,7 +150,7 @@ fun SettingsAppearanceScreen(
                                     AppThemePreviewItem(
                                         selected = dynamicColors,
                                         onClick = {
-                                            viewModel.updateDynamicColors(true)
+                                            bloc.updateDynamicColors(true)
                                         },
                                         colorScheme = MaterialTheme.colorScheme,
                                         shapes = MaterialTheme.shapes
@@ -191,8 +187,8 @@ fun SettingsAppearanceScreen(
                                 isAmoled = amoledBlack
                             ),
                             onClick = {
-                                viewModel.updateDynamicColors(false)
-                                viewModel.updateCurrentSeedColor(it.first)
+                                bloc.updateDynamicColors(false)
+                                bloc.updateCurrentSeedColor(it.first)
                             },
                             selected = currentSeedColor == it.first && !dynamicColors,
                             amoledBlack = amoledBlack,
@@ -224,7 +220,7 @@ fun SettingsAppearanceScreen(
                     title = stringResource(R.string.pref_pure_black),
                     checked = amoledBlack,
                     onClick = {
-                        viewModel.updateAmoledBlack(!amoledBlack)
+                        bloc.updateAmoledBlack(!amoledBlack)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Contrast)
                 )
@@ -234,7 +230,7 @@ fun SettingsAppearanceScreen(
                     title = stringResource(R.string.pref_board_theme_title),
                     subtitle = stringResource(R.string.pref_board_theme_summary),
                     onClick = {
-                        navigator.navigate(SettingsBoardThemeDestination())
+                        navigate(SettingsBoardThemeConfig)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Tag)
                 )
@@ -262,7 +258,7 @@ fun SettingsAppearanceScreen(
             ),
             selected = darkTheme,
             onSelect = { index ->
-                viewModel.updateDarkTheme(index)
+                bloc.updateDarkTheme(index)
             },
             onDismiss = { darkModeDialog = false }
         )
@@ -301,7 +297,7 @@ fun SettingsAppearanceScreen(
                 if (format == "custom") {
                     customFormatDialog = true
                 } else {
-                    viewModel.updateDateFormat(format)
+                    bloc.updateDateFormat(format)
                 }
                 dateFormatDialog = false
             },
@@ -325,7 +321,7 @@ fun SettingsAppearanceScreen(
             selected = ThemeSettingsManager.paletteStyles.find { it.first == currentPaletteStyle }?.second
                 ?: 0,
             onSelect = { index ->
-                viewModel.updatePaletteStyle(index)
+                bloc.updatePaletteStyle(index)
             },
             onDismiss = { paletteStyleDialog = false }
         )
@@ -345,8 +341,8 @@ fun SettingsAppearanceScreen(
 
         SetDateFormatPatternDialog(
             onConfirm = {
-                if (viewModel.checkCustomDateFormat(customDateFormat)) {
-                    viewModel.updateDateFormat(customDateFormat)
+                if (bloc.checkCustomDateFormat(customDateFormat)) {
+                    bloc.updateDateFormat(customDateFormat)
                     invalidCustomDateFormat = false
                     customFormatDialog = false
                 } else {
@@ -358,7 +354,7 @@ fun SettingsAppearanceScreen(
                 customDateFormat = text
                 if (invalidCustomDateFormat) invalidCustomDateFormat = false
 
-                dateFormatPreview = if (viewModel.checkCustomDateFormat(customDateFormat)) {
+                dateFormatPreview = if (bloc.checkCustomDateFormat(customDateFormat)) {
                     ZonedDateTime.now()
                         .format(DateTimeFormatter.ofPattern(customDateFormat))
                 } else {

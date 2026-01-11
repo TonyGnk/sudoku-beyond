@@ -79,34 +79,29 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
-import gr.tonygnk.sudokubeyond.destinations.AboutScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.AutoUpdateScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.FoldersScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.LearnScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AboutConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AutoUpdateConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.FoldersConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnConfig
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun MoreScreen(
-    navigator: DestinationsNavigator,
-    viewModel: MoreViewModel = rememberViewModel(MoreViewModel.builder),
+    bloc: MoreBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
-    val autoUpdateChannel by viewModel.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
-    val updateDismissedName by viewModel.updateDismissedName.collectAsStateWithLifecycle("")
+    val autoUpdateChannel by bloc.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
+    val updateDismissedName by bloc.updateDismissedName.collectAsStateWithLifecycle("")
 
     Scaffold(
         contentWindowInsets = WindowInsets.statusBars
@@ -138,27 +133,37 @@ fun MoreScreen(
             PreferenceRow(
                 title = stringResource(R.string.settings_title),
                 painter = painterResource(R.drawable.ic_settings_24),
-                onClick = { navigator.navigate(SettingsCategoriesScreenDestination()) }
+                onClick = {
+                    navigate(MainActivityBloc.PagesConfig.SettingsCategoriesConfig())
+                }
             )
             PreferenceRow(
                 title = stringResource(R.string.backup_restore_title),
                 painter = rememberVectorPainter(image = Icons.Rounded.SettingsBackupRestore),
-                onClick = { navigator.navigate(BackupScreenDestination()) }
+                onClick = {
+                    navigate(BackupConfig)
+                }
             )
             PreferenceRow(
                 title = stringResource(R.string.title_folders),
                 painter = rememberVectorPainter(Icons.Outlined.Folder),
-                onClick = { navigator.navigate(FoldersScreenDestination()) }
+                onClick = {
+                    navigate(FoldersConfig)
+                }
             )
             PreferenceRow(
                 title = stringResource(R.string.learn_screen_title),
                 painter = painterResource(R.drawable.ic_outline_help_outline_24),
-                onClick = { navigator.navigate(LearnScreenDestination()) }
+                onClick = {
+                    navigate(LearnConfig)
+                }
             )
             PreferenceRow(
                 title = stringResource(R.string.about_title),
                 painter = painterResource(R.drawable.ic_outline_info_24),
-                onClick = { navigator.navigate(AboutScreenDestination()) }
+                onClick = {
+                    navigate(AboutConfig)
+                }
             )
 
             if (!FlavorUtil.isFoss()) {
@@ -182,11 +187,9 @@ fun MoreScreen(
                         ) {
                             UpdateFoundBox(
                                 versionToUpdate = release.name ?: "?",
-                                onClick = {
-                                    navigator.navigate(AutoUpdateScreenDestination())
-                                },
+                                onClick = { navigate(AutoUpdateConfig) },
                                 onDismissed = {
-                                    viewModel.dismissUpdate(release)
+                                    bloc.dismissUpdate(release)
                                 },
                                 modifier = Modifier
                                     .fillMaxWidth()

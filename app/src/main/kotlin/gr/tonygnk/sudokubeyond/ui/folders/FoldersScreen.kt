@@ -93,28 +93,25 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.destinations.ExploreFolderScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SavedGameScreenDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ExploreFolderConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ImportFromFileConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SavedGameConfig
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import kotlin.math.sqrt
 
-@Destination(style = AnimatedNavigation::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FoldersScreen(
-    viewModel: FoldersViewModel = rememberViewModel(FoldersViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: FoldersBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -131,10 +128,10 @@ fun FoldersScreen(
     val createDocumentLauncher = rememberLauncherForActivityResult(
         contract = CreateDocument("application/sdm"),
         onResult = { uri ->
-            if (uri != null && viewModel.selectedFolder != null) {
+            if (uri != null && bloc.selectedFolder != null) {
                 coroutineScope.launch(Dispatchers.IO) {
                     context.contentResolver.openOutputStream(uri)?.use { outputStream ->
-                        outputStream.write(viewModel.generateFolderExportData())
+                        outputStream.write(bloc.generateFolderExportData())
                         outputStream.close()
                     }
                 }
@@ -149,7 +146,7 @@ fun FoldersScreen(
     var helpDialog by rememberSaveable { mutableStateOf(false) }
 
     val snackbarHostState = remember { SnackbarHostState() }
-    val gamesToImport by viewModel.sudokuListToImport.collectAsStateWithLifecycle()
+    val gamesToImport by bloc.sudokuListToImport.collectAsStateWithLifecycle()
 
     Scaffold(
         topBar = {
@@ -159,7 +156,7 @@ fun FoldersScreen(
                         Text(stringResource(R.string.title_folders))
                     },
                     navigationIcon = {
-                        IconButton(onClick = { navigator.popBackStack() }) {
+                        IconButton(onClick = finish) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_round_arrow_back_24),
                                 contentDescription = null
@@ -231,7 +228,7 @@ fun FoldersScreen(
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { navigator.popBackStack() }) {
+                        IconButton(onClick = finish) {
                             Icon(
                                 imageVector = Icons.Rounded.Close,
                                 contentDescription = null
@@ -248,12 +245,12 @@ fun FoldersScreen(
                 .padding(paddingValues)
                 .fillMaxWidth()
         ) {
-            val folders by viewModel.folders.collectAsStateWithLifecycle(initialValue = emptyList())
-            val lastGames by viewModel.lastSavedGames.collectAsStateWithLifecycle(initialValue = emptyList())
+            val folders by bloc.folders.collectAsStateWithLifecycle(initialValue = emptyList())
+            val lastGames by bloc.lastSavedGames.collectAsStateWithLifecycle(initialValue = emptyList())
 
             if (folders.isNotEmpty() && gamesToImport.isEmpty()) {
                 LaunchedEffect(folders) {
-                    viewModel.countPuzzlesInFolders(folders)
+                    bloc.countPuzzlesInFolders(folders)
                 }
                 ScrollbarLazyColumn {
                     item {
@@ -273,11 +270,7 @@ fun FoldersScreen(
                                             modifier = Modifier
                                                 .clip(CardDefaults.elevatedShape)
                                                 .clickable {
-                                                    navigator.navigate(
-                                                        SavedGameScreenDestination(
-                                                            gameUid = it.uid
-                                                        )
-                                                    )
+                                                    navigate(SavedGameConfig(boardUid = it.uid))
                                                 },
                                         ) {
                                             Box(
@@ -298,9 +291,9 @@ fun FoldersScreen(
                         }
                     }
                     items(folders) { item ->
-                        val puzzlesCount by remember(viewModel.puzzlesCountInFolder) {
+                        val puzzlesCount by remember(bloc.puzzlesCountInFolder) {
                             mutableIntStateOf(
-                                viewModel.puzzlesCountInFolder
+                                bloc.puzzlesCountInFolder
                                     .firstOrNull { it.first == item.uid }?.second ?: 0
                             )
                         }
@@ -308,10 +301,10 @@ fun FoldersScreen(
                             name = item.name,
                             puzzlesCount = puzzlesCount,
                             onClick = {
-                                navigator.navigate(ExploreFolderScreenDestination(folderUid = item.uid))
+                                navigate(ExploreFolderConfig(folderUid = item.uid))
                             },
                             onLongClick = {
-                                viewModel.selectedFolder = item
+                                bloc.selectedFolder = item
                                 coroutineScope.launch {
                                     folderActionBottomSheet = true
                                 }
@@ -341,7 +334,7 @@ fun FoldersScreen(
             isError = isError,
             onConfirm = {
                 if (textFieldValue.text.isNotEmpty() && textFieldValue.text.length < 128) {
-                    viewModel.createFolder(textFieldValue.text)
+                    bloc.createFolder(textFieldValue.text)
                     createFolderDialog = false
                 } else {
                     isError = true
@@ -355,8 +348,8 @@ fun FoldersScreen(
         var textFieldValue by remember {
             mutableStateOf(
                 TextFieldValue(
-                    text = viewModel.selectedFolder?.name ?: "",
-                    selection = TextRange((viewModel.selectedFolder?.name ?: "").length)
+                    text = bloc.selectedFolder?.name ?: "",
+                    selection = TextRange((bloc.selectedFolder?.name ?: "").length)
                 )
             )
         }
@@ -376,7 +369,7 @@ fun FoldersScreen(
             isError = isError,
             onConfirm = {
                 if (textFieldValue.text.isNotEmpty() && textFieldValue.text.length < 128) {
-                    viewModel.renameFolder(textFieldValue.text)
+                    bloc.renameFolder(textFieldValue.text)
                 } else {
                     isError = true
                 }
@@ -390,13 +383,13 @@ fun FoldersScreen(
         AlertDialog(
             title = { Text(stringResource(R.string.delete_folder)) },
             text = {
-                viewModel.selectedFolder?.let {
+                bloc.selectedFolder?.let {
                     Text(stringResource(R.string.dialog_delete_folder_text, it.name))
                 }
             },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.deleteFolder()
+                    bloc.deleteFolder()
                     deleteFolderDialog = false
                 }) {
                     Text(stringResource(R.string.action_delete))
@@ -440,7 +433,7 @@ fun FoldersScreen(
 
     LaunchedEffect(contentUri) {
         contentUri?.let {
-            navigator.navigate(ImportFromFileScreenDestination(fileUri = it.toString()))
+            navigate(ImportFromFileConfig(fileUri = it.toString()))
         }
     }
 
@@ -451,7 +444,7 @@ fun FoldersScreen(
                 Pair(Icons.Rounded.Share, stringResource(R.string.export)),
                 Pair(Icons.Rounded.Delete, stringResource(R.string.action_delete)),
             )
-            viewModel.selectedFolder?.let {
+            bloc.selectedFolder?.let {
                 Row(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically
@@ -480,7 +473,7 @@ fun FoldersScreen(
                                     0 -> renameFolderDialog = true
                                     1 -> {
                                         var fileName = ""
-                                        viewModel.selectedFolder?.let {
+                                        bloc.selectedFolder?.let {
                                             fileName += it.name + "-"
                                         }
                                         fileName += LocalDateTime

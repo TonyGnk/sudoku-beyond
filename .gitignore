@@ -7,6 +7,10 @@ local.properties
 
 # Log/OS Files
 *.log
+.DS_Store
+
+# Kotlin metadata
+.kotlin/
 
 # Android Studio generated files and folders
 captures/

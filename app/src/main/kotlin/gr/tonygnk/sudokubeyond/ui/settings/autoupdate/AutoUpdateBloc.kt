@@ -16,34 +16,37 @@
  * GNU General Public License for more details.
  */
 
-package gr.tonygnk.sudokubeyond.ui.more
+package gr.tonygnk.sudokubeyond.ui.settings.autoupdate
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.core.update.Release
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MoreViewModel(
-    private val appSettingsManager: AppSettingsManager
-) : ViewModel() {
-    val updateChannel = appSettingsManager.autoUpdateChannel
-    val updateDismissedName = appSettingsManager.updateDismissedName
+@OptIn(ExperimentalDecomposeApi::class)
+class AutoUpdateBloc(
+    blocContext: BlocContext,
+    private val appSettingsManager: AppSettingsManager,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
 
-    fun dismissUpdate(release: Release) {
-        viewModelScope.launch(Dispatchers.IO) {
-            appSettingsManager.setUpdateDismissedName(release.name.toString())
+    private val scope = lifecycle.coroutineScope
+
+    val updateChannel = appSettingsManager.autoUpdateChannel
+
+    fun updateAutoUpdateChannel(channel: UpdateChannel) {
+        scope.launch(Dispatchers.IO) {
+            appSettingsManager.setAutoUpdateChannel(channel)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            MoreViewModel(
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = AutoUpdateBloc(
+            blocContext = blocContext,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+        )
     }
 }

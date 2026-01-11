@@ -99,8 +99,6 @@ import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import dev.jeziellago.compose.markdowntext.MarkdownText
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
@@ -109,22 +107,19 @@ import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.core.update.Version
 import gr.tonygnk.sudokubeyond.core.update.toVersion
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun AutoUpdateScreen(
-    navigator: DestinationsNavigator,
-    viewModel: AutoUpdateViewModel = rememberViewModel(AutoUpdateViewModel.builder),
+    bloc: AutoUpdateBloc,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -153,7 +148,7 @@ fun AutoUpdateScreen(
 
     var latestRelease by remember { mutableStateOf<Release?>(null) }
     var currentDownloadStatus by remember { mutableStateOf(DownloadStatus.NotStarted as DownloadStatus) }
-    val updateChannel by viewModel.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
+    val updateChannel by bloc.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
     var checkingForUpdates by rememberSaveable { mutableStateOf(false) }
     var checkingForUpdatesError by rememberSaveable { mutableStateOf(false) }
     var changeLogBottomSheet by rememberSaveable { mutableStateOf(false) }
@@ -185,7 +180,7 @@ fun AutoUpdateScreen(
             CollapsingTopAppBar(
                 collapsingTitle = CollapsingTitle.medium(titleText = stringResource(R.string.auto_update_title)),
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -313,7 +308,7 @@ fun AutoUpdateScreen(
                         subtitle = stringResource(R.string.update_channel_stable_summary),
                         icon = Icons.Outlined.Verified,
                         onClick = {
-                            viewModel.updateAutoUpdateChannel(UpdateChannel.Stable)
+                            bloc.updateAutoUpdateChannel(UpdateChannel.Stable)
                         },
                         selected = updateChannel == UpdateChannel.Stable,
                     )
@@ -328,7 +323,7 @@ fun AutoUpdateScreen(
                             ).copy(alpha = 0.45f)
                         },
                         onClick = {
-                            viewModel.updateAutoUpdateChannel(UpdateChannel.Beta)
+                            bloc.updateAutoUpdateChannel(UpdateChannel.Beta)
                         },
                         selected = updateChannel == UpdateChannel.Beta
                     )
@@ -343,7 +338,7 @@ fun AutoUpdateScreen(
                             ).copy(alpha = 0.45f)
                         },
                         onClick = {
-                            viewModel.updateAutoUpdateChannel(UpdateChannel.Disabled)
+                            bloc.updateAutoUpdateChannel(UpdateChannel.Disabled)
                         },
                         selected = updateChannel == UpdateChannel.Disabled
                     )
@@ -582,7 +577,7 @@ fun NewUpdateContainer(
                 ) {
                     Text(
                         text = if (downloadStatus is DownloadStatus.Progress) {
-                            (downloadStatus as DownloadStatus.Progress).percent.toString()
+                            downloadStatus.percent.toString()
                         } else {
                             stringResource(R.string.action_download)
                         }

@@ -1,0 +1,308 @@
+/*
+ *  Copyright (C) 2026 TonyGnk
+ *
+ *  This file is part of Sudoku Beyond.
+ *  Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ */
+
+package gr.tonygnk.sudokubeyond.ui.app.bloc
+
+import androidx.compose.runtime.Stable
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.router.stack.ChildStack
+import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.childStack
+import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.pushToFront
+import com.arkivanov.decompose.router.stack.replaceAll
+import com.materialkolor.PaletteStyle
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
+import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
+import gr.tonygnk.sudokubeyond.domain.usecase.app.GetMainActivitySettingsUseCase
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AboutConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AutoUpdateConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ExploreFolderConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.FoldersConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GamesHistoryConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ImportFromFileConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnBasicConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnHiddenPairsConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnNakedPairsConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnSudokuRulesConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SavedGameConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAdvancedHintConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAppearanceConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAssistanceConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsGameplayConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsLanguageConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsOtherConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ToolbarTutorialConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.TopDestination
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.WelcomeConfig
+import gr.tonygnk.sudokubeyond.ui.backup.BackupBloc
+import gr.tonygnk.sudokubeyond.ui.create_edit_sudoku.CreateSudokuBloc
+import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderBloc
+import gr.tonygnk.sudokubeyond.ui.folders.FoldersBloc
+import gr.tonygnk.sudokubeyond.ui.game.GameBloc
+import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryBloc
+import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameBloc
+import gr.tonygnk.sudokubeyond.ui.home.HomeBloc
+import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileBloc
+import gr.tonygnk.sudokubeyond.ui.learn.LearnBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnapp.ToolbarTutorialBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnBasicBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnHiddenPairsBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnNakedPairsBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuRulesBloc
+import gr.tonygnk.sudokubeyond.ui.more.MoreBloc
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutBloc
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutLibrariesBloc
+import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeBloc
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategoriesBloc
+import gr.tonygnk.sudokubeyond.ui.settings.advanced_hint.SettingsAdvancedHintBloc
+import gr.tonygnk.sudokubeyond.ui.settings.appearance.SettingsAppearanceBloc
+import gr.tonygnk.sudokubeyond.ui.settings.assistance.SettingsAssistanceBloc
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.AutoUpdateBloc
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.settings.boardtheme.SettingsBoardThemeBloc
+import gr.tonygnk.sudokubeyond.ui.settings.gameplay.SettingsGameplayBloc
+import gr.tonygnk.sudokubeyond.ui.settings.language.SettingsLanguageBloc
+import gr.tonygnk.sudokubeyond.ui.settings.other.SettingsOtherBloc
+import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
+import gr.tonygnk.sudokubeyond.ui.util.toStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import kotlinx.serialization.Serializable
+
+@OptIn(ExperimentalDecomposeApi::class)
+class MainActivityBloc(
+    blocContext: BlocContext,
+    getMainActivitySettingsUseCase: GetMainActivitySettingsUseCase,
+) : BlocContext by blocContext {
+    private val scope = lifecycle.coroutineScope
+
+    val settings: StateFlow<MainActivitySettings> = getMainActivitySettingsUseCase()
+        .stateIn(
+            scope = scope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = MainActivitySettings(
+                dynamicColors = false,
+                darkTheme = 0,
+                amoledBlack = false,
+                firstLaunch = false,
+                monetSudokuBoard = false,
+                colorSeed = androidx.compose.ui.graphics.Color.Red,
+                paletteStyle = PaletteStyle.TonalSpot,
+                autoUpdateChannel = UpdateChannel.Disabled,
+                updateDismissedName = "",
+            )
+        )
+
+    private val navigation = StackNavigation<PagesConfig>()
+
+    private var hasHandledFirstLaunch = false
+
+    val stack: StateFlow<ChildStack<PagesConfig, PagesBloc>> = childStack(
+        source = navigation,
+        serializer = PagesConfig.serializer(),
+        initialConfiguration = TopDestination.HomeConfig,
+    ) { config, blocContext ->
+        when (config) {
+            TopDestination.HomeConfig -> HomeBloc(blocContext)
+            TopDestination.MoreConfig -> MoreBloc(blocContext)
+            TopDestination.StatisticsConfig -> StatisticsBloc(blocContext)
+            GamesHistoryConfig -> GamesHistoryBloc(blocContext)
+            is SavedGameConfig -> SavedGameBloc(blocContext, config.boardUid)
+            is ExploreFolderConfig -> ExploreFolderBloc(blocContext, config.folderUid)
+            is GameConfig -> GameBloc(blocContext, config.gameUid, config.playedBefore)
+            FoldersConfig -> FoldersBloc(blocContext)
+            is ImportFromFileConfig -> ImportFromFileBloc(
+                blocContext, config.fileUri, config.folderUid, config.fromDeepLink
+            )
+            WelcomeConfig -> WelcomeBloc(blocContext)
+            AboutConfig -> AboutBloc
+            AutoUpdateConfig -> AutoUpdateBloc(blocContext)
+            LearnConfig -> LearnBloc
+            LearnSudokuRulesConfig -> LearnSudokuRulesBloc
+            LearnBasicConfig -> LearnBasicBloc
+            LearnNakedPairsConfig -> LearnNakedPairsBloc
+            LearnHiddenPairsConfig -> LearnHiddenPairsBloc
+            ToolbarTutorialConfig -> ToolbarTutorialBloc
+            BackupConfig -> BackupBloc(blocContext)
+            SettingsAdvancedHintConfig -> SettingsAdvancedHintBloc(blocContext)
+            is SettingsCategoriesConfig -> SettingsCategoriesBloc(config.launchedFromGame)
+            SettingsAppearanceConfig -> SettingsAppearanceBloc(blocContext)
+            SettingsAssistanceConfig -> SettingsAssistanceBloc(blocContext)
+            SettingsGameplayConfig -> SettingsGameplayBloc(blocContext)
+            SettingsLanguageConfig -> SettingsLanguageBloc
+            PagesConfig.SettingsBoardThemeConfig -> SettingsBoardThemeBloc(blocContext)
+            is SettingsOtherConfig -> SettingsOtherBloc(blocContext, config.launchedFromGame)
+            PagesConfig.AboutLibrariesConfig -> AboutLibrariesBloc
+            is PagesConfig.CreateSudokuConfig -> CreateSudokuBloc(blocContext, config.gameUid, config.folderUid)
+        }
+    }.toStateFlow()
+
+    init {
+        scope.launch {
+            settings.collect { currentSettings ->
+                if (currentSettings.firstLaunch && !hasHandledFirstLaunch) {
+                    hasHandledFirstLaunch = true
+                    navigation.replaceAll(WelcomeConfig)
+                }
+            }
+        }
+    }
+
+    fun onChildSelected(newConfig: PagesConfig) {
+        if (newConfig == TopDestination.HomeConfig) {
+            navigation.replaceAll(newConfig)
+        } else {
+            navigation.pushToFront(newConfig)
+        }
+    }
+
+    fun onBackClicked() {
+        navigation.pop()
+    }
+
+    fun navigateToImportFromFile(fileUri: String) {
+        navigation.pushToFront(
+            ImportFromFileConfig(
+                fileUri = fileUri,
+                fromDeepLink = true
+            )
+        )
+    }
+
+    @Stable
+    interface PagesBloc
+
+    @Serializable
+    @Stable
+    sealed interface PagesConfig {
+        @Serializable
+        sealed interface TopDestination : PagesConfig {
+            @Serializable
+            data object StatisticsConfig : TopDestination
+
+            @Serializable
+            data object HomeConfig : TopDestination
+
+            @Serializable
+            data object MoreConfig : TopDestination
+        }
+
+        @Serializable
+        data object GamesHistoryConfig : PagesConfig
+
+        @Serializable
+        data class SavedGameConfig(val boardUid: Long) : PagesConfig
+
+        @Serializable
+        data class ExploreFolderConfig(val folderUid: Long) : PagesConfig
+
+        @Serializable
+        data class GameConfig(val gameUid: Long, val playedBefore: Boolean = false) : PagesConfig
+
+        @Serializable
+        data object FoldersConfig : PagesConfig
+
+        @Serializable
+        data object WelcomeConfig : PagesConfig
+
+        @Serializable
+        data object AboutConfig : PagesConfig
+
+        @Serializable
+        data object AutoUpdateConfig : PagesConfig
+
+        @Serializable
+        data object LearnConfig : PagesConfig
+
+        @Serializable
+        data object LearnSudokuRulesConfig : PagesConfig
+
+        @Serializable
+        data object LearnBasicConfig : PagesConfig
+
+        @Serializable
+        data object LearnNakedPairsConfig : PagesConfig
+
+        @Serializable
+        data object LearnHiddenPairsConfig : PagesConfig
+
+        @Serializable
+        data object ToolbarTutorialConfig : PagesConfig
+
+        @Serializable
+        data object BackupConfig : PagesConfig
+
+        @Serializable
+        data class SettingsCategoriesConfig(val launchedFromGame: Boolean = false) : PagesConfig
+
+        @Serializable
+        data object SettingsAdvancedHintConfig : PagesConfig
+
+        @Serializable
+        data object SettingsAppearanceConfig : PagesConfig
+
+        @Serializable
+        data object SettingsAssistanceConfig : PagesConfig
+
+        @Serializable
+        data object SettingsGameplayConfig : PagesConfig
+
+        @Serializable
+        data object SettingsLanguageConfig : PagesConfig
+
+        @Serializable
+        data class SettingsOtherConfig(val launchedFromGame: Boolean) : PagesConfig
+
+        @Serializable
+        data object SettingsBoardThemeConfig : PagesConfig
+
+        @Serializable
+        data object AboutLibrariesConfig : PagesConfig
+
+        @Serializable
+        data class ImportFromFileConfig(
+            val fileUri: String?,
+            val folderUid: Long = -1,
+            val fromDeepLink: Boolean = false,
+        ) : PagesConfig
+
+        @Serializable
+        data class CreateSudokuConfig(
+            val gameUid: Long = -1,
+            val folderUid: Long? = null,
+        ) : PagesConfig
+    }
+
+    companion object {
+        operator fun invoke(blocContext: BlocContext) = MainActivityBloc(
+            blocContext = blocContext,
+            getMainActivitySettingsUseCase = GetMainActivitySettingsUseCase(
+                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+            )
+        )
+    }
+}

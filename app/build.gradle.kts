@@ -119,9 +119,6 @@ dependencies {
 
     implementation(libs.mikepenz.aboutLibraries.compose)
 
-    implementation(libs.raamcosta.compose.destinations)
-    ksp(libs.raamcosta.compose.destinations.ksp)
-
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.documentFile)
     implementation(libs.androidx.work.runtime.ktx)
@@ -130,4 +127,8 @@ dependencies {
 
     implementation(libs.squareup.okhttp3)
     implementation(libs.jeziellago.compose.markdown)
+
+    implementation(libs.arkivanov.decompose)
+    implementation(libs.arkivanov.decompose.extensions.compose.experimental)
+    implementation(libs.arkivanov.decompose.jetpack.component.context)
 }

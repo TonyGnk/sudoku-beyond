@@ -21,9 +21,10 @@ package gr.tonygnk.sudokubeyond.ui.folders
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.parser.SdmParser
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.domain.usecase.board.GetGamesInFolderUseCase
@@ -33,14 +34,16 @@ import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetLastSavedGamesAnyFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.UpdateFolderUseCase
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
-class FoldersViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class FoldersBloc(
+    blocContext: BlocContext,
     getFoldersUseCase: GetFoldersUseCase,
     private val insertFolderUseCase: InsertFolderUseCase,
     private val updateFolderUseCase: UpdateFolderUseCase,
@@ -48,7 +51,10 @@ class FoldersViewModel(
     private val getGamesInFolderUseCase: GetGamesInFolderUseCase,
     private val countPuzzlesFolderUseCase: CountPuzzlesFolderUseCase,
     getLastSavedGamesAnyFolderUseCase: GetLastSavedGamesAnyFolderUseCase,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val folders = getFoldersUseCase()
 
     var selectedFolder: Folder? by mutableStateOf(null)
@@ -61,7 +67,7 @@ class FoldersViewModel(
     val lastSavedGames = getLastSavedGamesAnyFolderUseCase(gamesCount = 10)
 
     fun createFolder(name: String) {
-        viewModelScope.launch {
+        scope.launch {
             insertFolderUseCase(
                 Folder(
                     uid = 0,
@@ -73,7 +79,7 @@ class FoldersViewModel(
     }
 
     fun countPuzzlesInFolders(folders: List<Folder>) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val numberPuzzles = mutableListOf<Pair<Long, Int>>()
             folders.forEach {
                 numberPuzzles.add(
@@ -86,7 +92,7 @@ class FoldersViewModel(
 
     fun renameFolder(newName: String) {
         selectedFolder?.let {
-            viewModelScope.launch {
+            scope.launch {
                 updateFolderUseCase(
                     it.copy(name = newName.trim())
                 )
@@ -96,7 +102,7 @@ class FoldersViewModel(
 
     fun deleteFolder() {
         selectedFolder?.let {
-            viewModelScope.launch {
+            scope.launch {
                 deleteFolderUseCase(it)
             }
         }
@@ -109,31 +115,30 @@ class FoldersViewModel(
         return sdmParser.boardsToSdm(gamesInFolder).toByteArray()
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            FoldersViewModel(
-                getFoldersUseCase = GetFoldersUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository
-                ),
-                insertFolderUseCase = InsertFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository
-                ),
-                updateFolderUseCase = UpdateFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository
-                ),
-                deleteFolderUseCase = DeleteFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository,
-                ),
-                getGamesInFolderUseCase = GetGamesInFolderUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository,
-                ),
-                countPuzzlesFolderUseCase = CountPuzzlesFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository,
-                ),
-                getLastSavedGamesAnyFolderUseCase = GetLastSavedGamesAnyFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository,
-                )
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = FoldersBloc(
+            blocContext = blocContext,
+            getFoldersUseCase = GetFoldersUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            insertFolderUseCase = InsertFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            updateFolderUseCase = UpdateFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            deleteFolderUseCase = DeleteFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            getGamesInFolderUseCase = GetGamesInFolderUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            countPuzzlesFolderUseCase = CountPuzzlesFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            getLastSavedGamesAnyFolderUseCase = GetLastSavedGamesAnyFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
             )
-        }
+        )
     }
 }

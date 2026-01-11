@@ -43,24 +43,18 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsOtherScreen(
-    viewModel: SettingsOtherViewModel = rememberViewModel(SettingsOtherViewModel.builder),
-    navigator: DestinationsNavigator,
-    launchedFromGame: Boolean = false,
+    bloc: SettingsOtherBloc,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -68,13 +62,13 @@ fun SettingsOtherScreen(
 
     var resetGameDataDialog by rememberSaveable { mutableStateOf(false) }
 
-    val saveLastSelectedDifficultyType by viewModel.saveLastSelectedDifficultyType
+    val saveLastSelectedDifficultyType by bloc.saveLastSelectedDifficultyType
         .collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_SAVE_LAST_SELECTED_DIFF_TYPE)
-    val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_KEEP_SCREEN_ON)
+    val keepScreenOn by bloc.keepScreenOn.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_KEEP_SCREEN_ON)
 
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.pref_other),
-        navigator = navigator,
+        finish = finish,
         snackbarHostState = snackbarHostState
     ) { paddingValues ->
         ScrollbarLazyColumn(
@@ -88,7 +82,7 @@ fun SettingsOtherScreen(
                     subtitle = stringResource(R.string.pref_save_last_diff_and_type_subtitle),
                     checked = saveLastSelectedDifficultyType,
                     onClick = {
-                        viewModel.updateSaveLastSelectedDifficultyType(!saveLastSelectedDifficultyType)
+                        bloc.updateSaveLastSelectedDifficultyType(!saveLastSelectedDifficultyType)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Bookmark)
                 )
@@ -99,7 +93,7 @@ fun SettingsOtherScreen(
                     title = stringResource(R.string.pref_keep_screen_on),
                     checked = keepScreenOn,
                     onClick = {
-                        viewModel.updateKeepScreenOn(!keepScreenOn)
+                        bloc.updateKeepScreenOn(!keepScreenOn)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Smartphone)
                 )
@@ -109,7 +103,7 @@ fun SettingsOtherScreen(
                 PreferenceRow(
                     title = stringResource(R.string.pref_reset_tipcards),
                     onClick = {
-                        viewModel.resetTipCards()
+                        bloc.resetTipCards()
                         scope.launch {
                             snackbarHostState.showSnackbar(
                                 context.resources.getString(R.string.pref_tipcards_reset)
@@ -120,7 +114,7 @@ fun SettingsOtherScreen(
                 )
             }
 
-            if (!launchedFromGame) {
+            if (!bloc.launchedFromGame) {
                 item {
                     PreferenceRow(
                         title = stringResource(R.string.pref_delete_stats),
@@ -139,7 +133,7 @@ fun SettingsOtherScreen(
                 text = { Text(stringResource(R.string.pref_delete_stats_summ)) },
                 confirmButton = {
                     TextButton(onClick = {
-                        viewModel.deleteAllTables()
+                        bloc.deleteAllTables()
                         resetGameDataDialog = false
                         scope.launch {
                             snackbarHostState.showSnackbar(

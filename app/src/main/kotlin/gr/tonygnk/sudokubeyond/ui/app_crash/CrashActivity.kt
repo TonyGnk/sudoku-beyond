@@ -61,6 +61,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.arkivanov.decompose.DecomposeSettings
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import com.arkivanov.decompose.defaultComponentContext
+import com.arkivanov.decompose.jetpackcomponentcontext.asJetpackComponentContext
 import com.materialkolor.PaletteStyle
 import gr.tonygnk.sudokubeyond.MainActivity
 import gr.tonygnk.sudokubeyond.R
@@ -72,23 +76,27 @@ import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler.Companion.getEx
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
 class CrashActivity : ComponentActivity() {
+    @OptIn(ExperimentalDecomposeApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val crashReason = getExceptionString()
 
+        DecomposeSettings.update { currentSettings ->
+            currentSettings.copy(duplicateConfigurationsEnabled = true)
+        }
+        val bloc = CrashBloc(defaultComponentContext().asJetpackComponentContext())
+
         enableEdgeToEdge()
         setContent {
-            val viewModel = rememberViewModel(CrashViewModel.builder)
-            val dynamicColors by viewModel.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
-            val darkTheme by viewModel.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
-            val amoledBlack by viewModel.amoledBlack.collectAsStateWithLifecycle(
+            val dynamicColors by bloc.dc.collectAsStateWithLifecycle(isSystemInDarkTheme())
+            val darkTheme by bloc.darkTheme.collectAsStateWithLifecycle(PreferencesConstants.DEFAULT_DARK_THEME)
+            val amoledBlack by bloc.amoledBlack.collectAsStateWithLifecycle(
                 PreferencesConstants.DEFAULT_AMOLED_BLACK
             )
-            val colorSeed by viewModel.colorSeed.collectAsStateWithLifecycle(initialValue = Color.Red)
-            val paletteStyle by viewModel.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
+            val colorSeed by bloc.colorSeed.collectAsStateWithLifecycle(initialValue = Color.Red)
+            val paletteStyle by bloc.paletteStyle.collectAsStateWithLifecycle(initialValue = PaletteStyle.TonalSpot)
 
             LibreSudokuTheme(
                 darkTheme = when (darkTheme) {

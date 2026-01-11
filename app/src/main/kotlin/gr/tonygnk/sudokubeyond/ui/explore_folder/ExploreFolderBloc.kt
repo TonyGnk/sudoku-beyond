@@ -21,14 +21,14 @@ package gr.tonygnk.sudokubeyond.ui.explore_folder
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.algorithm.QQWingController
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.usecase.UpdateManyBoardsUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.DeleteBoardUseCase
@@ -38,7 +38,7 @@ import gr.tonygnk.sudokubeyond.domain.usecase.board.InsertBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFoldersUseCase
-import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,7 +46,10 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class ExploreFolderViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class ExploreFolderBloc(
+    blocContext: BlocContext,
+    private val folderUid: Long,
     getFolderUseCase: GetFolderUseCase,
     getBoardsInFolderWithSavedUseCase: GetBoardsInFolderWithSavedUseCase,
     private val updateBoardUseCase: UpdateBoardUseCase,
@@ -55,9 +58,8 @@ class ExploreFolderViewModel(
     private val deleteBoardsUseCase: DeleteBoardsUseCase,
     private val insertBoardUseCase: InsertBoardUseCase,
     getFoldersUseCase: GetFoldersUseCase,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    private val folderUid = savedStateHandle.navArgs<ExploreFolderScreenNavArgs>().folderUid
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+    private val scope = lifecycle.coroutineScope
 
     val folder = getFolderUseCase(folderUid)
     val games = getBoardsInFolderWithSavedUseCase(folderUid)
@@ -79,7 +81,7 @@ class ExploreFolderViewModel(
     fun prepareSudokuToPlay(board: SudokuBoard) {
         gameUidToPlay = board.uid
         if (board.solvedBoard == "") {
-            viewModelScope.launch {
+            scope.launch {
                 val qqWingController = QQWingController()
                 val sudokuParser = SudokuParser()
                 val boardToSolve = board.initialBoard.map { it.digitToInt(13) }.toIntArray()
@@ -114,7 +116,7 @@ class ExploreFolderViewModel(
     }
 
     fun deleteSelected() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             deleteBoardsUseCase(selectedBoardsList)
             selectedBoardsList = emptyList()
             inSelectionMode = false
@@ -122,13 +124,13 @@ class ExploreFolderViewModel(
     }
 
     fun deleteGame(board: SudokuBoard) {
-        viewModelScope.launch {
+        scope.launch {
             deleteBoardUseCase(board)
         }
     }
 
     fun moveBoards(folderUid: Long) {
-        viewModelScope.launch {
+        scope.launch {
             updateManyBoardsUseCase(
                 selectedBoardsList.map { it.copy(folderId = folderUid) }
             )
@@ -137,7 +139,7 @@ class ExploreFolderViewModel(
     }
 
     fun generateSudoku(type: GameType, difficulty: GameDifficulty, numberToGenerate: Int) {
-        generatingJob = viewModelScope.launch(Dispatchers.Default) {
+        generatingJob = scope.launch(Dispatchers.Default) {
             withContext(Dispatchers.Main) {
                 _generatedSudokuCount.emit(0)
             }
@@ -170,35 +172,34 @@ class ExploreFolderViewModel(
         generatingJob?.cancel()
     }
 
-    companion object {
-        val builder: (SavedStateHandle) -> ExploreFolderViewModel = { savedStateHandle ->
-            ExploreFolderViewModel(
-                getFolderUseCase = GetFolderUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository
-                ),
-                getBoardsInFolderWithSavedUseCase = GetBoardsInFolderWithSavedUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository,
-                ),
-                updateBoardUseCase = UpdateBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                updateManyBoardsUseCase = UpdateManyBoardsUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                deleteBoardUseCase = DeleteBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                deleteBoardsUseCase = DeleteBoardsUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                insertBoardUseCase = InsertBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                getFoldersUseCase = GetFoldersUseCase(
-                    folderRepository = LibreSudokuApp.appModule.folderRepository
-                ),
-                savedStateHandle = savedStateHandle
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext, folderUid: Long) = ExploreFolderBloc(
+            blocContext = blocContext,
+            folderUid = folderUid,
+            getFolderUseCase = GetFolderUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+            getBoardsInFolderWithSavedUseCase = GetBoardsInFolderWithSavedUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository,
+            ),
+            updateBoardUseCase = UpdateBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            updateManyBoardsUseCase = UpdateManyBoardsUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            deleteBoardUseCase = DeleteBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            deleteBoardsUseCase = DeleteBoardsUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            insertBoardUseCase = InsertBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            getFoldersUseCase = GetFoldersUseCase(
+                folderRepository = LibreSudokuApp.appModule.folderRepository
+            ),
+        )
     }
 }

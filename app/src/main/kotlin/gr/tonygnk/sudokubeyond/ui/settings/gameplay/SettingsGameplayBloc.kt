@@ -18,61 +18,66 @@
 
 package gr.tonygnk.sudokubeyond.ui.settings.gameplay
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsGameplayViewModel(
-    private val settings: AppSettingsManager
-) : ViewModel() {
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsGameplayBloc(
+    blocContext: BlocContext,
+    private val settings: AppSettingsManager,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val inputMethod = settings.inputMethod
     fun updateInputMethod(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setInputMethod(value)
         }
     }
 
     val mistakesLimit = settings.mistakesLimit
     fun updateMistakesLimit(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setMistakesLimit(enabled)
         }
 
     val timer = settings.timerEnabled
     fun updateTimer(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setTimer(enabled)
         }
 
     val canResetTimer = settings.resetTimerEnabled
     fun updateCanResetTimer(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setResetTimer(enabled)
         }
 
     val disableHints = settings.hintsDisabled
     fun updateHintDisabled(disabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setHintsDisabled(disabled)
         }
     }
 
     val funKeyboardOverNum = settings.funKeyboardOverNumbers
     fun updateFunKeyboardOverNum(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setFunKeyboardOverNum(enabled)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsGameplayViewModel(
-                settings = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = SettingsGameplayBloc(
+            blocContext = blocContext,
+            settings = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }

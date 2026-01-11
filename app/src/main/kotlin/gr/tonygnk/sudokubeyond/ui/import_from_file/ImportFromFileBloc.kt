@@ -18,26 +18,24 @@
 
 package gr.tonygnk.sudokubeyond.ui.import_from_file
 
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.net.toUri
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
+import gr.tonygnk.sudoku.core.types.GameDifficulty
+import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.parser.GsudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.OpenSudokuParser
 import gr.tonygnk.sudokubeyond.core.parser.SdmParser
-import gr.tonygnk.sudoku.core.types.GameDifficulty
-import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.InsertFolderUseCase
-import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,19 +45,21 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.time.ZonedDateTime
 
-class ImportFromFileViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class ImportFromFileBloc(
+    blocContext: BlocContext,
+    val fileUri: String?,
+    folderUid: Long,
+    val fromDeepLink: Boolean,
     private val insertFolderUseCase: InsertFolderUseCase,
     private val boardRepository: BoardRepository,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-
-    private val _navArgs: ImportFromFileScreenNavArgs = savedStateHandle.navArgs()
-    var fileUri: Uri? by mutableStateOf(_navArgs.fileUri?.toUri())
-
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+    
+    private val scope = lifecycle.coroutineScope
 
     // uid of the folder where to add the imported sudoku.
     // If uid = -1, a new folder will be created (ask the user for the folder name)
-    val folderUid by mutableLongStateOf(_navArgs.folderUid)
+    val folderUidState by mutableLongStateOf(folderUid)
 
     var isLoading by mutableStateOf(true)
     var isSaved by mutableStateOf(false)
@@ -74,7 +74,7 @@ class ImportFromFileViewModel(
     val importError = _importingError.asStateFlow()
 
     fun readData(inputStream: InputStreamReader) {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             var toImport = listOf<String>()
             try {
                 BufferedReader(inputStream).use { bufferRead ->
@@ -107,9 +107,9 @@ class ImportFromFileViewModel(
     }
 
     fun saveImported(folderName: String? = null) {
-        viewModelScope.launch {
+        scope.launch {
             isSaving = true
-            var folderUidToImport = folderUid
+            var folderUidToImport = folderUidState
 
             if (folderUidToImport == -1L) {
                 folderUidToImport = insertFolderUseCase(
@@ -145,13 +145,19 @@ class ImportFromFileViewModel(
         difficultyForImport = difficulty
     }
 
-    companion object {
-        val builder: (SavedStateHandle) -> ImportFromFileViewModel = { savedStateHandle ->
-            ImportFromFileViewModel(
-                insertFolderUseCase = InsertFolderUseCase(LibreSudokuApp.appModule.folderRepository),
-                boardRepository = LibreSudokuApp.appModule.boardRepository,
-                savedStateHandle = savedStateHandle
-            )
-        }
+    companion object Companion {
+        operator fun invoke(
+            blocContext: BlocContext,
+            fileUri: String?,
+            folderUid: Long,
+            fromDeepLink: Boolean,
+        ) = ImportFromFileBloc(
+            blocContext = blocContext,
+            fileUri = fileUri,
+            folderUid = folderUid,
+            fromDeepLink = fromDeepLink,
+            insertFolderUseCase = InsertFolderUseCase(LibreSudokuApp.appModule.folderRepository),
+            boardRepository = LibreSudokuApp.appModule.boardRepository,
+        )
     }
 }

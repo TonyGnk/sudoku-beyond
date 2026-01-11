@@ -43,26 +43,26 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.learn.learnapp.LearnAppScreen
 import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuScreen
 import kotlinx.coroutines.launch
 
-@Destination(style = AnimatedNavigation::class)
+data object LearnBloc : MainActivityBloc.PagesBloc
+
 @Composable
 @OptIn(ExperimentalMaterial3Api::class)
 fun LearnScreen(
-    navigator: DestinationsNavigator,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.learn_screen_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -114,9 +114,9 @@ fun LearnScreen(
                 verticalAlignment = Alignment.Top
             ) { page ->
                 when (page) {
-                    0 -> LearnSudokuScreen(navigator)
-                    1 -> LearnAppScreen(navigator)
-                    else -> LearnSudokuScreen(navigator)
+                    0 -> LearnSudokuScreen(navigate)
+                    1 -> LearnAppScreen(navigate)
+                    else -> LearnSudokuScreen(navigate)
                 }
             }
         }

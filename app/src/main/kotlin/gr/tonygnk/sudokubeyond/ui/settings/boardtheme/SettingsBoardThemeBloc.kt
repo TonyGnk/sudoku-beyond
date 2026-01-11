@@ -18,55 +18,60 @@
 
 package gr.tonygnk.sudokubeyond.ui.settings.boardtheme
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsBoardThemeViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsBoardThemeBloc(
+    blocContext: BlocContext,
     private val themeSettingsManager: ThemeSettingsManager,
     private val appSettingsManager: AppSettingsManager,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val monetSudokuBoard = themeSettingsManager.monetSudokuBoard
     val positionLines = appSettingsManager.positionLines
     val highlightMistakes = appSettingsManager.highlightMistakes
     var crossHighlight = themeSettingsManager.boardCrossHighlight
 
     fun updateMonetSudokuBoardSetting(enabled: Boolean) {
-        viewModelScope.launch {
+        scope.launch {
             themeSettingsManager.setMonetSudokuBoard(enabled)
         }
     }
 
     fun updatePositionLinesSetting(enabled: Boolean) {
-        viewModelScope.launch {
+        scope.launch {
             appSettingsManager.setPositionLines(enabled)
         }
     }
 
     fun updateBoardCrossHighlight(enabled: Boolean) {
-        viewModelScope.launch {
+        scope.launch {
             themeSettingsManager.setBoardCrossHighlight(enabled)
         }
     }
 
     val fontSize = appSettingsManager.fontSize
     fun updateFontSize(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appSettingsManager.setFontSize(value)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsBoardThemeViewModel(
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = SettingsBoardThemeBloc(
+            blocContext = blocContext,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+        )
     }
 }

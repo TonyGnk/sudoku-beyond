@@ -23,9 +23,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.TextUnit
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.algorithm.QQWingController
 import gr.tonygnk.sudoku.core.hint.AdvancedHint
 import gr.tonygnk.sudoku.core.hint.AdvancedHintData
@@ -40,6 +39,7 @@ import gr.tonygnk.sudoku.core.utils.SudokuUtils
 import gr.tonygnk.sudoku.core.utils.UndoRedoManager
 import gr.tonygnk.sudoku.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.database.model.Record
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
@@ -51,7 +51,7 @@ import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.board.GetBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.record.GetAllRecordsUseCase
-import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import kotlinx.coroutines.Dispatchers
@@ -72,23 +72,27 @@ import kotlin.time.toDuration
 import kotlin.time.toJavaDuration
 import kotlin.time.toKotlinDuration
 
-class GameViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class GameBloc(
+    blocContext: BlocContext,
+    private val gameUid: Long,
+    private val playedBefore: Boolean,
     private val savedGameRepository: SavedGameRepository,
     private val appSettingsManager: AppSettingsManager,
     private val recordRepository: RecordRepository,
     private val updateBoardUseCase: UpdateBoardUseCase,
     private val getBoardUseCase: GetBoardUseCase,
     themeSettingsManager: ThemeSettingsManager,
-    private val savedStateHandle: SavedStateHandle,
     private val getAllRecordsUseCase: GetAllRecordsUseCase,
-) : ViewModel() {
-    init {
-        val navArgs: GameScreenNavArgs = savedStateHandle.navArgs()
-        val sudokuParser = SudokuParser()
-        val continueSaved = navArgs.playedBefore
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
 
-        viewModelScope.launch(Dispatchers.IO) {
-            boardEntity = getBoardUseCase(navArgs.gameUid)
+    private val scope = lifecycle.coroutineScope
+
+    init {
+        val sudokuParser = SudokuParser()
+
+        scope.launch(Dispatchers.IO) {
+            boardEntity = getBoardUseCase(gameUid)
             val savedGame = savedGameRepository.get(boardEntity.uid)
 
             withContext(Dispatchers.Main) {
@@ -129,7 +133,7 @@ class GameViewModel(
             }
 
             withContext(Dispatchers.Main) {
-                if (savedGame != null && continueSaved) {
+                if (savedGame != null && playedBefore) {
                     restoreSavedGame(savedGame)
                 } else {
                     gameBoard = initialBoard
@@ -172,7 +176,7 @@ class GameViewModel(
 
     // mistakes checking method
     var mistakesMethod = appSettingsManager.highlightMistakes.stateIn(
-        viewModelScope,
+        scope,
         SharingStarted.Eagerly,
         PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES
     )
@@ -182,13 +186,13 @@ class GameViewModel(
     val funKeyboardOverNum = appSettingsManager.funKeyboardOverNumbers
 
     var mistakesLimit = appSettingsManager.mistakesLimit.stateIn(
-        viewModelScope,
+        scope,
         SharingStarted.Eagerly,
         PreferencesConstants.DEFAULT_MISTAKES_LIMIT
     )
 
     private var autoEraseNotes = appSettingsManager.autoEraseNotes.stateIn(
-        viewModelScope,
+        scope,
         SharingStarted.Eagerly,
         PreferencesConstants.DEFAULT_AUTO_ERASE_NOTES
     )
@@ -221,7 +225,7 @@ class GameViewModel(
     var digitFirstNumber by mutableIntStateOf(0)
     private val inputMethod = appSettingsManager.inputMethod
         .stateIn(
-            scope = viewModelScope,
+            scope = scope,
             started = SharingStarted.Eagerly,
             initialValue = PreferencesConstants.DEFAULT_INPUT_METHOD
         )
@@ -463,7 +467,7 @@ class GameViewModel(
                     timeText = duration.toFormattedString()
                     // save game
                     if (gameBoard.any { it.any { cell -> cell.value != 0 } }) {
-                        viewModelScope.launch(Dispatchers.IO) {
+                        scope.launch(Dispatchers.IO) {
                             saveGame()
                         }
                     }
@@ -593,7 +597,7 @@ class GameViewModel(
                 }
             }
         }
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val savedGame = savedGameRepository.get(boardEntity.uid)
             if (savedGame != null) {
                 savedGameRepository.update(
@@ -689,7 +693,7 @@ class GameViewModel(
         giveUp = true
         endGame = true
         currCell = Cell(-1, -1, 0)
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val savedGame = savedGameRepository.get(boardEntity.uid)
             if (savedGame != null) {
                 val sudokuParser = SudokuParser()
@@ -713,7 +717,7 @@ class GameViewModel(
 
         pauseTimer()
         currCell = Cell(-1, -1, 0)
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             saveGame()
             recordRepository.insert(
                 Record(
@@ -733,7 +737,7 @@ class GameViewModel(
     }
 
     fun setFirstGameFalse() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appSettingsManager.setFirstGame(false)
         }
     }
@@ -766,7 +770,7 @@ class GameViewModel(
             }
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             val sudokuParser = SudokuParser()
             updateBoardUseCase(
                 boardEntity.copy(solvedBoard = sudokuParser.boardToString(newSolvedBoard))
@@ -813,7 +817,7 @@ class GameViewModel(
     }
 
     fun getAdvancedHint() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             currCell = Cell(-1, -1, 0)
             _advancedHintMode.emit(true)
             val hintSettings = runBlocking { appSettingsManager.advancedHintSettings.first() }
@@ -830,14 +834,14 @@ class GameViewModel(
     }
 
     fun cancelAdvancedHint() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             _advancedHintData.emit(null)
             _advancedHintMode.emit(false)
         }
     }
 
     fun applyAdvancedHint() {
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             val cell = _advancedHintData.value?.targetCell
             if (cell != null) {
                 currCell = gameBoard[cell.row][cell.col]
@@ -848,18 +852,22 @@ class GameViewModel(
         }
     }
 
-    companion object {
-        val builder: (SavedStateHandle) -> GameViewModel = { savedStateHandle ->
-            GameViewModel(
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-                recordRepository = LibreSudokuApp.appModule.recordRepository,
-                updateBoardUseCase = UpdateBoardUseCase(LibreSudokuApp.appModule.boardRepository),
-                getBoardUseCase = GetBoardUseCase(LibreSudokuApp.appModule.boardRepository),
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                savedStateHandle = savedStateHandle,
-                getAllRecordsUseCase = GetAllRecordsUseCase(LibreSudokuApp.appModule.recordRepository)
-            )
-        }
+    companion object Companion {
+        operator fun invoke(
+            blocContext: BlocContext,
+            gameUid: Long,
+            playedBefore: Boolean,
+        ) = GameBloc(
+            blocContext = blocContext,
+            gameUid = gameUid,
+            playedBefore = playedBefore,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            recordRepository = LibreSudokuApp.appModule.recordRepository,
+            updateBoardUseCase = UpdateBoardUseCase(LibreSudokuApp.appModule.boardRepository),
+            getBoardUseCase = GetBoardUseCase(LibreSudokuApp.appModule.boardRepository),
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            getAllRecordsUseCase = GetAllRecordsUseCase(LibreSudokuApp.appModule.recordRepository)
+        )
     }
 }

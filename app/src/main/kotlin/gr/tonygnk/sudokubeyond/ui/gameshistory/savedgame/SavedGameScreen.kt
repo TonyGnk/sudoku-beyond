@@ -25,11 +25,9 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -83,42 +81,33 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudoku.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.ExploreFolderScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ExploreFolderConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
-import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 import kotlin.time.toKotlinDuration
 
-@Destination(
-    style = AnimatedNavigation::class,
-    navArgsDelegate = SavedGameScreenNavArgs::class
-)
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class,
-    ExperimentalLayoutApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SavedGameScreen(
-    viewModel: SavedGameViewModel = rememberSavedStateViewModel(SavedGameViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SavedGameBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val clipboardManager = LocalClipboardManager.current
 
-    val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(
+    val dateFormat by bloc.dateFormat.collectAsStateWithLifecycle(
         initialValue = ""
     )
     val dateTimeFormatter by remember(dateFormat) {
@@ -129,9 +118,9 @@ fun SavedGameScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.game_id, viewModel.boardUid)) },
+                title = { Text(stringResource(R.string.game_id, bloc.boardUid)) },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -157,7 +146,7 @@ fun SavedGameScreen(
                                         Text(stringResource(R.string.export_string_title))
                                     },
                                     onClick = {
-                                        viewModel.exportDialog = true
+                                        bloc.exportDialog = true
                                         showMenu = false
                                     }
                                 )
@@ -168,21 +157,21 @@ fun SavedGameScreen(
             )
         },
     ) { innerPadding ->
-        LaunchedEffect(Unit) { viewModel.updateGameDetails() }
+        LaunchedEffect(Unit) { bloc.updateGameDetails() }
 
-        if (viewModel.savedGame != null && viewModel.boardEntity != null &&
-            viewModel.parsedCurrentBoard.isNotEmpty() && viewModel.parsedInitialBoard.isNotEmpty()
+        if (bloc.savedGame != null && bloc.boardEntity != null &&
+            bloc.parsedCurrentBoard.isNotEmpty() && bloc.parsedInitialBoard.isNotEmpty()
         ) {
             val configuration = LocalConfiguration.current
             val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
-            val crossHighlight by viewModel.crossHighlight.collectAsStateWithLifecycle(
+            val crossHighlight by bloc.crossHighlight.collectAsStateWithLifecycle(
                 initialValue = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT
             )
-            val fontSizeFactor by viewModel.fontSize.collectAsState(initial = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
+            val fontSizeFactor by bloc.fontSize.collectAsState(initial = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
             val fontSizeValue by remember(fontSizeFactor) {
                 mutableStateOf(
-                    viewModel.getFontSize(factor = fontSizeFactor)
+                    bloc.getFontSize(factor = fontSizeFactor)
                 )
             }
 
@@ -251,26 +240,26 @@ fun SavedGameScreen(
                                 ) {
                                     when (page) {
                                         0 -> Board(
-                                            board = viewModel.parsedCurrentBoard,
-                                            notes = viewModel.notes,
+                                            board = bloc.parsedCurrentBoard,
+                                            notes = bloc.notes,
                                             modifier = boardModifier,
                                             mainTextSize = fontSizeValue,
                                             autoFontSize = fontSizeFactor == 0,
                                             selectedCell = Cell(-1, -1),
                                             onClick = { },
                                             crossHighlight = crossHighlight,
-                                            cages = viewModel.killerCages
+                                            cages = bloc.killerCages
                                         )
 
                                         1 -> Board(
-                                            board = viewModel.parsedInitialBoard,
+                                            board = bloc.parsedInitialBoard,
                                             modifier = boardModifier,
                                             mainTextSize = fontSizeValue,
                                             autoFontSize = fontSizeFactor == 0,
                                             selectedCell = Cell(-1, -1),
                                             onClick = { },
                                             crossHighlight = crossHighlight,
-                                            cages = viewModel.killerCages
+                                            cages = bloc.killerCages
                                         )
                                     }
                                 }
@@ -283,7 +272,7 @@ fun SavedGameScreen(
                             .padding(horizontal = 12.dp)
                             .fillMaxWidth()
                     ) {
-                        val gameFolder by viewModel.gameFolder.collectAsStateWithLifecycle()
+                        val gameFolder by bloc.gameFolder.collectAsStateWithLifecycle()
                         gameFolder?.let {
                             AssistChip(
                                 leadingIcon = {
@@ -293,11 +282,7 @@ fun SavedGameScreen(
                                     )
                                 },
                                 onClick = {
-                                    navigator.navigate(
-                                        ExploreFolderScreenDestination(
-                                            folderUid = it.uid
-                                        )
-                                    )
+                                    navigate(ExploreFolderConfig(folderUid = it.uid))
                                 },
                                 label = { Text(it.name) }
                             )
@@ -305,8 +290,8 @@ fun SavedGameScreen(
 
                         val textStyle = MaterialTheme.typography.bodyLarge
 
-                        val progressPercentage by viewModel.gameProgressPercentage.collectAsStateWithLifecycle()
-                        LaunchedEffect(viewModel.parsedCurrentBoard) { viewModel.countProgressFilled() }
+                        val progressPercentage by bloc.gameProgressPercentage.collectAsStateWithLifecycle()
+                        LaunchedEffect(bloc.parsedCurrentBoard) { bloc.countProgressFilled() }
 
                         Text(
                             text = stringResource(
@@ -317,7 +302,7 @@ fun SavedGameScreen(
                         )
 
 
-                        viewModel.savedGame?.let { savedGame ->
+                        bloc.savedGame?.let { savedGame ->
                             if (savedGame.startedAt != null) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     val startedAtDate by remember(savedGame) {
@@ -337,7 +322,7 @@ fun SavedGameScreen(
                         }
 
                         Text(
-                            text = viewModel.savedGame?.let {
+                            text = bloc.savedGame?.let {
                                 when {
                                     it.mistakes >= PreferencesConstants.MISTAKES_LIMIT -> stringResource(
                                         R.string.saved_game_mistakes_limit
@@ -353,34 +338,32 @@ fun SavedGameScreen(
                         Text(
                             text = stringResource(
                                 R.string.saved_game_difficulty,
-                                stringResource(viewModel.boardEntity!!.difficulty.resName)
+                                stringResource(bloc.boardEntity!!.difficulty.resName)
                             ),
                             style = textStyle
                         )
                         Text(
                             text = stringResource(
                                 R.string.saved_game_type,
-                                stringResource(viewModel.boardEntity!!.type.resName)
+                                stringResource(bloc.boardEntity!!.type.resName)
                             ),
                             style = textStyle
                         )
                         Text(
                             text = stringResource(
                                 R.string.saved_game_time,
-                                viewModel.savedGame!!.timer
+                                bloc.savedGame!!.timer
                                     .toKotlinDuration()
                                     .toFormattedString()
                             )
                         )
 
-                        if (viewModel.savedGame!!.canContinue) {
+                        if (bloc.savedGame!!.canContinue) {
                             FilledTonalButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 onClick = {
-                                    navigator.navigate(
-                                        GameScreenDestination(
-                                            gameUid = viewModel.savedGame!!.uid, playedBefore = true
-                                        )
+                                    navigate(
+                                        GameConfig(gameUid = bloc.savedGame!!.uid, playedBefore = true)
                                     )
                                 }
                             ) {
@@ -440,26 +423,26 @@ fun SavedGameScreen(
                         ) { page ->
                             when (page) {
                                 0 -> Board(
-                                    board = viewModel.parsedCurrentBoard,
-                                    notes = viewModel.notes,
+                                    board = bloc.parsedCurrentBoard,
+                                    notes = bloc.notes,
                                     modifier = boardModifier,
                                     mainTextSize = fontSizeValue,
                                     autoFontSize = fontSizeFactor == 0,
                                     selectedCell = Cell(-1, -1),
                                     onClick = { },
                                     crossHighlight = crossHighlight,
-                                    cages = viewModel.killerCages
+                                    cages = bloc.killerCages
                                 )
 
                                 1 -> Board(
-                                    board = viewModel.parsedInitialBoard,
+                                    board = bloc.parsedInitialBoard,
                                     modifier = boardModifier,
                                     mainTextSize = fontSizeValue,
                                     autoFontSize = fontSizeFactor == 0,
                                     selectedCell = Cell(-1, -1),
                                     onClick = { },
                                     crossHighlight = crossHighlight,
-                                    cages = viewModel.killerCages
+                                    cages = bloc.killerCages
                                 )
                             }
                         }
@@ -471,7 +454,7 @@ fun SavedGameScreen(
                             .padding(horizontal = 12.dp)
                             .fillMaxWidth()
                     ) {
-                        val gameFolder by viewModel.gameFolder.collectAsStateWithLifecycle()
+                        val gameFolder by bloc.gameFolder.collectAsStateWithLifecycle()
                         gameFolder?.let {
                             AssistChip(
                                 leadingIcon = {
@@ -481,11 +464,7 @@ fun SavedGameScreen(
                                     )
                                 },
                                 onClick = {
-                                    navigator.navigate(
-                                        ExploreFolderScreenDestination(
-                                            folderUid = it.uid
-                                        )
-                                    )
+                                    navigate(ExploreFolderConfig(folderUid = it.uid))
                                 },
                                 label = { Text(it.name) }
                             )
@@ -493,8 +472,8 @@ fun SavedGameScreen(
 
                         val textStyle = MaterialTheme.typography.bodyLarge
 
-                        val progressPercentage by viewModel.gameProgressPercentage.collectAsStateWithLifecycle()
-                        LaunchedEffect(viewModel.parsedCurrentBoard) { viewModel.countProgressFilled() }
+                        val progressPercentage by bloc.gameProgressPercentage.collectAsStateWithLifecycle()
+                        LaunchedEffect(bloc.parsedCurrentBoard) { bloc.countProgressFilled() }
 
                         Text(
                             text = stringResource(
@@ -505,7 +484,7 @@ fun SavedGameScreen(
                         )
 
 
-                        viewModel.savedGame?.let { savedGame ->
+                        bloc.savedGame?.let { savedGame ->
                             if (savedGame.startedAt != null) {
                                 Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                     val startedAtDate by remember(savedGame) {
@@ -525,7 +504,7 @@ fun SavedGameScreen(
                         }
 
                         Text(
-                            text = viewModel.savedGame?.let {
+                            text = bloc.savedGame?.let {
                                 when {
                                     it.mistakes >= PreferencesConstants.MISTAKES_LIMIT -> stringResource(
                                         R.string.saved_game_mistakes_limit
@@ -541,34 +520,32 @@ fun SavedGameScreen(
                         Text(
                             text = stringResource(
                                 R.string.saved_game_difficulty,
-                                stringResource(viewModel.boardEntity!!.difficulty.resName)
+                                stringResource(bloc.boardEntity!!.difficulty.resName)
                             ),
                             style = textStyle
                         )
                         Text(
                             text = stringResource(
                                 R.string.saved_game_type,
-                                stringResource(viewModel.boardEntity!!.type.resName)
+                                stringResource(bloc.boardEntity!!.type.resName)
                             ),
                             style = textStyle
                         )
                         Text(
                             text = stringResource(
                                 R.string.saved_game_time,
-                                viewModel.savedGame!!.timer
+                                bloc.savedGame!!.timer
                                     .toKotlinDuration()
                                     .toFormattedString()
                             )
                         )
 
-                        if (viewModel.savedGame!!.canContinue) {
+                        if (bloc.savedGame!!.canContinue) {
                             FilledTonalButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 onClick = {
-                                    navigator.navigate(
-                                        GameScreenDestination(
-                                            gameUid = viewModel.savedGame!!.uid, playedBefore = true
-                                        )
+                                    navigate(
+                                        GameConfig(gameUid = bloc.savedGame!!.uid, playedBefore = true)
                                     )
                                 }
                             ) {
@@ -582,12 +559,12 @@ fun SavedGameScreen(
             EmptyScreen(stringResource(R.string.empty_screen_something_went_wrong))
         }
 
-        if (viewModel.exportDialog) {
+        if (bloc.exportDialog) {
             ModalBottomSheet(
-                onDismissRequest = { viewModel.exportDialog = false },
+                onDismissRequest = { bloc.exportDialog = false },
                 sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
             ) {
-                viewModel.boardEntity?.let {
+                bloc.boardEntity?.let {
                     var copyInitial by rememberSaveable { mutableStateOf(true) }
                     var selectedEmptyCell by rememberSaveable { mutableStateOf(SudokuParser.EMPTY_SEPARATORS.first()) }
                     Column(
@@ -622,7 +599,7 @@ fun SavedGameScreen(
                                     }
                                 )
                             }
-                            viewModel.savedGame?.let { savedGame ->
+                            bloc.savedGame?.let { savedGame ->
                                 AnimatedContent(
                                     (if (copyInitial) it.initialBoard else savedGame.currentBoard)
                                         .replace('0', selectedEmptyCell)
@@ -662,7 +639,7 @@ fun SavedGameScreen(
                         Button(
                             onClick = {
                                 val exported =
-                                    (if (copyInitial) it.initialBoard else viewModel.savedGame?.currentBoard
+                                    (if (copyInitial) it.initialBoard else bloc.savedGame?.currentBoard
                                         ?: "")
                                         .replace('0', selectedEmptyCell)
                                         .uppercase()

@@ -70,44 +70,38 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
-import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.runBlocking
 import java.time.ZonedDateTime
 import kotlin.math.sqrt
 import kotlin.time.toKotlinDuration
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Destination(style = AnimatedNavigation::class)
-@RootNavGraph(start = true)
 @Composable
 fun HomeScreen(
-    navigator: DestinationsNavigator,
-    viewModel: HomeViewModel = rememberViewModel(HomeViewModel.builder),
+    bloc: HomeBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
     var continueGameDialog by rememberSaveable { mutableStateOf(false) }
     var lastGamesBottomSheet by rememberSaveable {
         mutableStateOf(false)
     }
 
-    val lastGame by viewModel.lastSavedGame.collectAsStateWithLifecycle()
-    val lastGames by viewModel.lastGames.collectAsStateWithLifecycle(initialValue = emptyMap())
-    val saveSelectedGameDifficultyType by viewModel.saveSelectedGameDifficultyType.collectAsStateWithLifecycle(
+    val lastGame by bloc.lastSavedGame.collectAsStateWithLifecycle()
+    val lastGames by bloc.lastGames.collectAsStateWithLifecycle(initialValue = emptyMap())
+    val saveSelectedGameDifficultyType by bloc.saveSelectedGameDifficultyType.collectAsStateWithLifecycle(
         false
     )
-    val lastSelectedGameDifficultyType by viewModel.lastSelectedGameDifficultyType.collectAsStateWithLifecycle(
+    val lastSelectedGameDifficultyType by bloc.lastSelectedGameDifficultyType.collectAsStateWithLifecycle(
         Pair(
             GameDifficulty.Easy, GameType.Default9x9
         )
@@ -117,8 +111,8 @@ fun HomeScreen(
     LaunchedEffect(saveSelectedGameDifficultyType) {
         if (saveSelectedGameDifficultyType) {
             val (difficulty, type) = lastSelectedGameDifficultyType
-            viewModel.selectedDifficulty = difficulty
-            viewModel.selectedType = type
+            bloc.selectedDifficulty = difficulty
+            bloc.selectedType = type
         }
     }
 
@@ -130,17 +124,14 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceAround
         ) {
-            if (viewModel.readyToPlay) {
-                viewModel.readyToPlay = false
+            if (bloc.readyToPlay) {
+                bloc.readyToPlay = false
 
                 runBlocking {
                     //viewModel.saveToDatabase()
                     val saved = lastGame?.completed ?: false
-                    navigator.navigate(
-                        GameScreenDestination(
-                            gameUid = viewModel.insertedBoardUid,
-                            playedBefore = saved
-                        )
+                    navigate(
+                        GameConfig(gameUid = bloc.insertedBoardUid, playedBefore = saved)
                     )
                 }
             }
@@ -153,14 +144,14 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 HorizontalPicker(
-                    text = stringResource(viewModel.selectedDifficulty.resName),
-                    onLeftClick = { viewModel.changeDifficulty(-1) },
-                    onRightClick = { viewModel.changeDifficulty(1) }
+                    text = stringResource(bloc.selectedDifficulty.resName),
+                    onLeftClick = { bloc.changeDifficulty(-1) },
+                    onRightClick = { bloc.changeDifficulty(1) }
                 )
                 HorizontalPicker(
-                    text = stringResource(viewModel.selectedType.resName),
-                    onLeftClick = { viewModel.changeType(-1) },
-                    onRightClick = { viewModel.changeType(1) }
+                    text = stringResource(bloc.selectedType.resName),
+                    onLeftClick = { bloc.changeType(-1) },
+                    onRightClick = { bloc.changeType(1) }
                 )
 
                 Spacer(Modifier.height(12.dp))
@@ -172,12 +163,7 @@ fun HomeScreen(
                         Button(onClick = {
                             if (lastGames.size <= 1) {
                                 lastGame?.let {
-                                    navigator.navigate(
-                                        GameScreenDestination(
-                                            gameUid = it.uid,
-                                            playedBefore = true
-                                        )
-                                    )
+                                    GameConfig(gameUid = it.uid, playedBefore = true)
                                 }
                             } else {
                                 lastGamesBottomSheet = true
@@ -192,8 +178,8 @@ fun HomeScreen(
                         }
                     } else {
                         Button(onClick = {
-                            viewModel.giveUpLastGame()
-                            viewModel.startGame()
+                            bloc.giveUpLastGame()
+                            bloc.startGame()
                         }) {
                             Text(stringResource(R.string.action_play))
                         }
@@ -203,12 +189,12 @@ fun HomeScreen(
         }
 
 
-        if (viewModel.isGenerating || viewModel.isSolving) {
+        if (bloc.isGenerating || bloc.isSolving) {
             GeneratingDialog(
                 onDismiss = { },
                 text = when {
-                    viewModel.isGenerating -> stringResource(R.string.dialog_generating)
-                    viewModel.isSolving -> stringResource(R.string.dialog_solving)
+                    bloc.isGenerating -> stringResource(R.string.dialog_generating)
+                    bloc.isSolving -> stringResource(R.string.dialog_solving)
                     else -> ""
                 }
             )
@@ -221,8 +207,8 @@ fun HomeScreen(
                 confirmButton = {
                     TextButton(onClick = {
                         continueGameDialog = false
-                        viewModel.giveUpLastGame()
-                        viewModel.startGame()
+                        bloc.giveUpLastGame()
+                        bloc.startGame()
                     }) {
                         Text(stringResource(R.string.dialog_new_game_positive))
                     }
@@ -262,12 +248,7 @@ fun HomeScreen(
                             type = stringResource(item.second.type.resName),
                             savedGame = item.first,
                             onClick = {
-                                navigator.navigate(
-                                    GameScreenDestination(
-                                        gameUid = item.first.uid,
-                                        playedBefore = true
-                                    )
-                                )
+                                GameConfig(gameUid = item.first.uid, playedBefore = true)
                                 lastGamesBottomSheet = false
                             }
                         )

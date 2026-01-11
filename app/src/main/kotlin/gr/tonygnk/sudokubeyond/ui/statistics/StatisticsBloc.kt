@@ -21,28 +21,33 @@ package gr.tonygnk.sudokubeyond.ui.statistics
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.model.Record
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class StatisticsViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class StatisticsBloc(
+    blocContext: BlocContext,
     private val recordRepository: RecordRepository,
     private val tipCardsDataStore: TipCardsDataStore,
     savedGameRepository: SavedGameRepository,
     appSettingsManager: AppSettingsManager,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+    private val scope = lifecycle.coroutineScope
+
     var showDeleteDialog by mutableStateOf(false)
     var selectedDifficulty by mutableStateOf(GameDifficulty.Unspecified)
     var selectedType by mutableStateOf(GameType.Unspecified)
@@ -56,7 +61,7 @@ class StatisticsViewModel(
     val dateFormat = appSettingsManager.dateFormat
 
     fun deleteRecord(recordEntity: Record) {
-        viewModelScope.launch {
+        scope.launch {
             recordRepository.delete(recordEntity)
         }
     }
@@ -94,13 +99,13 @@ class StatisticsViewModel(
     }
 
     fun setRecordTipCard(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             tipCardsDataStore.setRecordCard(enabled)
         }
     }
 
     fun setStreakTipCard(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             tipCardsDataStore.setStreakCard(enabled)
         }
     }
@@ -135,14 +140,13 @@ class StatisticsViewModel(
             .toFloat()
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            StatisticsViewModel(
-                recordRepository = LibreSudokuApp.appModule.recordRepository,
-                tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = StatisticsBloc(
+            blocContext = blocContext,
+            recordRepository = LibreSudokuApp.appModule.recordRepository,
+            tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }

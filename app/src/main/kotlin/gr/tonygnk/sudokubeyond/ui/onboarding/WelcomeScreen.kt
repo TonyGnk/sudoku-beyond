@@ -64,32 +64,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.R
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.SudokuParser
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsLanguageScreenDestination
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsLanguageConfig
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-@Destination
 @Composable
 fun WelcomeScreen(
-    viewModel: WelcomeViewModel = rememberViewModel(WelcomeViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: WelcomeBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    removeWelcomeAndNavigateToHome: () -> Unit,
 ) {
     val context = LocalContext.current
     val currentLanguage by remember {
@@ -127,17 +124,16 @@ fun WelcomeScreen(
                 ) {
                     Text(stringResource(R.string.intro_rules))
                     Board(
-                        board = viewModel.previewBoard,
+                        board = bloc.previewBoard,
                         size = 9,
-                        selectedCell = viewModel.selectedCell,
-                        onClick = { cell -> viewModel.selectedCell = cell }
+                        selectedCell = bloc.selectedCell,
+                        onClick = { cell -> bloc.selectedCell = cell }
                     )
 
                     Button(
                         onClick = {
-                            viewModel.setFirstLaunch()
-                            navigator.popBackStack()
-                            navigator.navigate(HomeScreenDestination())
+                            bloc.setFirstLaunch()
+                            removeWelcomeAndNavigateToHome()
                         },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
@@ -148,14 +144,16 @@ fun WelcomeScreen(
                         title = stringResource(R.string.pref_app_language),
                         icon = Icons.Rounded.Language,
                         subtitle = currentLanguage,
-                        onClick = { navigator.navigate(SettingsLanguageScreenDestination()) },
+                        onClick = {
+                            navigate(SettingsLanguageConfig)
+                        },
                     )
                     ItemRowBigIcon(
                         title = stringResource(R.string.onboard_restore_backup),
                         icon = Icons.Rounded.Restore,
                         subtitle = stringResource(R.string.onboard_restore_backup_description),
                         onClick = {
-                            navigator.navigate(BackupScreenDestination)
+                            navigate(BackupConfig)
                         }
                     )
                     ItemRowBigIcon(
@@ -163,7 +161,7 @@ fun WelcomeScreen(
                         icon = Icons.Rounded.Settings,
                         subtitle = stringResource(R.string.onboard_settings_description),
                         onClick = {
-                            navigator.navigate(SettingsCategoriesScreenDestination(false))
+                            navigate(SettingsCategoriesConfig(false))
                         }
                     )
                 }
@@ -241,9 +239,14 @@ fun ItemRowBigIcon(
     }
 }
 
-class WelcomeViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class WelcomeBloc(
+    blocContext: BlocContext,
     private val settingsDataManager: AppSettingsManager,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     var selectedCell by mutableStateOf(Cell(-1, -1, 0))
 
     // all heart shaped ❤
@@ -263,16 +266,15 @@ class WelcomeViewModel(
     )
 
     fun setFirstLaunch(value: Boolean = false) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settingsDataManager.setFirstLaunch(value)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            WelcomeViewModel(
-                settingsDataManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = WelcomeBloc(
+            blocContext = blocContext,
+            settingsDataManager = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }

@@ -21,10 +21,11 @@ package gr.tonygnk.sudokubeyond.ui.backup
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.backup.BackupData
 import gr.tonygnk.sudokubeyond.data.backup.SettingsBackup
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
@@ -34,7 +35,7 @@ import gr.tonygnk.sudokubeyond.domain.repository.DatabaseRepository
 import gr.tonygnk.sudokubeyond.domain.repository.FolderRepository
 import gr.tonygnk.sudokubeyond.domain.repository.RecordRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -46,7 +47,9 @@ import kotlinx.serialization.json.Json
 import java.io.OutputStream
 import java.time.ZonedDateTime
 
-class BackupScreenViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class BackupBloc(
+    blocContext: BlocContext,
     private val appSettingsManager: AppSettingsManager,
     private val themeSettingsManager: ThemeSettingsManager,
     private val boardRepository: BoardRepository,
@@ -54,9 +57,12 @@ class BackupScreenViewModel(
     private val recordRepository: RecordRepository,
     private val savedGameRepository: SavedGameRepository,
     private val databaseRepository: DatabaseRepository,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val backupUri = appSettingsManager.backupUri.stateIn(
-        viewModelScope,
+        scope,
         SharingStarted.Eagerly,
         initialValue = ""
     )
@@ -107,7 +113,7 @@ class BackupScreenViewModel(
     }
 
     fun setBackupDirectory(uri: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appSettingsManager.setBackupUri(uri)
         }
     }
@@ -130,7 +136,7 @@ class BackupScreenViewModel(
         outputStream: OutputStream?,
         onComplete: (Throwable?) -> Unit,
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             backupJson?.let { backup ->
                 try {
                     outputStream?.use {
@@ -138,7 +144,7 @@ class BackupScreenViewModel(
                         it.close()
                     }
                     onComplete(null)
-                    viewModelScope.launch(Dispatchers.IO) {
+                    scope.launch(Dispatchers.IO) {
                         appSettingsManager.setLastBackupDate(ZonedDateTime.now())
                     }
                 } catch (e: Exception) {
@@ -152,7 +158,7 @@ class BackupScreenViewModel(
         onComplete: () -> Unit,
     ) {
         backupData?.let { backup ->
-            viewModelScope.launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 try {
                     // deleting all data from database
                     runBlocking { databaseRepository.resetDb() }
@@ -175,28 +181,27 @@ class BackupScreenViewModel(
     }
 
     fun setAutoBackupsNumber(value: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appSettingsManager.setAutoBackupsNumber(value)
         }
     }
 
     fun setAutoBackupInterval(hours: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appSettingsManager.setAutoBackupInterval(hours)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            BackupScreenViewModel(
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                boardRepository = LibreSudokuApp.appModule.boardRepository,
-                folderRepository = LibreSudokuApp.appModule.folderRepository,
-                recordRepository = LibreSudokuApp.appModule.recordRepository,
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
-                databaseRepository = LibreSudokuApp.appModule.databaseRepository
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = BackupBloc(
+            blocContext = blocContext,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            boardRepository = LibreSudokuApp.appModule.boardRepository,
+            folderRepository = LibreSudokuApp.appModule.folderRepository,
+            recordRepository = LibreSudokuApp.appModule.recordRepository,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+            databaseRepository = LibreSudokuApp.appModule.databaseRepository
+        )
     }
 }

@@ -23,14 +23,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.model.Cage
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.model.Note
 import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
@@ -39,7 +39,7 @@ import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
 import gr.tonygnk.sudokubeyond.domain.usecase.folder.GetFolderUseCase
-import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -49,16 +49,17 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.pow
 
-class SavedGameViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SavedGameBloc(
+    blocContext: BlocContext,
+    val boardUid: Long,
     private val boardRepository: BoardRepository,
     private val savedGameRepository: SavedGameRepository,
     private val getFolderUseCase: GetFolderUseCase,
     appSettingsManager: AppSettingsManager,
     themeSettingsManager: ThemeSettingsManager,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    val navArgs: SavedGameScreenNavArgs = savedStateHandle.navArgs()
-    val boardUid = navArgs.gameUid
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+    private val scope = lifecycle.coroutineScope
 
     val fontSize = appSettingsManager.fontSize
     val dateFormat = appSettingsManager.dateFormat
@@ -82,7 +83,7 @@ class SavedGameViewModel(
     val crossHighlight = themeSettingsManager.boardCrossHighlight
 
     fun updateGameDetails() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             boardEntity = boardRepository.get(boardUid)
             savedGame = savedGameRepository.get(boardUid)
 
@@ -111,7 +112,7 @@ class SavedGameViewModel(
                     }
                 }
 
-                viewModelScope.launch {
+                scope.launch {
                     boardEntity.folderId?.let { folderUid ->
                         val folder = getFolderUseCase(folderUid)
                         folder.collectLatest {
@@ -124,7 +125,7 @@ class SavedGameViewModel(
     }
 
     fun countProgressFilled() {
-        viewModelScope.launch {
+        scope.launch {
             var totalCells = 1
             var count = 0
             boardEntity?.let { board ->
@@ -146,16 +147,15 @@ class SavedGameViewModel(
         return 24.sp
     }
 
-    companion object {
-        val builder: (SavedStateHandle) -> SavedGameViewModel = { savedStateHandle ->
-            SavedGameViewModel(
-                boardRepository = LibreSudokuApp.appModule.boardRepository,
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
-                getFolderUseCase = GetFolderUseCase(LibreSudokuApp.appModule.folderRepository),
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                savedStateHandle = savedStateHandle
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext, boardUid: Long) = SavedGameBloc(
+            blocContext = blocContext,
+            boardUid = boardUid,
+            boardRepository = LibreSudokuApp.appModule.boardRepository,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+            getFolderUseCase = GetFolderUseCase(LibreSudokuApp.appModule.folderRepository),
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+        )
     }
 }

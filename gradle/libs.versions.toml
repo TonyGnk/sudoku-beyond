@@ -13,6 +13,7 @@ androidxGraphicsShape = "1.1.0"
 androidxLifecycleRuntime = "2.10.0"
 androidxRoom = "2.8.4"
 androidxWorkRuntime = "2.11.0"
+arkivanovDecompose = "3.5.0-alpha01"
 googleDevtoolsKsp = "2.3.4"
 jetbrainsKotlin = "2.3.0"
 jetbrainsKotlinStdlib = "2.3.0"
@@ -22,7 +23,6 @@ junit = "4.13.2"
 kotlinTest = "2.3.0"
 materialKolor = "2.0.0"
 mikepenzAboutLibraries = '13.2.1'
-raamcostaComposeDestinations = "1.11.6"
 squareupOkhttp3 = "5.0.0-alpha.14"
 
 # Sdk versions
@@ -61,12 +61,13 @@ jetbrains-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", 
 jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
 
 # Third Party
+arkivanov-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "arkivanovDecompose" }
+arkivanov-decompose-extensions-compose-experimental = { module = "com.arkivanov.decompose:extensions-compose-experimental", version.ref = "arkivanovDecompose" }
+arkivanov-decompose-jetpack-component-context = { module = "com.arkivanov.decompose:jetpack-component-context", version.ref = "arkivanovDecompose" }
 jeziellago-compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "jeziellagoComposeMarkdown" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 materialKolor-material-kolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 mikepenz-aboutLibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "mikepenzAboutLibraries" }
-raamcosta-compose-destinations = { group = "io.github.raamcosta.compose-destinations", name = "animations-core", version.ref = "raamcostaComposeDestinations" }
-raamcosta-compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "raamcostaComposeDestinations" }
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "squareupOkhttp3" }
 
 [plugins]

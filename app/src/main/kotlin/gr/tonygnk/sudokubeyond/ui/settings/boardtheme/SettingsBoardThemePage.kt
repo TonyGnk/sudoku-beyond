@@ -28,7 +28,6 @@ import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.rounded.FormatSize
 import androidx.compose.material.icons.rounded.GridGoldenratio
 import androidx.compose.material.icons.rounded.GridOn
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -51,15 +50,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
@@ -68,20 +64,17 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopA
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
 import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsBoardTheme(
-    viewModel: SettingsBoardThemeViewModel = rememberViewModel(SettingsBoardThemeViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SettingsBoardThemeBloc,
+    finish: () -> Unit,
 ) {
     val scrollBehavior = rememberTopAppBarScrollBehavior()
-    val positionLines by viewModel.positionLines.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_POSITION_LINES)
-    val highlightMistakes by viewModel.highlightMistakes.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES)
-    val boardCrossHighlight by viewModel.crossHighlight.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT)
-    val fontSizeFactor by viewModel.fontSize.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
+    val positionLines by bloc.positionLines.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_POSITION_LINES)
+    val highlightMistakes by bloc.highlightMistakes.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES)
+    val boardCrossHighlight by bloc.crossHighlight.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT)
+    val fontSizeFactor by bloc.fontSize.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
 
     var fontSizeDialog by rememberSaveable {
         mutableStateOf(false)
@@ -108,7 +101,7 @@ fun SettingsBoardTheme(
             CollapsingTopAppBar(
                 collapsingTitle = CollapsingTitle.medium(titleText = stringResource(R.string.board_theme_title)),
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -154,7 +147,7 @@ fun SettingsBoardTheme(
                 autoFontSize = fontSizeFactor == 0,
                 gameType = selectedBoardType
             )
-            val monetSudokuBoard by viewModel.monetSudokuBoard.collectAsStateWithLifecycle(
+            val monetSudokuBoard by bloc.monetSudokuBoard.collectAsStateWithLifecycle(
                 PreferencesConstants.DEFAULT_MONET_SUDOKU_BOARD
             )
             PreferenceRowSwitch(
@@ -163,7 +156,7 @@ fun SettingsBoardTheme(
                 checked = monetSudokuBoard,
                 painter = rememberVectorPainter(Icons.Outlined.Palette),
                 onClick = {
-                    viewModel.updateMonetSudokuBoardSetting(!monetSudokuBoard)
+                    bloc.updateMonetSudokuBoardSetting(!monetSudokuBoard)
                 }
             )
 
@@ -172,7 +165,7 @@ fun SettingsBoardTheme(
                 subtitle = stringResource(R.string.pref_position_lines_summ),
                 checked = positionLines,
                 painter = rememberVectorPainter(Icons.Rounded.GridGoldenratio),
-                onClick = { viewModel.updatePositionLinesSetting(!positionLines) }
+                onClick = { bloc.updatePositionLinesSetting(!positionLines) }
             )
 
             PreferenceRowSwitch(
@@ -180,7 +173,7 @@ fun SettingsBoardTheme(
                 subtitle = stringResource(R.string.pref_cross_highlight_subtitle),
                 checked = boardCrossHighlight,
                 painter = rememberVectorPainter(Icons.Rounded.GridOn),
-                onClick = { viewModel.updateBoardCrossHighlight(!boardCrossHighlight) }
+                onClick = { bloc.updateBoardCrossHighlight(!boardCrossHighlight) }
             )
             PreferenceRow(
                 title = stringResource(R.string.pref_board_font_size),
@@ -207,7 +200,7 @@ fun SettingsBoardTheme(
                 ),
                 selected = fontSizeFactor,
                 onSelect = { index ->
-                    viewModel.updateFontSize(index)
+                    bloc.updateFontSize(index)
                 },
                 onDismiss = { fontSizeDialog = false }
             )

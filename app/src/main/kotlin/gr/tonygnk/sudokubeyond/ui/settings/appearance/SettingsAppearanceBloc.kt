@@ -19,26 +19,32 @@
 package gr.tonygnk.sudokubeyond.ui.settings.appearance
 
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
-class SettingsAppearanceViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsAppearanceBloc(
+    blocContext: BlocContext,
     private val themeSettings: ThemeSettingsManager,
-    private val settings: AppSettingsManager
-) : ViewModel() {
+    private val settings: AppSettingsManager,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val darkTheme by lazy {
         themeSettings.darkTheme
     }
 
     fun updateDarkTheme(value: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             themeSettings.setDarkTheme(value)
         }
 
@@ -47,7 +53,7 @@ class SettingsAppearanceViewModel(
     }
 
     fun updateDynamicColors(enabled: Boolean) =
-        viewModelScope.launch {
+        scope.launch {
             themeSettings.setDynamicColors(enabled)
         }
 
@@ -56,26 +62,26 @@ class SettingsAppearanceViewModel(
     }
 
     fun updateAmoledBlack(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             themeSettings.setAmoledBlack(enabled)
         }
 
     val dateFormat = settings.dateFormat
     fun updateDateFormat(format: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setDateFormat(format)
         }
     }
 
     val paletteStyle by lazy { themeSettings.themePaletteStyle }
     fun updatePaletteStyle(index: Int) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             themeSettings.setPaletteStyle(ThemeSettingsManager.paletteStyles[index].first)
         }
 
     val seedColor by lazy { themeSettings.themeColorSeed }
     fun updateCurrentSeedColor(seedColor: Color) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             themeSettings.setCurrentThemeColor(seedColor)
         }
     }
@@ -89,12 +95,11 @@ class SettingsAppearanceViewModel(
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsAppearanceViewModel(
-                themeSettings = LibreSudokuApp.appModule.themeSettingsManager,
-                settings = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = SettingsAppearanceBloc(
+            blocContext = blocContext,
+            themeSettings = LibreSudokuApp.appModule.themeSettingsManager,
+            settings = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }

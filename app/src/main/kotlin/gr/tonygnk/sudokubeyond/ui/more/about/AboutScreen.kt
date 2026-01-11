@@ -70,8 +70,7 @@ import gr.tonygnk.sudokubeyond.core.CRYPTO_USDT_TRC20
 import gr.tonygnk.sudokubeyond.core.GITHUB_REPOSITORY
 import gr.tonygnk.sudokubeyond.core.TELEGRAM_CHANNEL
 import gr.tonygnk.sudokubeyond.core.WEBLATE_ENGAGE
-import gr.tonygnk.sudokubeyond.destinations.AboutLibrariesScreenDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 import gr.tonygnk.sudokubeyond.ui.theme.icons.Bitcoin
 import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
@@ -80,14 +79,14 @@ import gr.tonygnk.sudokubeyond.ui.theme.icons.Mir
 import gr.tonygnk.sudokubeyond.ui.theme.icons.Ton
 import gr.tonygnk.sudokubeyond.ui.theme.icons.Usdt
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+data object AboutBloc : MainActivityBloc.PagesBloc
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutScreen(
-    navigator: DestinationsNavigator
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val uriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
@@ -97,7 +96,7 @@ fun AboutScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.about_title)) },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -190,7 +189,9 @@ fun AboutScreen(
                     title = stringResource(R.string.libraries_licenses),
                     subtitle = stringResource(R.string.libraries_licenses_title),
                     icon = Icons.Outlined.Info,
-                    onClick = { navigator.navigate(AboutLibrariesScreenDestination()) }
+                    onClick = {
+                        navigate(MainActivityBloc.PagesConfig.AboutLibrariesConfig)
+                    }
                 )
             }
 
@@ -275,7 +276,7 @@ fun FlowRowScope.AboutSectionBox(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
-    additionalContent: @Composable (ColumnScope.() -> Unit)? = null
+    additionalContent: @Composable (ColumnScope.() -> Unit)? = null,
 ) {
     Box(
         modifier = modifier
@@ -322,7 +323,7 @@ fun DonationItem(
     information: String,
     icon: ImageVector,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier

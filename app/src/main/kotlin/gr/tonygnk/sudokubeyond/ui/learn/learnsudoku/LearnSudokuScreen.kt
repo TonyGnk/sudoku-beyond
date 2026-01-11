@@ -25,19 +25,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.destinations.LearnBasicDestination
-import gr.tonygnk.sudokubeyond.destinations.LearnHiddenPairsDestination
-import gr.tonygnk.sudokubeyond.destinations.LearnNakedPairsDestination
-import gr.tonygnk.sudokubeyond.destinations.LearnSudokuRulesDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnBasicConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnHiddenPairsConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnNakedPairsConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnSudokuRulesConfig
 import gr.tonygnk.sudokubeyond.ui.learn.components.LearnRowItem
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun LearnSudokuScreen(
-    navigator: DestinationsNavigator
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -46,19 +43,27 @@ fun LearnSudokuScreen(
             item {
                 LearnRowItem(
                     title = stringResource(R.string.learn_sudoku_rules),
-                    onClick = { navigator.navigate(LearnSudokuRulesDestination()) }
+                    onClick = {
+                        navigate(LearnSudokuRulesConfig)
+                    }
                 )
                 LearnRowItem(
                     title = stringResource(R.string.learn_basic_title),
-                    onClick = { navigator.navigate(LearnBasicDestination()) }
+                    onClick = {
+                        navigate(LearnBasicConfig)
+                    }
                 )
                 LearnRowItem(
                     title = stringResource(R.string.naked_pairs_title),
-                    onClick = { navigator.navigate(LearnNakedPairsDestination()) }
+                    onClick = {
+                        navigate(LearnNakedPairsConfig)
+                    }
                 )
                 LearnRowItem(
                     title = stringResource(R.string.learn_hidden_pairs_title),
-                    onClick = { navigator.navigate(LearnHiddenPairsDestination()) }
+                    onClick = {
+                        navigate(LearnHiddenPairsConfig)
+                    }
                 )
             }
         }

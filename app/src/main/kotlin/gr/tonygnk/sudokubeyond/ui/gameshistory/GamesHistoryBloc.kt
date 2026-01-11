@@ -21,22 +21,24 @@ package gr.tonygnk.sudokubeyond.ui.gameshistory
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import gr.tonygnk.sudokubeyond.LibreSudokuApp
-import gr.tonygnk.sudokubeyond.R
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 
-class HistoryViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class GamesHistoryBloc(
+    blocContext: BlocContext,
     savedGameRepository: SavedGameRepository,
     appSettingsManager: AppSettingsManager,
-) : ViewModel(
-) {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
     val games = savedGameRepository.getWithBoards()
 
     var sortType by mutableStateOf(SortType.Descending)
@@ -134,13 +136,12 @@ class HistoryViewModel(
         return if (descending) sortedWith(compareByDescending(selector)) else sortedWith(compareBy(selector))
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            HistoryViewModel(
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = GamesHistoryBloc(
+            blocContext = blocContext,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }
 

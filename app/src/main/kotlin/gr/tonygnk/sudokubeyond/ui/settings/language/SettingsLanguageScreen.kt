@@ -58,7 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.os.LocaleListCompat
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.WEBLATE_ENGAGE
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.locale_emoji.LocaleEmoji
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
@@ -66,13 +66,12 @@ import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 import gr.tonygnk.sudokubeyond.ui.util.findActivity
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleTag
 import gr.tonygnk.sudokubeyond.ui.util.getLangs
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
+data object SettingsLanguageBloc : MainActivityBloc.PagesBloc
+
 @Composable
 fun SettingsLanguageScreen(
-    navigator: DestinationsNavigator
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val uriHandler = LocalUriHandler.current
@@ -82,7 +81,7 @@ fun SettingsLanguageScreen(
 
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.pref_app_language),
-        navigator = navigator
+        finish = finish
     ) { paddingValues ->
         ScrollbarLazyColumn(
             modifier = Modifier
@@ -128,7 +127,7 @@ fun SettingsLanguageScreen(
 @Composable
 private fun HelpTranslateCard(
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Row(
         modifier = modifier
@@ -175,7 +174,7 @@ private fun LanguageItem(
     languageEmoji: String?,
     selected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val titleStyle = MaterialTheme.typography.titleLarge.copy(
         color = MaterialTheme.colorScheme.onSurface,

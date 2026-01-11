@@ -25,16 +25,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.destinations.ToolbarTutorialScreenDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ToolbarTutorialConfig
 import gr.tonygnk.sudokubeyond.ui.learn.components.LearnRowItem
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun LearnAppScreen(
-    navigator: DestinationsNavigator
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
@@ -44,7 +41,7 @@ fun LearnAppScreen(
                 LearnRowItem(
                     title = stringResource(R.string.learn_app_toolbar),
                     subtitle = stringResource(R.string.learn_app_toolbar_desc),
-                    onClick = { navigator.navigate(ToolbarTutorialScreenDestination()) }
+                    onClick = { navigate(ToolbarTutorialConfig) }
                 )
             }
         }

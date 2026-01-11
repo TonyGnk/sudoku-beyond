@@ -21,8 +21,8 @@ package gr.tonygnk.sudokubeyond.ui.home
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.algorithm.CageGenerator
 import gr.tonygnk.sudoku.core.algorithm.QQWingController
 import gr.tonygnk.sudoku.core.model.Cage
@@ -34,11 +34,12 @@ import gr.tonygnk.sudoku.core.types.GameDifficulty.Moderate
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.domain.repository.BoardRepository
 import gr.tonygnk.sudokubeyond.domain.repository.SavedGameRepository
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
@@ -47,18 +48,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class HomeViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class HomeBloc(
+    blocContext: BlocContext,
     private val appSettingsManager: AppSettingsManager,
     private val boardRepository: BoardRepository,
     private val savedGameRepository: SavedGameRepository,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
 
     val lastSavedGame = savedGameRepository.getLast()
-        .stateIn(viewModelScope, SharingStarted.Eagerly, null)
+        .stateIn(scope, SharingStarted.Eagerly, null)
 
     private val lastGamesLimit = 5
     val lastGames = savedGameRepository.getLastPlayable(limit = lastGamesLimit)
-        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyMap())
+        .stateIn(scope, SharingStarted.Eagerly, emptyMap())
 
     var insertedBoardUid = -1L
 
@@ -100,7 +105,7 @@ class HomeViewModel(
         puzzle = List(size) { row -> List(size) { col -> Cell(row, col, 0) } }
         solvedPuzzle = List(size) { row -> List(size) { col -> Cell(row, col, 0) } }
 
-        viewModelScope.launch(Dispatchers.Default) {
+        scope.launch(Dispatchers.Default) {
             val saveSelectedGameDifficultyAndType = runBlocking { appSettingsManager.saveSelectedGameDifficultyType.first() }
             if (saveSelectedGameDifficultyAndType) {
                 appSettingsManager.setLastSelectedGameDifficultyType(
@@ -175,7 +180,7 @@ class HomeViewModel(
     }
 
     fun giveUpLastGame() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             lastSavedGame.value?.let {
                 if (!it.completed) {
                     savedGameRepository.update(
@@ -189,13 +194,12 @@ class HomeViewModel(
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            HomeViewModel(
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-                boardRepository = LibreSudokuApp.appModule.boardRepository,
-                savedGameRepository = LibreSudokuApp.appModule.savedGameRepository
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = HomeBloc(
+            blocContext = blocContext,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            boardRepository = LibreSudokuApp.appModule.boardRepository,
+            savedGameRepository = LibreSudokuApp.appModule.savedGameRepository
+        )
     }
 }

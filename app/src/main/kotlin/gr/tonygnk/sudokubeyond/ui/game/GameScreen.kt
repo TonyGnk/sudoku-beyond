@@ -84,19 +84,17 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudoku.core.hint.AdvancedHintData
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.SudokuParser
-import gr.tonygnk.sudokubeyond.destinations.SettingsAdvancedHintScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.extensions.resName
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAdvancedHintConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
 import gr.tonygnk.sudokubeyond.ui.components.AdvancedHintContainer
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
 import gr.tonygnk.sudokubeyond.ui.game.components.GameMenu
@@ -107,64 +105,60 @@ import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
 import gr.tonygnk.sudokubeyond.ui.game.components.UndoRedoMenu
 import gr.tonygnk.sudokubeyond.ui.onboarding.FirstGameDialog
 import gr.tonygnk.sudokubeyond.ui.util.ReverseArrangement
-import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 
-@Destination(
-    style = AnimatedNavigation::class,
-    navArgsDelegate = GameScreenNavArgs::class
-)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GameScreen(
-    viewModel: GameViewModel = rememberSavedStateViewModel(GameViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: GameBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val localView = LocalView.current // vibration
     val clipboardManager = LocalClipboardManager.current
     val context = LocalContext.current
 
-    val firstGame by viewModel.firstGame.collectAsStateWithLifecycle(initialValue = false)
-    val resetTimer by viewModel.resetTimerOnRestart.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_GAME_RESET_TIMER)
-    val mistakesLimit by viewModel.mistakesLimit.collectAsStateWithLifecycle(
+    val firstGame by bloc.firstGame.collectAsStateWithLifecycle(initialValue = false)
+    val resetTimer by bloc.resetTimerOnRestart.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_GAME_RESET_TIMER)
+    val mistakesLimit by bloc.mistakesLimit.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_MISTAKES_LIMIT
     )
-    val errorHighlight by viewModel.mistakesMethod.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES)
-    val keepScreenOn by viewModel.keepScreenOn.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_KEEP_SCREEN_ON)
-    val remainingUse by viewModel.remainingUse.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_REMAINING_USES)
-    val highlightIdentical by viewModel.identicalHighlight.collectAsStateWithLifecycle(
+    val errorHighlight by bloc.mistakesMethod.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES)
+    val keepScreenOn by bloc.keepScreenOn.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_KEEP_SCREEN_ON)
+    val remainingUse by bloc.remainingUse.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_REMAINING_USES)
+    val highlightIdentical by bloc.identicalHighlight.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_IDENTICAL
     )
-    val positionLines by viewModel.positionLines.collectAsStateWithLifecycle(
+    val positionLines by bloc.positionLines.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_POSITION_LINES
     )
-    val crossHighlight by viewModel.crossHighlight.collectAsStateWithLifecycle(
+    val crossHighlight by bloc.crossHighlight.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT
     )
-    val funKeyboardOverNum by viewModel.funKeyboardOverNum.collectAsStateWithLifecycle(
+    val funKeyboardOverNum by bloc.funKeyboardOverNum.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_FUN_KEYBOARD_OVER_NUM
     )
 
-    val fontSizeFactor by viewModel.fontSize.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
-    val fontSizeValue by remember(fontSizeFactor, viewModel.gameType) {
+    val fontSizeFactor by bloc.fontSize.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
+    val fontSizeValue by remember(fontSizeFactor, bloc.gameType) {
         mutableStateOf(
-            viewModel.getFontSize(factor = fontSizeFactor)
+            bloc.getFontSize(factor = fontSizeFactor)
         )
     }
-    val advancedHintEnabled by viewModel.advancedHintEnabled.collectAsStateWithLifecycle(
+    val advancedHintEnabled by bloc.advancedHintEnabled.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_ADVANCED_HINT
     )
-    val advancedHintMode by viewModel.advancedHintMode.collectAsStateWithLifecycle(false)
-    val advancedHintData by viewModel.advancedHintData.collectAsStateWithLifecycle(null)
+    val advancedHintMode by bloc.advancedHintMode.collectAsStateWithLifecycle(false)
+    val advancedHintData by bloc.advancedHintData.collectAsStateWithLifecycle(null)
     if (keepScreenOn) {
         KeepScreenOn()
     }
 
     if (firstGame) {
-        viewModel.pauseTimer()
+        bloc.pauseTimer()
         FirstGameDialog(
             onFinished = {
-                viewModel.setFirstGameFalse()
-                viewModel.startTimer()
+                bloc.setFirstGameFalse()
+                bloc.startTimer()
             }
         )
     }
@@ -176,11 +170,11 @@ fun GameScreen(
     )
 
     val boardBlur by animateDpAsState(
-        targetValue = if (viewModel.gamePlaying || viewModel.endGame) 0.dp else 10.dp,
+        targetValue = if (bloc.gamePlaying || bloc.endGame) 0.dp else 10.dp,
         label = "Game board blur"
     )
     val boardScale by animateFloatAsState(
-        targetValue = if (viewModel.gamePlaying || viewModel.endGame) 1f else 0.90f,
+        targetValue = if (bloc.gamePlaying || bloc.endGame) 1f else 0.90f,
         label = "Game board scale"
     )
 
@@ -191,7 +185,7 @@ fun GameScreen(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -199,15 +193,15 @@ fun GameScreen(
                     }
                 },
                 actions = {
-                    AnimatedVisibility(visible = viewModel.endGame && (viewModel.mistakesCount >= PreferencesConstants.MISTAKES_LIMIT || viewModel.giveUp)) {
+                    AnimatedVisibility(visible = bloc.endGame && (bloc.mistakesCount >= PreferencesConstants.MISTAKES_LIMIT || bloc.giveUp)) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             FilledTonalButton(
-                                onClick = { viewModel.showSolution = !viewModel.showSolution }
+                                onClick = { bloc.showSolution = !bloc.showSolution }
                             ) {
                                 AnimatedContent(
-                                    if (viewModel.showSolution) stringResource(R.string.action_show_mine_sudoku)
+                                    if (bloc.showSolution) stringResource(R.string.action_show_mine_sudoku)
                                     else stringResource(R.string.action_show_solution),
                                     label = "Show solution/mine button"
                                 ) {
@@ -217,19 +211,19 @@ fun GameScreen(
                         }
                     }
 
-                    AnimatedVisibility(visible = !viewModel.endGame) {
+                    AnimatedVisibility(visible = !bloc.endGame) {
                         val rotationAngle by animateFloatAsState(
-                            targetValue = if (viewModel.gamePlaying) 0f else 360f,
+                            targetValue = if (bloc.gamePlaying) 0f else 360f,
                             label = "Play/Pause game icon rotation"
                         )
                         IconButton(onClick = {
-                            if (!viewModel.gamePlaying) viewModel.startTimer() else viewModel.pauseTimer()
-                            viewModel.currCell = Cell(-1, -1, 0)
+                            if (!bloc.gamePlaying) bloc.startTimer() else bloc.pauseTimer()
+                            bloc.currCell = Cell(-1, -1, 0)
                         }) {
                             Icon(
                                 modifier = Modifier.rotate(rotationAngle),
                                 painter = painterResource(
-                                    if (viewModel.gamePlaying) {
+                                    if (bloc.gamePlaying) {
                                         R.drawable.ic_round_pause_24
                                     } else {
                                         R.drawable.ic_round_play_24
@@ -240,8 +234,8 @@ fun GameScreen(
                         }
                     }
 
-                    AnimatedVisibility(visible = !viewModel.endGame) {
-                        IconButton(onClick = { viewModel.restartDialog = true }) {
+                    AnimatedVisibility(visible = !bloc.endGame) {
+                        IconButton(onClick = { bloc.restartDialog = true }) {
                             Icon(
                                 modifier = Modifier.rotate(restartButtonAnimation),
                                 painter = painterResource(R.drawable.ic_round_replay_24),
@@ -249,32 +243,31 @@ fun GameScreen(
                             )
                         }
                     }
-                    AnimatedVisibility(visible = !viewModel.endGame) {
+                    AnimatedVisibility(visible = !bloc.endGame) {
                         Box {
-                            IconButton(onClick = { viewModel.showMenu = !viewModel.showMenu }) {
+                            IconButton(onClick = { bloc.showMenu = !bloc.showMenu }) {
                                 Icon(
                                     Icons.Default.MoreVert,
                                     contentDescription = null
                                 )
                             }
                             GameMenu(
-                                expanded = viewModel.showMenu,
-                                onDismiss = { viewModel.showMenu = false },
+                                expanded = bloc.showMenu,
+                                onDismiss = { bloc.showMenu = false },
                                 onGiveUpClick = {
-                                    viewModel.pauseTimer()
-                                    viewModel.giveUpDialog = true
+                                    bloc.pauseTimer()
+                                    bloc.giveUpDialog = true
                                 },
                                 onSettingsClick = {
-                                    navigator.navigate(
-                                        SettingsCategoriesScreenDestination(
-                                            launchedFromGame = true
-                                        )
+                                    navigate(
+                                        SettingsCategoriesConfig(launchedFromGame = true)
                                     )
-                                    viewModel.showMenu = false
+//
+                                    bloc.showMenu = false
                                 },
                                 onExportClick = {
                                     val stringBoard = SudokuParser().boardToString(
-                                        viewModel.gameBoard,
+                                        bloc.gameBoard,
                                         emptySeparator = '.'
                                     )
                                     clipboardManager.setText(
@@ -319,7 +312,7 @@ fun GameScreen(
                         modifier = Modifier.align(Alignment.Center)
                     ) {
                         AnimatedVisibility(
-                            visible = !viewModel.gamePlaying && !viewModel.endGame,
+                            visible = !bloc.gamePlaying && !bloc.endGame,
                             enter = expandVertically(clip = false) + fadeIn(),
                             exit = shrinkVertically(clip = false) + fadeOut()
                         ) {
@@ -336,41 +329,41 @@ fun GameScreen(
                         modifier = Modifier
                             .blur(boardBlur)
                             .scale(boardScale, boardScale),
-                        board = if (!viewModel.showSolution) viewModel.gameBoard else viewModel.solvedBoard,
-                        size = viewModel.size,
+                        board = if (!bloc.showSolution) bloc.gameBoard else bloc.solvedBoard,
+                        size = bloc.size,
                         mainTextSize = fontSizeValue,
                         autoFontSize = fontSizeFactor == 0,
-                        notes = viewModel.notes,
-                        selectedCell = viewModel.currCell,
+                        notes = bloc.notes,
+                        selectedCell = bloc.currCell,
                         onClick = { cell ->
-                            viewModel.processInput(
+                            bloc.processInput(
                                 cell = cell,
                                 remainingUse = remainingUse,
                             )
-                            if (!viewModel.gamePlaying) {
+                            if (!bloc.gamePlaying) {
                                 localView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                viewModel.startTimer()
+                                bloc.startTimer()
                             }
                         },
                         onLongClick = { cell ->
-                            if (viewModel.processInput(cell, remainingUse, longTap = true)) {
+                            if (bloc.processInput(cell, remainingUse, longTap = true)) {
                                 localView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                             }
                         },
                         identicalNumbersHighlight = highlightIdentical,
                         errorsHighlight = errorHighlight != 0,
                         positionLines = positionLines,
-                        notesToHighlight = if (viewModel.digitFirstNumber > 0) {
-                            viewModel.notes.filter { it.value == viewModel.digitFirstNumber }
+                        notesToHighlight = if (bloc.digitFirstNumber > 0) {
+                            bloc.notes.filter { it.value == bloc.digitFirstNumber }
                         } else {
                             emptyList()
                         },
-                        enabled = viewModel.gamePlaying && !viewModel.endGame,
-                        questions = !(viewModel.gamePlaying || viewModel.endGame) && SDK_INT < Build.VERSION_CODES.R,
-                        renderNotes = renderNotes && !viewModel.showSolution,
-                        zoomable = viewModel.gameType == GameType.Default12x12 || viewModel.gameType == GameType.Killer12x12,
+                        enabled = bloc.gamePlaying && !bloc.endGame,
+                        questions = !(bloc.gamePlaying || bloc.endGame) && SDK_INT < Build.VERSION_CODES.R,
+                        renderNotes = renderNotes && !bloc.showSolution,
+                        zoomable = bloc.gameType == GameType.Default12x12 || bloc.gameType == GameType.Killer12x12,
                         crossHighlight = crossHighlight,
-                        cages = viewModel.cages,
+                        cages = bloc.cages,
                         cellsToHighlight = if (advancedHintMode && advancedHintData != null) advancedHintData!!.helpCells + advancedHintData!!.targetCell else null
                     )
                 }
@@ -381,15 +374,13 @@ fun GameScreen(
                             AdvancedHintContainer(
                                 advancedHintData = hintData,
                                 onApplyClick = {
-                                    viewModel.applyAdvancedHint()
+                                    bloc.applyAdvancedHint()
                                 },
                                 onBackClick = {
-                                    viewModel.cancelAdvancedHint()
+                                    bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-                                    navigator.navigate(
-                                        SettingsAdvancedHintScreenDestination
-                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
@@ -406,17 +397,15 @@ fun GameScreen(
                                 ),
                                 onApplyClick = null,
                                 onBackClick = {
-                                    viewModel.cancelAdvancedHint()
+                                    bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-                                    navigator.navigate(
-                                        SettingsAdvancedHintScreenDestination
-                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
                     } else {
-                        AnimatedContent(!viewModel.endGame, label = "") { contentState ->
+                        AnimatedContent(!bloc.endGame, label = "") { contentState ->
                             if (contentState) {
                                 Column(
                                     Modifier
@@ -424,30 +413,30 @@ fun GameScreen(
                                         .padding(bottom = 8.dp),
                                     verticalArrangement = Arrangement.SpaceBetween
                                 ) {
-                                    AnimatedVisibility(visible = !viewModel.endGame) {
+                                    AnimatedVisibility(visible = !bloc.endGame) {
                                         Row(
                                             modifier = Modifier
                                                 .fillMaxWidth(),
                                             verticalAlignment = Alignment.CenterVertically,
                                             horizontalArrangement = Arrangement.SpaceBetween
                                         ) {
-                                            TopBoardSection(stringResource(viewModel.gameDifficulty.resName))
+                                            TopBoardSection(stringResource(bloc.gameDifficulty.resName))
 
                                             if (mistakesLimit && errorHighlight != 0) {
                                                 TopBoardSection(
                                                     stringResource(
                                                         R.string.mistakes_number_out_of,
-                                                        viewModel.mistakesCount,
+                                                        bloc.mistakesCount,
                                                         3
                                                     )
                                                 )
                                             }
 
-                                            val timerEnabled by viewModel.timerEnabled.collectAsStateWithLifecycle(
+                                            val timerEnabled by bloc.timerEnabled.collectAsStateWithLifecycle(
                                                 initialValue = PreferencesConstants.DEFAULT_SHOW_TIMER
                                             )
-                                            AnimatedVisibility(visible = timerEnabled || viewModel.endGame) {
-                                                TopBoardSection(viewModel.timeText)
+                                            AnimatedVisibility(visible = timerEnabled || bloc.endGame) {
+                                                TopBoardSection(bloc.timeText)
                                             }
                                         }
                                     }
@@ -455,18 +444,18 @@ fun GameScreen(
                                         verticalArrangement = if (funKeyboardOverNum) ReverseArrangement else Arrangement.Top
                                     ) {
                                         SquareGameKeyboard(
-                                            size = viewModel.size,
-                                            remainingUses = if (remainingUse) viewModel.remainingUsesList else null,
+                                            size = bloc.size,
+                                            remainingUses = if (remainingUse) bloc.remainingUsesList else null,
                                             onClick = {
-                                                viewModel.processInputKeyboard(number = it)
+                                                bloc.processInputKeyboard(number = it)
                                             },
                                             onLongClick = {
-                                                viewModel.processInputKeyboard(
+                                                bloc.processInputKeyboard(
                                                     number = it,
                                                     longTap = true
                                                 )
                                             },
-                                            selected = viewModel.digitFirstNumber
+                                            selected = bloc.digitFirstNumber
                                         )
                                         Row(
                                             horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -476,34 +465,34 @@ fun GameScreen(
                                                 modifier = Modifier.weight(1f)
                                             ) {
                                                 UndoRedoMenu(
-                                                    expanded = viewModel.showUndoRedoMenu,
+                                                    expanded = bloc.showUndoRedoMenu,
                                                     onDismiss = {
-                                                        viewModel.showUndoRedoMenu = false
+                                                        bloc.showUndoRedoMenu = false
                                                     },
                                                     onRedoClick = {
-                                                        viewModel.toolbarClick(
+                                                        bloc.toolbarClick(
                                                             ToolBarItem.Redo
                                                         )
                                                     }
                                                 )
                                                 ToolbarItem(
                                                     painter = painterResource(R.drawable.ic_round_undo_24),
-                                                    onClick = { viewModel.toolbarClick(ToolBarItem.Undo) },
+                                                    onClick = { bloc.toolbarClick(ToolBarItem.Undo) },
                                                     onLongClick = {
-                                                        viewModel.showUndoRedoMenu = true
+                                                        bloc.showUndoRedoMenu = true
                                                     }
                                                 )
 
                                             }
-                                            val hintsDisabled by viewModel.disableHints.collectAsStateWithLifecycle(
+                                            val hintsDisabled by bloc.disableHints.collectAsStateWithLifecycle(
                                                 initialValue = PreferencesConstants.DEFAULT_HINTS_DISABLED
                                             )
                                             if (!hintsDisabled) {
                                                 ToolbarItem(
                                                     modifier = Modifier.weight(1f),
                                                     painter = painterResource(R.drawable.ic_lightbulb_stars_24),
-                                                    enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
-                                                    onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
+                                                    enabled = bloc.currCell.row >= 0 && bloc.currCell.col >= 0,
+                                                    onClick = { bloc.toolbarClick(ToolBarItem.Hint) }
                                                 )
                                             }
 
@@ -511,10 +500,10 @@ fun GameScreen(
                                                 modifier = Modifier.weight(1f)
                                             ) {
                                                 NotesMenu(
-                                                    expanded = viewModel.showNotesMenu,
-                                                    onDismiss = { viewModel.showNotesMenu = false },
-                                                    onComputeNotesClick = { viewModel.computeNotes() },
-                                                    onClearNotesClick = { viewModel.clearNotes() },
+                                                    expanded = bloc.showNotesMenu,
+                                                    onDismiss = { bloc.showNotesMenu = false },
+                                                    onComputeNotesClick = { bloc.computeNotes() },
+                                                    onClearNotesClick = { bloc.clearNotes() },
                                                     renderNotes = renderNotes,
                                                     onRenderNotesClick = {
                                                         renderNotes = !renderNotes
@@ -522,14 +511,14 @@ fun GameScreen(
                                                 )
                                                 ToolbarItem(
                                                     painter = painterResource(R.drawable.ic_round_edit_24),
-                                                    toggled = viewModel.notesToggled,
-                                                    onClick = { viewModel.toolbarClick(ToolBarItem.Note) },
+                                                    toggled = bloc.notesToggled,
+                                                    onClick = { bloc.toolbarClick(ToolBarItem.Note) },
                                                     onLongClick = {
-                                                        if (viewModel.gamePlaying) {
+                                                        if (bloc.gamePlaying) {
                                                             localView.performHapticFeedback(
                                                                 HapticFeedbackConstants.VIRTUAL_KEY
                                                             )
-                                                            viewModel.showNotesMenu = true
+                                                            bloc.showNotesMenu = true
                                                         }
                                                     }
                                                 )
@@ -538,16 +527,16 @@ fun GameScreen(
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
                                                 painter = painterResource(R.drawable.ic_eraser_24),
-                                                toggled = viewModel.eraseButtonToggled,
+                                                toggled = bloc.eraseButtonToggled,
                                                 onClick = {
-                                                    viewModel.toolbarClick(ToolBarItem.Remove)
+                                                    bloc.toolbarClick(ToolBarItem.Remove)
                                                 },
                                                 onLongClick = {
-                                                    if (viewModel.gamePlaying) {
+                                                    if (bloc.gamePlaying) {
                                                         localView.performHapticFeedback(
                                                             HapticFeedbackConstants.VIRTUAL_KEY
                                                         )
-                                                        viewModel.toggleEraseButton()
+                                                        bloc.toggleEraseButton()
                                                     }
                                                 }
                                             )
@@ -556,8 +545,8 @@ fun GameScreen(
                                                     modifier = Modifier.weight(1f),
                                                     painter = rememberVectorPainter(Icons.Rounded.AutoAwesome),
                                                     onClick = {
-                                                        if (viewModel.gamePlaying) {
-                                                            viewModel.getAdvancedHint()
+                                                        if (bloc.gamePlaying) {
+                                                            bloc.getAdvancedHint()
                                                         }
                                                     }
                                                 )
@@ -567,21 +556,21 @@ fun GameScreen(
                                 }
                             } else {
                                 // Game completed section
-                                val allRecords by viewModel.allRecords.collectAsStateWithLifecycle(
+                                val allRecords by bloc.allRecords.collectAsStateWithLifecycle(
                                     initialValue = emptyList()
                                 )
                                 AfterGameStats(
                                     modifier = Modifier.fillMaxWidth(),
-                                    difficulty = viewModel.gameDifficulty,
-                                    type = viewModel.gameType,
-                                    hintsUsed = viewModel.hintsUsed,
-                                    mistakesMade = viewModel.mistakesMade,
+                                    difficulty = bloc.gameDifficulty,
+                                    type = bloc.gameType,
+                                    hintsUsed = bloc.hintsUsed,
+                                    mistakesMade = bloc.mistakesMade,
                                     mistakesLimit = mistakesLimit,
-                                    mistakesLimitCount = viewModel.mistakesCount,
-                                    giveUp = viewModel.giveUp,
-                                    notesTaken = viewModel.notesTaken,
+                                    mistakesLimitCount = bloc.mistakesCount,
+                                    giveUp = bloc.giveUp,
+                                    notesTaken = bloc.notesTaken,
                                     records = allRecords,
-                                    timeText = viewModel.timeText
+                                    timeText = bloc.timeText
                                 )
                             }
                         }
@@ -595,7 +584,7 @@ fun GameScreen(
                     .padding(horizontal = 12.dp),
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {
-                AnimatedVisibility(visible = !viewModel.endGame) {
+                AnimatedVisibility(visible = !bloc.endGame) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -603,23 +592,23 @@ fun GameScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        TopBoardSection(stringResource(viewModel.gameDifficulty.resName))
+                        TopBoardSection(stringResource(bloc.gameDifficulty.resName))
 
                         if (mistakesLimit && errorHighlight != 0) {
                             TopBoardSection(
                                 stringResource(
                                     R.string.mistakes_number_out_of,
-                                    viewModel.mistakesCount,
+                                    bloc.mistakesCount,
                                     3
                                 )
                             )
                         }
 
-                        val timerEnabled by viewModel.timerEnabled.collectAsStateWithLifecycle(
+                        val timerEnabled by bloc.timerEnabled.collectAsStateWithLifecycle(
                             initialValue = PreferencesConstants.DEFAULT_SHOW_TIMER
                         )
-                        AnimatedVisibility(visible = timerEnabled || viewModel.endGame) {
-                            TopBoardSection(viewModel.timeText)
+                        AnimatedVisibility(visible = timerEnabled || bloc.endGame) {
+                            TopBoardSection(bloc.timeText)
                         }
                     }
                 }
@@ -633,7 +622,7 @@ fun GameScreen(
                         modifier = Modifier.align(Alignment.Center)
                     ) {
                         AnimatedVisibility(
-                            visible = !viewModel.gamePlaying && !viewModel.endGame,
+                            visible = !bloc.gamePlaying && !bloc.endGame,
                             enter = expandVertically(clip = false) + fadeIn(),
                             exit = shrinkVertically(clip = false) + fadeOut()
                         ) {
@@ -650,41 +639,41 @@ fun GameScreen(
                         modifier = Modifier
                             .blur(boardBlur)
                             .scale(boardScale, boardScale),
-                        board = if (!viewModel.showSolution) viewModel.gameBoard else viewModel.solvedBoard,
-                        size = viewModel.size,
+                        board = if (!bloc.showSolution) bloc.gameBoard else bloc.solvedBoard,
+                        size = bloc.size,
                         mainTextSize = fontSizeValue,
                         autoFontSize = fontSizeFactor == 0,
-                        notes = viewModel.notes,
-                        selectedCell = viewModel.currCell,
+                        notes = bloc.notes,
+                        selectedCell = bloc.currCell,
                         onClick = { cell ->
-                            viewModel.processInput(
+                            bloc.processInput(
                                 cell = cell,
                                 remainingUse = remainingUse,
                             )
-                            if (!viewModel.gamePlaying) {
+                            if (!bloc.gamePlaying) {
                                 localView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
-                                viewModel.startTimer()
+                                bloc.startTimer()
                             }
                         },
                         onLongClick = { cell ->
-                            if (viewModel.processInput(cell, remainingUse, longTap = true)) {
+                            if (bloc.processInput(cell, remainingUse, longTap = true)) {
                                 localView.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY)
                             }
                         },
                         identicalNumbersHighlight = highlightIdentical,
                         errorsHighlight = errorHighlight != 0,
                         positionLines = positionLines,
-                        notesToHighlight = if (viewModel.digitFirstNumber > 0) {
-                            viewModel.notes.filter { it.value == viewModel.digitFirstNumber }
+                        notesToHighlight = if (bloc.digitFirstNumber > 0) {
+                            bloc.notes.filter { it.value == bloc.digitFirstNumber }
                         } else {
                             emptyList()
                         },
-                        enabled = viewModel.gamePlaying && !viewModel.endGame,
-                        questions = !(viewModel.gamePlaying || viewModel.endGame) && SDK_INT < Build.VERSION_CODES.R,
-                        renderNotes = renderNotes && !viewModel.showSolution,
-                        zoomable = viewModel.gameType == GameType.Default12x12 || viewModel.gameType == GameType.Killer12x12,
+                        enabled = bloc.gamePlaying && !bloc.endGame,
+                        questions = !(bloc.gamePlaying || bloc.endGame) && SDK_INT < Build.VERSION_CODES.R,
+                        renderNotes = renderNotes && !bloc.showSolution,
+                        zoomable = bloc.gameType == GameType.Default12x12 || bloc.gameType == GameType.Killer12x12,
                         crossHighlight = crossHighlight,
-                        cages = viewModel.cages,
+                        cages = bloc.cages,
                         cellsToHighlight = if (advancedHintMode && advancedHintData != null) advancedHintData!!.helpCells + advancedHintData!!.targetCell else null
                     )
                 }
@@ -695,15 +684,13 @@ fun GameScreen(
                             AdvancedHintContainer(
                                 advancedHintData = hintData,
                                 onApplyClick = {
-                                    viewModel.applyAdvancedHint()
+                                    bloc.applyAdvancedHint()
                                 },
                                 onBackClick = {
-                                    viewModel.cancelAdvancedHint()
+                                    bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-                                    navigator.navigate(
-                                        SettingsAdvancedHintScreenDestination
-                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
@@ -720,34 +707,32 @@ fun GameScreen(
                                 ),
                                 onApplyClick = null,
                                 onBackClick = {
-                                    viewModel.cancelAdvancedHint()
+                                    bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-                                    navigator.navigate(
-                                        SettingsAdvancedHintScreenDestination
-                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
                     } else {
-                        AnimatedContent(!viewModel.endGame, label = "") { contentState ->
+                        AnimatedContent(!bloc.endGame, label = "") { contentState ->
                             if (contentState) {
                                 Column(
                                     verticalArrangement = if (funKeyboardOverNum) ReverseArrangement else Arrangement.Top
                                 ) {
                                     DefaultGameKeyboard(
-                                        size = viewModel.size,
-                                        remainingUses = if (remainingUse) viewModel.remainingUsesList else null,
+                                        size = bloc.size,
+                                        remainingUses = if (remainingUse) bloc.remainingUsesList else null,
                                         onClick = {
-                                            viewModel.processInputKeyboard(number = it)
+                                            bloc.processInputKeyboard(number = it)
                                         },
                                         onLongClick = {
-                                            viewModel.processInputKeyboard(
+                                            bloc.processInputKeyboard(
                                                 number = it,
                                                 longTap = true
                                             )
                                         },
-                                        selected = viewModel.digitFirstNumber
+                                        selected = bloc.digitFirstNumber
                                     )
                                     Row(
                                         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -757,26 +742,26 @@ fun GameScreen(
                                             modifier = Modifier.weight(1f)
                                         ) {
                                             UndoRedoMenu(
-                                                expanded = viewModel.showUndoRedoMenu,
-                                                onDismiss = { viewModel.showUndoRedoMenu = false },
-                                                onRedoClick = { viewModel.toolbarClick(ToolBarItem.Redo) }
+                                                expanded = bloc.showUndoRedoMenu,
+                                                onDismiss = { bloc.showUndoRedoMenu = false },
+                                                onRedoClick = { bloc.toolbarClick(ToolBarItem.Redo) }
                                             )
                                             ToolbarItem(
                                                 painter = painterResource(R.drawable.ic_round_undo_24),
-                                                onClick = { viewModel.toolbarClick(ToolBarItem.Undo) },
-                                                onLongClick = { viewModel.showUndoRedoMenu = true }
+                                                onClick = { bloc.toolbarClick(ToolBarItem.Undo) },
+                                                onLongClick = { bloc.showUndoRedoMenu = true }
                                             )
 
                                         }
-                                        val hintsDisabled by viewModel.disableHints.collectAsStateWithLifecycle(
+                                        val hintsDisabled by bloc.disableHints.collectAsStateWithLifecycle(
                                             initialValue = PreferencesConstants.DEFAULT_HINTS_DISABLED
                                         )
                                         if (!hintsDisabled) {
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
                                                 painter = painterResource(R.drawable.ic_lightbulb_stars_24),
-                                                enabled = viewModel.currCell.row >= 0 && viewModel.currCell.col >= 0,
-                                                onClick = { viewModel.toolbarClick(ToolBarItem.Hint) }
+                                                enabled = bloc.currCell.row >= 0 && bloc.currCell.col >= 0,
+                                                onClick = { bloc.toolbarClick(ToolBarItem.Hint) }
                                             )
                                         }
 
@@ -784,23 +769,23 @@ fun GameScreen(
                                             modifier = Modifier.weight(1f)
                                         ) {
                                             NotesMenu(
-                                                expanded = viewModel.showNotesMenu,
-                                                onDismiss = { viewModel.showNotesMenu = false },
-                                                onComputeNotesClick = { viewModel.computeNotes() },
-                                                onClearNotesClick = { viewModel.clearNotes() },
+                                                expanded = bloc.showNotesMenu,
+                                                onDismiss = { bloc.showNotesMenu = false },
+                                                onComputeNotesClick = { bloc.computeNotes() },
+                                                onClearNotesClick = { bloc.clearNotes() },
                                                 renderNotes = renderNotes,
                                                 onRenderNotesClick = { renderNotes = !renderNotes }
                                             )
                                             ToolbarItem(
                                                 painter = painterResource(R.drawable.ic_round_edit_24),
-                                                toggled = viewModel.notesToggled,
-                                                onClick = { viewModel.toolbarClick(ToolBarItem.Note) },
+                                                toggled = bloc.notesToggled,
+                                                onClick = { bloc.toolbarClick(ToolBarItem.Note) },
                                                 onLongClick = {
-                                                    if (viewModel.gamePlaying) {
+                                                    if (bloc.gamePlaying) {
                                                         localView.performHapticFeedback(
                                                             HapticFeedbackConstants.VIRTUAL_KEY
                                                         )
-                                                        viewModel.showNotesMenu = true
+                                                        bloc.showNotesMenu = true
                                                     }
                                                 }
                                             )
@@ -809,16 +794,16 @@ fun GameScreen(
                                         ToolbarItem(
                                             modifier = Modifier.weight(1f),
                                             painter = painterResource(R.drawable.ic_eraser_24),
-                                            toggled = viewModel.eraseButtonToggled,
+                                            toggled = bloc.eraseButtonToggled,
                                             onClick = {
-                                                viewModel.toolbarClick(ToolBarItem.Remove)
+                                                bloc.toolbarClick(ToolBarItem.Remove)
                                             },
                                             onLongClick = {
-                                                if (viewModel.gamePlaying) {
+                                                if (bloc.gamePlaying) {
                                                     localView.performHapticFeedback(
                                                         HapticFeedbackConstants.VIRTUAL_KEY
                                                     )
-                                                    viewModel.toggleEraseButton()
+                                                    bloc.toggleEraseButton()
                                                 }
                                             }
                                         )
@@ -827,8 +812,8 @@ fun GameScreen(
                                                 modifier = Modifier.weight(1f),
                                                 painter = rememberVectorPainter(Icons.Rounded.AutoAwesome),
                                                 onClick = {
-                                                    if (viewModel.gamePlaying) {
-                                                        viewModel.getAdvancedHint()
+                                                    if (bloc.gamePlaying) {
+                                                        bloc.getAdvancedHint()
                                                     }
                                                 }
                                             )
@@ -837,21 +822,21 @@ fun GameScreen(
                                 }
                             } else {
                                 // Game completed section
-                                val allRecords by viewModel.allRecords.collectAsStateWithLifecycle(
+                                val allRecords by bloc.allRecords.collectAsStateWithLifecycle(
                                     initialValue = emptyList()
                                 )
                                 AfterGameStats(
                                     modifier = Modifier.fillMaxWidth(),
-                                    difficulty = viewModel.gameDifficulty,
-                                    type = viewModel.gameType,
-                                    hintsUsed = viewModel.hintsUsed,
-                                    mistakesMade = viewModel.mistakesMade,
+                                    difficulty = bloc.gameDifficulty,
+                                    type = bloc.gameType,
+                                    hintsUsed = bloc.hintsUsed,
+                                    mistakesMade = bloc.mistakesMade,
                                     mistakesLimit = mistakesLimit,
-                                    mistakesLimitCount = viewModel.mistakesCount,
-                                    giveUp = viewModel.giveUp,
-                                    notesTaken = viewModel.notesTaken,
+                                    mistakesLimitCount = bloc.mistakesCount,
+                                    giveUp = bloc.giveUp,
+                                    notesTaken = bloc.notesTaken,
                                     records = allRecords,
-                                    timeText = viewModel.timeText
+                                    timeText = bloc.timeText
                                 )
                             }
                         }
@@ -862,15 +847,15 @@ fun GameScreen(
     }
 
     // dialogs
-    if (viewModel.restartDialog) {
-        viewModel.pauseTimer()
+    if (bloc.restartDialog) {
+        bloc.pauseTimer()
         AlertDialog(
             title = { Text(stringResource(R.string.action_reset_game)) },
             text = { Text(stringResource(R.string.reset_game_text)) },
             dismissButton = {
                 TextButton(onClick = {
-                    viewModel.restartDialog = false
-                    viewModel.startTimer()
+                    bloc.restartDialog = false
+                    bloc.startTimer()
                 }) {
                     Text(stringResource(R.string.dialog_no))
                 }
@@ -878,60 +863,60 @@ fun GameScreen(
             confirmButton = {
                 TextButton(onClick = {
                     restartButtonAngleState -= 360
-                    viewModel.resetGame(resetTimer)
-                    viewModel.restartDialog = false
-                    viewModel.startTimer()
+                    bloc.resetGame(resetTimer)
+                    bloc.restartDialog = false
+                    bloc.startTimer()
                 }) {
                     Text(stringResource(R.string.dialog_yes))
                 }
             },
             onDismissRequest = {
-                viewModel.restartDialog = false
-                viewModel.startTimer()
+                bloc.restartDialog = false
+                bloc.startTimer()
             }
         )
-    } else if (viewModel.giveUpDialog) {
-        viewModel.pauseTimer()
+    } else if (bloc.giveUpDialog) {
+        bloc.pauseTimer()
         AlertDialog(
             title = { Text(stringResource(R.string.action_give_up)) },
             text = { Text(stringResource(R.string.give_up_text)) },
             dismissButton = {
                 TextButton(onClick = {
-                    viewModel.giveUpDialog = false
-                    viewModel.startTimer()
+                    bloc.giveUpDialog = false
+                    bloc.startTimer()
                 }) {
                     Text(stringResource(R.string.dialog_no))
                 }
             },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.giveUp()
-                    viewModel.giveUpDialog = false
-                    viewModel.pauseTimer()
+                    bloc.giveUp()
+                    bloc.giveUpDialog = false
+                    bloc.pauseTimer()
                 }) {
                     Text(stringResource(R.string.dialog_yes))
                 }
             },
             onDismissRequest = {
-                viewModel.giveUpDialog = false
-                viewModel.startTimer()
+                bloc.giveUpDialog = false
+                bloc.startTimer()
             },
         )
     }
 
-    LaunchedEffect(viewModel.mistakesMethod) {
-        viewModel.checkMistakesAll()
+    LaunchedEffect(bloc.mistakesMethod) {
+        bloc.checkMistakesAll()
     }
 
     LaunchedEffect(Unit) {
-        if (!viewModel.endGame && !viewModel.gameCompleted) {
-            viewModel.startTimer()
+        if (!bloc.endGame && !bloc.gameCompleted) {
+            bloc.startTimer()
         }
     }
 
-    LaunchedEffect(viewModel.gameCompleted) {
-        if (viewModel.gameCompleted) {
-            viewModel.onGameComplete()
+    LaunchedEffect(bloc.gameCompleted) {
+        if (bloc.gameCompleted) {
+            bloc.onGameComplete()
         }
     }
 
@@ -941,15 +926,15 @@ fun GameScreen(
     OnLifecycleEvent { _, event ->
         when (event) {
             Lifecycle.Event.ON_RESUME -> {
-                if (viewModel.gamePlaying) viewModel.startTimer()
+                if (bloc.gamePlaying) bloc.startTimer()
             }
 
             Lifecycle.Event.ON_PAUSE -> {
-                viewModel.pauseTimer()
-                viewModel.currCell = Cell(-1, -1, 0)
+                bloc.pauseTimer()
+                bloc.currCell = Cell(-1, -1, 0)
             }
 
-            Lifecycle.Event.ON_DESTROY -> viewModel.pauseTimer()
+            Lifecycle.Event.ON_DESTROY -> bloc.pauseTimer()
             else -> {}
         }
     }

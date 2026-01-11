@@ -36,38 +36,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsGameplayScreen(
-    viewModel: SettingsGameplayViewModel = rememberViewModel(SettingsGameplayViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SettingsGameplayBloc,
+    finish: () -> Unit,
 ) {
     var inputMethodDialog by rememberSaveable { mutableStateOf(false) }
 
-    val inputMethod by viewModel.inputMethod.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_INPUT_METHOD)
-    val mistakesLimit by viewModel.mistakesLimit.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_MISTAKES_LIMIT)
-    val hintDisabled by viewModel.disableHints.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HINTS_DISABLED)
-    val timerEnabled by viewModel.timer.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_SHOW_TIMER)
-    val resetTimer by viewModel.canResetTimer.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_GAME_RESET_TIMER)
-    val funKeyboardOverNum by viewModel.funKeyboardOverNum.collectAsStateWithLifecycle(
+    val inputMethod by bloc.inputMethod.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_INPUT_METHOD)
+    val mistakesLimit by bloc.mistakesLimit.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_MISTAKES_LIMIT)
+    val hintDisabled by bloc.disableHints.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_HINTS_DISABLED)
+    val timerEnabled by bloc.timer.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_SHOW_TIMER)
+    val resetTimer by bloc.canResetTimer.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_GAME_RESET_TIMER)
+    val funKeyboardOverNum by bloc.funKeyboardOverNum.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_FUN_KEYBOARD_OVER_NUM
     )
 
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.pref_gameplay),
-        navigator = navigator
+        finish = finish
     ) { paddingValues ->
         ScrollbarLazyColumn(
             modifier = Modifier
@@ -92,7 +87,7 @@ fun SettingsGameplayScreen(
                     title = stringResource(R.string.pref_mistakes_limit),
                     subtitle = stringResource(R.string.pref_mistakes_limit_summ),
                     checked = mistakesLimit,
-                    onClick = { viewModel.updateMistakesLimit(!mistakesLimit) },
+                    onClick = { bloc.updateMistakesLimit(!mistakesLimit) },
                     painter = rememberVectorPainter(Icons.Outlined.Block)
                 )
             }
@@ -102,7 +97,7 @@ fun SettingsGameplayScreen(
                     title = stringResource(R.string.pref_disable_hints),
                     subtitle = stringResource(R.string.pref_disable_hints_summ),
                     checked = hintDisabled,
-                    onClick = { viewModel.updateHintDisabled(!hintDisabled) },
+                    onClick = { bloc.updateHintDisabled(!hintDisabled) },
                     painter = rememberVectorPainter(Icons.Outlined.VisibilityOff)
                 )
             }
@@ -111,7 +106,7 @@ fun SettingsGameplayScreen(
                 PreferenceRowSwitch(
                     title = stringResource(R.string.pref_show_timer),
                     checked = timerEnabled,
-                    onClick = { viewModel.updateTimer(!timerEnabled) },
+                    onClick = { bloc.updateTimer(!timerEnabled) },
                     painter = rememberVectorPainter(Icons.Outlined.Schedule)
                 )
             }
@@ -120,7 +115,7 @@ fun SettingsGameplayScreen(
                 PreferenceRowSwitch(
                     title = stringResource(R.string.pref_reset_timer),
                     checked = resetTimer,
-                    onClick = { viewModel.updateCanResetTimer(!resetTimer) },
+                    onClick = { bloc.updateCanResetTimer(!resetTimer) },
                     painter = rememberVectorPainter(Icons.Outlined.HistoryToggleOff)
                 )
             }
@@ -131,7 +126,7 @@ fun SettingsGameplayScreen(
                     subtitle = stringResource(R.string.pref_fun_keyboard_over_num_subtitle),
                     checked = funKeyboardOverNum,
                     onClick = {
-                        viewModel.updateFunKeyboardOverNum(!funKeyboardOverNum)
+                        bloc.updateFunKeyboardOverNum(!funKeyboardOverNum)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.SwitchAccessShortcut)
                 )
@@ -147,7 +142,7 @@ fun SettingsGameplayScreen(
                 ),
                 selected = inputMethod,
                 onSelect = { index ->
-                    viewModel.updateInputMethod(index)
+                    bloc.updateInputMethod(index)
                 },
                 onDismiss = { inputMethodDialog = false }
             )
