@@ -18,16 +18,18 @@
 
 package gr.tonygnk.sudokubeyond.ui.app_crash
 
-import androidx.lifecycle.ViewModel
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
 
-class CrashViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class CrashBloc(
+    blocContext: BlocContext,
     themeSettingsManager: ThemeSettingsManager,
     appSettingsManager: AppSettingsManager,
-) : ViewModel() {
+) : BlocContext by blocContext {
     val dc = themeSettingsManager.dynamicColors
     val darkTheme = themeSettingsManager.darkTheme
     val amoledBlack = themeSettingsManager.amoledBlack
@@ -36,12 +38,11 @@ class CrashViewModel(
     val colorSeed = themeSettingsManager.themeColorSeed
     val paletteStyle = themeSettingsManager.themePaletteStyle
 
-    companion object {
-        val builder = viewModelBuilder {
-            CrashViewModel(
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = CrashBloc(
+            blocContext = blocContext,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+        )
     }
 }

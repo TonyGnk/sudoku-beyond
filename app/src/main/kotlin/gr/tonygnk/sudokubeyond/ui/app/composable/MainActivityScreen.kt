@@ -35,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.rememberNavController
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LocalBoardColors
 import gr.tonygnk.sudokubeyond.core.BlocContext
@@ -148,8 +147,6 @@ private fun MainActivityContent(
         colorSeed = settings.colorSeed,
         paletteStyle = settings.paletteStyle
     ) {
-        val navController = rememberNavController()
-
 //        LaunchedEffect(settings.firstLaunch) {
 //            if (settings.firstLaunch) {
 //                navController.navigate(

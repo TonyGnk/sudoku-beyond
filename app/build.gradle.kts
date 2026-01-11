@@ -119,9 +119,6 @@ dependencies {
 
     implementation(libs.mikepenz.aboutLibraries.compose)
 
-    implementation(libs.raamcosta.compose.destinations)
-    ksp(libs.raamcosta.compose.destinations.ksp)
-
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.documentFile)
     implementation(libs.androidx.work.runtime.ktx)

@@ -23,7 +23,6 @@ junit = "4.13.2"
 kotlinTest = "2.3.0"
 materialKolor = "2.0.0"
 mikepenzAboutLibraries = '13.2.1'
-raamcostaComposeDestinations = "1.11.6"
 squareupOkhttp3 = "5.0.0-alpha.14"
 
 # Sdk versions
@@ -69,8 +68,6 @@ jeziellago-compose-markdown = { group = "com.github.jeziellago", name = "compose
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 materialKolor-material-kolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 mikepenz-aboutLibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "mikepenzAboutLibraries" }
-raamcosta-compose-destinations = { group = "io.github.raamcosta.compose-destinations", name = "animations-core", version.ref = "raamcostaComposeDestinations" }
-raamcosta-compose-destinations-ksp = { group = "io.github.raamcosta.compose-destinations", name = "ksp", version.ref = "raamcostaComposeDestinations" }
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "squareupOkhttp3" }
 
 [plugins]
