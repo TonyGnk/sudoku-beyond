@@ -44,7 +44,6 @@ import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -116,20 +115,16 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
-import gr.tonygnk.sudokubeyond.destinations.CreateSudokuScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.GameScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ImportFromFileConfig
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
@@ -139,22 +134,16 @@ import gr.tonygnk.sudokubeyond.ui.gameshistory.ColorfulBadge
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
 import gr.tonygnk.sudokubeyond.ui.util.isScrollingUp
-import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 import kotlinx.coroutines.launch
 import kotlin.math.sqrt
 import kotlin.time.toKotlinDuration
 
-@Destination(
-    style = AnimatedNavigation::class,
-    navArgsDelegate = ExploreFolderScreenNavArgs::class
-)
-@OptIn(
-    ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class, ExperimentalLayoutApi::class
-)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExploreFolderScreen(
-    viewModel: ExploreFolderViewModel = rememberSavedStateViewModel(ExploreFolderViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: ExploreFolderBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
     val lazyListState = rememberLazyListState()
@@ -166,9 +155,9 @@ fun ExploreFolderScreen(
     // used for a delete dialog when deleting
     var deleteBoardDialogBoard: SudokuBoard? by remember { mutableStateOf(null) }
 
-    val folders by viewModel.folders.collectAsStateWithLifecycle(initialValue = emptyList())
-    val folder by viewModel.folder.collectAsStateWithLifecycle(null)
-    val games by viewModel.games.collectAsStateWithLifecycle(emptyMap())
+    val folders by bloc.folders.collectAsStateWithLifecycle(initialValue = emptyList())
+    val folder by bloc.folder.collectAsStateWithLifecycle(null)
+    val games by bloc.games.collectAsStateWithLifecycle(emptyMap())
 
     var contentUri by remember { mutableStateOf<Uri?>(null) }
     val openDocumentLauncher = rememberLauncherForActivityResult(
@@ -181,8 +170,8 @@ fun ExploreFolderScreen(
     LaunchedEffect(contentUri) {
         contentUri?.let { uri ->
             folder?.let { folder ->
-                navigator.navigate(
-                    ImportFromFileScreenDestination(
+                navigate(
+                    ImportFromFileConfig(
                         fileUri = uri.toString(),
                         folderUid = folder.uid
                     )
@@ -191,23 +180,23 @@ fun ExploreFolderScreen(
         }
     }
 
-    BackHandler(viewModel.inSelectionMode) {
-        viewModel.inSelectionMode = false
+    BackHandler(bloc.inSelectionMode) {
+        bloc.inSelectionMode = false
     }
 
     Scaffold(
         topBar = {
             AnimatedContent(
-                viewModel.inSelectionMode,
+                bloc.inSelectionMode,
                 label = "TopAppBar InSelection"
             ) { inSelectionMode ->
                 if (inSelectionMode) {
                     SelectionTopAppbar(
-                        title = { Text(viewModel.selectedBoardsList.size.toString()) },
-                        onCloseClick = { viewModel.inSelectionMode = false },
+                        title = { Text(bloc.selectedBoardsList.size.toString()) },
+                        onCloseClick = { bloc.inSelectionMode = false },
                         onClickMoveSelected = { moveSelectedDialog = true },
                         onClickDeleteSelected = { deleteBoardDialog = true },
-                        onClickSelectAll = { viewModel.addAllToSelection(games.map { it.key }) }
+                        onClickSelectAll = { bloc.addAllToSelection(games.map { it.key }) }
                     )
                 } else {
                     DefaultTopAppBar(
@@ -219,7 +208,7 @@ fun ExploreFolderScreen(
                                 )
                             }
                         },
-                        navigateBack = { navigator.popBackStack() },
+                        navigateBack = finish,
                         onImportMenuClick = {
                             addSudokuBottomSheet = true
                         }
@@ -247,8 +236,8 @@ fun ExploreFolderScreen(
             if (folder != null && games.isNotEmpty()) {
                 var expandedGameUid by rememberSaveable { mutableLongStateOf(-1L) }
 
-                LaunchedEffect(viewModel.inSelectionMode) {
-                    if (viewModel.inSelectionMode) expandedGameUid = -1L
+                LaunchedEffect(bloc.inSelectionMode) {
+                    if (bloc.inSelectionMode) expandedGameUid = -1L
                 }
 
                 ScrollbarLazyColumn(
@@ -269,27 +258,27 @@ fun ExploreFolderScreen(
                             gameId = game.first.uid,
                             savedGame = game.second,
                             expanded = expandedGameUid == game.first.uid,
-                            selected = viewModel.selectedBoardsList.contains(game.first),
+                            selected = bloc.selectedBoardsList.contains(game.first),
                             onClick = {
-                                if (!viewModel.inSelectionMode) {
+                                if (!bloc.inSelectionMode) {
                                     expandedGameUid =
                                         if (expandedGameUid != game.first.uid) game.first.uid else -1L
                                 } else {
-                                    viewModel.addToSelection(game.first)
+                                    bloc.addToSelection(game.first)
                                 }
                             },
                             onLongClick = {
-                                viewModel.inSelectionMode = true
-                                viewModel.addToSelection(game.first)
+                                bloc.inSelectionMode = true
+                                bloc.addToSelection(game.first)
                             },
-                            onPlayClick = { viewModel.prepareSudokuToPlay(game.first) },
+                            onPlayClick = { bloc.prepareSudokuToPlay(game.first) },
                             onEditClick = {
-                                navigator.navigate(
-                                    CreateSudokuScreenDestination(
-                                        gameUid = game.first.uid,
-                                        folderUid = folder!!.uid
-                                    )
-                                )
+//                             TODO   navigator.navigate(
+//                                    CreateSudokuScreenDestination(
+//                                        gameUid = game.first.uid,
+//                                        folderUid = folder!!.uid
+//                                    )
+//                                )
                             },
                             onDeleteClick = {
                                 deleteBoardDialogBoard = game.first
@@ -315,24 +304,24 @@ fun ExploreFolderScreen(
         }
     }
 
-    LaunchedEffect(viewModel.readyToPlay, viewModel.gameUidToPlay) {
-        if (viewModel.readyToPlay) {
-            viewModel.gameUidToPlay?.let {
-                navigator.navigate(GameScreenDestination(it, viewModel.isPlayedBefore))
-                viewModel.readyToPlay = false
+    LaunchedEffect(bloc.readyToPlay, bloc.gameUidToPlay) {
+        if (bloc.readyToPlay) {
+            bloc.gameUidToPlay?.let {
+                //TODO navigator.navigate(GameScreenDestination(it, bloc.isPlayedBefore))
+                bloc.readyToPlay = false
             }
         }
     }
 
-    LaunchedEffect(viewModel.selectedBoardsList) {
-        if (viewModel.selectedBoardsList.isEmpty()) {
-            viewModel.inSelectionMode = false
+    LaunchedEffect(bloc.selectedBoardsList) {
+        if (bloc.selectedBoardsList.isEmpty()) {
+            bloc.inSelectionMode = false
         }
     }
 
-    LaunchedEffect(viewModel.inSelectionMode) {
-        if (!viewModel.inSelectionMode) {
-            viewModel.selectedBoardsList = emptyList()
+    LaunchedEffect(bloc.inSelectionMode) {
+        if (!bloc.inSelectionMode) {
+            bloc.selectedBoardsList = emptyList()
         }
     }
 
@@ -344,8 +333,8 @@ fun ExploreFolderScreen(
                 Text(
                     text = pluralStringResource(
                         id = R.plurals.delete_selected_in_folder,
-                        count = if (deleteBoardDialogBoard != null) 1 else viewModel.selectedBoardsList.size,
-                        if (deleteBoardDialogBoard != null) 1 else viewModel.selectedBoardsList.size
+                        count = if (deleteBoardDialogBoard != null) 1 else bloc.selectedBoardsList.size,
+                        if (deleteBoardDialogBoard != null) 1 else bloc.selectedBoardsList.size
                     )
                 )
             },
@@ -359,11 +348,11 @@ fun ExploreFolderScreen(
                 TextButton(onClick = {
                     if (deleteBoardDialogBoard != null) {
                         deleteBoardDialogBoard?.let { gameToDelete ->
-                            viewModel.deleteGame(gameToDelete)
+                            bloc.deleteGame(gameToDelete)
                             deleteBoardDialogBoard = null
                         }
                     } else {
-                        viewModel.deleteSelected()
+                        bloc.deleteSelected()
                     }
                     deleteBoardDialog = false
                 }) {
@@ -375,18 +364,18 @@ fun ExploreFolderScreen(
         MoveSudokuToFolderDialog(
             availableFolders = folders.filter { it != folder },
             onDismiss = { moveSelectedDialog = false },
-            onConfirmMove = { folderUid -> viewModel.moveBoards(folderUid) }
+            onConfirmMove = { folderUid -> bloc.moveBoards(folderUid) }
         )
     } else if (generateSudokuDialog) {
         var isGenerating by remember { mutableStateOf(false) }
         var selectedType by remember { mutableStateOf(GameType.Default9x9) }
         var selectedDifficulty by remember { mutableStateOf(GameDifficulty.Easy) }
         var numberToGenerate by remember { mutableIntStateOf(1) }
-        val generatedNumber by viewModel.generatedSudokuCount.collectAsStateWithLifecycle(0)
+        val generatedNumber by bloc.generatedSudokuCount.collectAsStateWithLifecycle(0)
         AlertDialog(
             onDismissRequest = {
                 generateSudokuDialog = false
-                viewModel.canelGeneratingIfRunning()
+                bloc.canelGeneratingIfRunning()
             },
             title = { Text(stringResource(R.string.action_generate)) },
             confirmButton = {
@@ -394,7 +383,7 @@ fun ExploreFolderScreen(
                     enabled = !isGenerating,
                     onClick = {
                         isGenerating = true
-                        viewModel.generateSudoku(selectedType, selectedDifficulty, numberToGenerate)
+                        bloc.generateSudoku(selectedType, selectedDifficulty, numberToGenerate)
                     }) {
                     Text(stringResource(R.string.dialog_ok))
                 }
@@ -402,7 +391,7 @@ fun ExploreFolderScreen(
             dismissButton = {
                 TextButton(onClick = {
                     generateSudokuDialog = false
-                    viewModel.canelGeneratingIfRunning()
+                    bloc.canelGeneratingIfRunning()
                 }) {
                     Text(stringResource(R.string.action_cancel))
                 }
@@ -536,11 +525,11 @@ fun ExploreFolderScreen(
 
                                         1 -> {
                                             folder?.let {
-                                                navigator.navigate(
-                                                    CreateSudokuScreenDestination(
-                                                        folderUid = it.uid
-                                                    )
-                                                )
+//                                             TODO   navigator.navigate(
+//                                                    CreateSudokuScreenDestination(
+//                                                        folderUid = it.uid
+//                                                    )
+//                                                )
                                             }
                                         }
 

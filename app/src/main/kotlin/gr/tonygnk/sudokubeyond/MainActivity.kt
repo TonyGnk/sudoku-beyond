@@ -38,7 +38,6 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.destinations.ImportFromFileScreenDestination
 import gr.tonygnk.sudokubeyond.ui.app.composable.MainActivityScreen
 import gr.tonygnk.sudokubeyond.ui.app_crash.CrashActivity
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
@@ -86,12 +85,12 @@ fun HandleImportFromFileDeepLink(
         if (activity != null) {
             val intentData = activity.intent.data
             if (intentData != null) {
-                navigator.navigate(
-                    ImportFromFileScreenDestination(
-                        fileUri = intentData.toString(),
-                        fromDeepLink = true
-                    )
-                )
+//              TODO  navigator.navigate(
+//                    ImportFromFileScreenDestination(
+//                        fileUri = intentData.toString(),
+//                        fromDeepLink = true
+//                    )
+//                )
             }
         }
     }

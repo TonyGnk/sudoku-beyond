@@ -31,14 +31,21 @@ import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.domain.usecase.app.GetMainActivitySettingsUseCase
+import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderBloc
+import gr.tonygnk.sudokubeyond.ui.folders.FoldersBloc
+import gr.tonygnk.sudokubeyond.ui.game.GameBloc
 import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryBloc
 import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameBloc
+import gr.tonygnk.sudokubeyond.ui.home.HomeBloc
+import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileBloc
+import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeBloc
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
 import gr.tonygnk.sudokubeyond.ui.util.toStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
 @OptIn(ExperimentalDecomposeApi::class)
@@ -67,20 +74,40 @@ class MainActivityBloc(
 
     private val navigation = StackNavigation<PagesConfig>()
 
+    private var hasHandledFirstLaunch = false
+
     val stack: StateFlow<ChildStack<PagesConfig, PagesBloc>> = childStack(
         source = navigation,
         serializer = PagesConfig.serializer(),
         initialConfiguration = PagesConfig.TopDestination.HomeConfig,
     ) { config, blocContext ->
         when (config) {
-            PagesConfig.TopDestination.HomeConfig -> TemporaryHomeBloc(blocContext = blocContext)
-            PagesConfig.TopDestination.MoreConfig -> TemporaryMoreBloc(blocContext = blocContext)
-            PagesConfig.TopDestination.StatisticsConfig -> StatisticsBloc(blocContext = blocContext)
-            PagesConfig.GamesHistoryConfig -> GamesHistoryBloc(blocContext = blocContext)
+            PagesConfig.TopDestination.HomeConfig -> HomeBloc(blocContext)
+            PagesConfig.TopDestination.MoreConfig -> TemporaryMoreBloc(blocContext)
+            PagesConfig.TopDestination.StatisticsConfig -> StatisticsBloc(blocContext)
+            PagesConfig.GamesHistoryConfig -> GamesHistoryBloc(blocContext)
             is PagesConfig.SavedGameConfig -> SavedGameBloc(blocContext, config.boardUid)
-            PagesConfig.TopDestination.OldNavigationGraph -> TemporaryOldNavigation(blocContext = blocContext)
+            is PagesConfig.ExploreFolderConfig -> ExploreFolderBloc(blocContext, config.folderUid)
+            is PagesConfig.GameConfig -> GameBloc(blocContext, config.gameUid, config.playedBefore)
+            PagesConfig.FoldersConfig -> FoldersBloc(blocContext)
+            is PagesConfig.ImportFromFileConfig -> ImportFromFileBloc(
+                blocContext, config.fileUri, config.folderUid, config.fromDeepLink
+            )
+            PagesConfig.WelcomeConfig -> WelcomeBloc(blocContext)
+            PagesConfig.TopDestination.OldNavigationGraph -> TemporaryOldNavigation(blocContext)
         }
     }.toStateFlow()
+
+    init {
+        scope.launch {
+            settings.collect { currentSettings ->
+                if (currentSettings.firstLaunch && !hasHandledFirstLaunch) {
+                    hasHandledFirstLaunch = true
+                    navigation.replaceAll(PagesConfig.WelcomeConfig)
+                }
+            }
+        }
+    }
 
     fun onChildSelected(newConfig: PagesConfig) {
         if (newConfig == PagesConfig.TopDestination.HomeConfig) {
@@ -120,6 +147,25 @@ class MainActivityBloc(
 
         @Serializable
         data class SavedGameConfig(val boardUid: Long) : PagesConfig
+
+        @Serializable
+        data class ExploreFolderConfig(val folderUid: Long) : PagesConfig
+
+        @Serializable
+        data class GameConfig(val gameUid: Long, val playedBefore: Boolean = false) : PagesConfig
+
+        @Serializable
+        data object FoldersConfig : PagesConfig
+
+        @Serializable
+        data object WelcomeConfig : PagesConfig
+
+        @Serializable
+        data class ImportFromFileConfig(
+            val fileUri: String?,
+            val folderUid: Long = -1,
+            val fromDeepLink: Boolean = false,
+        ) : PagesConfig
     }
 
     companion object {
@@ -134,10 +180,6 @@ class MainActivityBloc(
 }
 
 class TemporaryMoreBloc(
-    blocContext: BlocContext,
-) : MainActivityBloc.PagesBloc, BlocContext by blocContext
-
-class TemporaryHomeBloc(
     blocContext: BlocContext,
 ) : MainActivityBloc.PagesBloc, BlocContext by blocContext
 

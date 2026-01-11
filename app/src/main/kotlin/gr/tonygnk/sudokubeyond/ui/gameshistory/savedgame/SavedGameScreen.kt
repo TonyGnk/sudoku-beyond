@@ -89,6 +89,8 @@ import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ExploreFolderConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import kotlinx.coroutines.launch
@@ -280,11 +282,7 @@ fun SavedGameScreen(
                                     )
                                 },
                                 onClick = {
-//                                 TODO   navigator.navigate(
-//                                        ExploreFolderScreenDestination(
-//                                            folderUid = it.uid
-//                                        )
-//                                    )
+                                    navigate(ExploreFolderConfig(folderUid = it.uid))
                                 },
                                 label = { Text(it.name) }
                             )
@@ -364,11 +362,9 @@ fun SavedGameScreen(
                             FilledTonalButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 onClick = {
-//                                  TODO  navigator.navigate(
-//                                        GameScreenDestination(
-//                                            gameUid = bloc.savedGame!!.uid, playedBefore = true
-//                                        )
-//                                    )
+                                    navigate(
+                                        GameConfig(gameUid = bloc.savedGame!!.uid, playedBefore = true)
+                                    )
                                 }
                             ) {
                                 Text(stringResource(R.string.action_continue))
@@ -468,11 +464,7 @@ fun SavedGameScreen(
                                     )
                                 },
                                 onClick = {
-//                                   TODO navigator.navigate(
-//                                        ExploreFolderScreenDestination(
-//                                            folderUid = it.uid
-//                                        )
-//                                    )
+                                    navigate(ExploreFolderConfig(folderUid = it.uid))
                                 },
                                 label = { Text(it.name) }
                             )
@@ -552,11 +544,9 @@ fun SavedGameScreen(
                             FilledTonalButton(
                                 modifier = Modifier.align(Alignment.CenterHorizontally),
                                 onClick = {
-//                                   TODO navigator.navigate(
-//                                        GameScreenDestination(
-//                                            gameUid = bloc.savedGame!!.uid, playedBefore = true
-//                                        )
-//                                    )
+                                    navigate(
+                                        GameConfig(gameUid = bloc.savedGame!!.uid, playedBefore = true)
+                                    )
                                 }
                             ) {
                                 Text(stringResource(R.string.action_continue))

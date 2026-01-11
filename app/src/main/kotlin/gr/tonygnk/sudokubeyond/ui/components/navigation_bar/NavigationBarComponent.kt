@@ -42,7 +42,7 @@ fun NavigationBarComponent(
 ) {
     val directions = listOf(
 //        NavigationBarDestination.Statistics,
-        NavigationBarDestination.Home,
+//        NavigationBarDestination.Home,
         NavigationBarDestination.More
     )
 

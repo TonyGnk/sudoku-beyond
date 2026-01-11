@@ -87,7 +87,6 @@ import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.destinations.AboutScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.AutoUpdateScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.BackupScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.FoldersScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.LearnScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.SettingsCategoriesScreenDestination
 import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
@@ -99,7 +98,7 @@ import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-@Destination(style = AnimatedNavigation::class)
+@Destination(start = true, style = AnimatedNavigation::class)
 @Composable
 fun MoreScreen(
     navigator: DestinationsNavigator,
@@ -148,7 +147,9 @@ fun MoreScreen(
             PreferenceRow(
                 title = stringResource(R.string.title_folders),
                 painter = rememberVectorPainter(Icons.Outlined.Folder),
-                onClick = { navigator.navigate(FoldersScreenDestination()) }
+                onClick = {
+                    //TODO navigator.navigate(FoldersScreenDestination())
+                }
             )
             PreferenceRow(
                 title = stringResource(R.string.learn_screen_title),

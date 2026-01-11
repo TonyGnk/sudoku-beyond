@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navOptions
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.ramcosta.composedestinations.DestinationsNavHost
 import gr.tonygnk.sudokubeyond.LocalBoardColors
@@ -47,21 +46,30 @@ import gr.tonygnk.sudokubeyond.NavGraphs
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
-import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.WelcomeScreenDestination
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
-import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryHomeBloc
 import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryMoreBloc
 import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryOldNavigation
 import gr.tonygnk.sudokubeyond.ui.components.ChildStack
 import gr.tonygnk.sudokubeyond.ui.components.ChildStackState
 import gr.tonygnk.sudokubeyond.ui.components.navigation_bar.NavigationBarComponent
+import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderBloc
+import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderScreen
+import gr.tonygnk.sudokubeyond.ui.folders.FoldersBloc
+import gr.tonygnk.sudokubeyond.ui.folders.FoldersScreen
+import gr.tonygnk.sudokubeyond.ui.game.GameBloc
+import gr.tonygnk.sudokubeyond.ui.game.GameScreen
 import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryBloc
 import gr.tonygnk.sudokubeyond.ui.gameshistory.GamesHistoryScreen
 import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameBloc
 import gr.tonygnk.sudokubeyond.ui.gameshistory.savedgame.SavedGameScreen
+import gr.tonygnk.sudokubeyond.ui.home.HomeBloc
+import gr.tonygnk.sudokubeyond.ui.home.HomeScreen
+import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileBloc
+import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileScreen
+import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeBloc
+import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeScreen
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsScreen
@@ -116,22 +124,22 @@ private fun MainActivityContent(
 
         LaunchedEffect(navBackStackEntry) {
             bottomBarState = when (navBackStackEntry?.destination?.route) {
-                HomeScreenDestination.route, MoreScreenDestination.route -> true
+                MoreScreenDestination.route -> true
                 else -> false
             }
         }
-        LaunchedEffect(settings.firstLaunch) {
-            if (settings.firstLaunch) {
-                navController.navigate(
-                    route = WelcomeScreenDestination.route,
-                    navOptions = navOptions {
-                        popUpTo(HomeScreenDestination.route) {
-                            inclusive = true
-                        }
-                    }
-                )
-            }
-        }
+//        LaunchedEffect(settings.firstLaunch) {
+//            if (settings.firstLaunch) {
+//                navController.navigate(
+//                    route = WelcomeScreenDestination.route,
+//                    navOptions = navOptions {
+//                        popUpTo(HomeScreenDestination.route) {
+//                            inclusive = true
+//                        }
+//                    }
+//                )
+//            }
+//        }
 
         val boardColors =
             if (settings.monetSudokuBoard) {
@@ -187,7 +195,9 @@ private fun MainActivityContent(
                     modifier = Modifier.padding(paddingValuesOuter),
                 ) { child ->
                     when (val bloc = child.instance) {
-                        is TemporaryHomeBloc -> Text("Home Screen Placeholder")
+                        is HomeBloc -> HomeScreen(
+                            bloc = bloc,
+                        )
                         is TemporaryMoreBloc -> Text("More Screen Placeholder")
                         is StatisticsBloc -> StatisticsScreen(
                             bloc = bloc,
@@ -202,6 +212,33 @@ private fun MainActivityContent(
                             bloc = bloc,
                             navigate = stackState.onChildSelect,
                             finish = stackState.onBackClick
+                        )
+                        is ExploreFolderBloc -> ExploreFolderScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is GameBloc -> GameScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is FoldersBloc -> FoldersScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is ImportFromFileBloc -> ImportFromFileScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+                        is WelcomeBloc -> WelcomeScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            removeWelcomeAndNavigateToHome = {
+                                stackState.onBackClick()
+                                stackState.onChildSelect(MainActivityBloc.PagesConfig.TopDestination.HomeConfig)
+                            }
                         )
                         is TemporaryOldNavigation -> {
                             Scaffold(

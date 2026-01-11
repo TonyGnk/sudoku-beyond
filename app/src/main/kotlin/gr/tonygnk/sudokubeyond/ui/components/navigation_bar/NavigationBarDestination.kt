@@ -20,12 +20,10 @@ package gr.tonygnk.sudokubeyond.ui.components.navigation_bar
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ramcosta.composedestinations.spec.DirectionDestinationSpec
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.destinations.HomeScreenDestination
 import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
 
 sealed class NavigationBarDestination(
@@ -33,11 +31,11 @@ sealed class NavigationBarDestination(
     val icon: ImageVector,
     @StringRes val label: Int,
 ) {
-    data object Home : NavigationBarDestination(
-        HomeScreenDestination,
-        Icons.Rounded.Home,
-        R.string.nav_bar_home
-    )
+//    data object Home : NavigationBarDestination(
+//        HomeScreenDestination,
+//        Icons.Rounded.Home,
+//        R.string.nav_bar_home
+//    )
 
 //    data object Statistics : NavigationBarDestination(
 //        StatisticsScreenDestination,
