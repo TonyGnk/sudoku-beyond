@@ -83,14 +83,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.backup.BackupData
 import gr.tonygnk.sudokubeyond.data.backup.BackupWorker
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.GrantPermissionCard
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
@@ -102,7 +99,6 @@ import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToEnd
 import gr.tonygnk.sudokubeyond.ui.util.isScrolledToStart
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 import kotlinx.coroutines.launch
 
 private val autoBackupIntervalEntries = mapOf(
@@ -113,18 +109,17 @@ private val autoBackupIntervalEntries = mapOf(
     168L to R.string.weekly,
 )
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun BackupScreen(
-    navigator: DestinationsNavigator,
-    viewModel: BackupScreenViewModel = rememberViewModel(BackupScreenViewModel.builder),
+    bloc: BackupBloc,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scrollBehavior = rememberTopAppBarScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val backupUri by viewModel.backupUri.collectAsStateWithLifecycle()
+    val backupUri by bloc.backupUri.collectAsStateWithLifecycle()
 
     var backupOptionsDialog by rememberSaveable { mutableStateOf(false) }
     var autoBackupsNumberDialog by rememberSaveable { mutableStateOf(false) }
@@ -133,10 +128,10 @@ fun BackupScreen(
 
     var autoBackupAvailable by remember { mutableStateOf(false) }
 
-    val autoBackupsNumber by viewModel.autoBackupsNumber.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTO_BACKUPS_NUMBER)
-    val autoBackupInterval by viewModel.autoBackupInterval.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTOBACKUP_INTERVAL)
-    val lastBackupDate by viewModel.lastBackupDate.collectAsStateWithLifecycle(initialValue = null)
-    val dateFormat by viewModel.dateFormat.collectAsStateWithLifecycle(initialValue = "")
+    val autoBackupsNumber by bloc.autoBackupsNumber.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTO_BACKUPS_NUMBER)
+    val autoBackupInterval by bloc.autoBackupInterval.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTOBACKUP_INTERVAL)
+    val lastBackupDate by bloc.lastBackupDate.collectAsStateWithLifecycle(initialValue = null)
+    val dateFormat by bloc.dateFormat.collectAsStateWithLifecycle(initialValue = "")
 
     LaunchedEffect(Unit) {
         autoBackupAvailable = context.contentResolver
@@ -152,7 +147,7 @@ fun BackupScreen(
                     Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION
                 )
 
-                viewModel.setBackupDirectory(uri.toString())
+                bloc.setBackupDirectory(uri.toString())
 
                 autoBackupAvailable =
                     context.contentResolver.persistedUriPermissions.any { it.uri == uri }
@@ -164,7 +159,7 @@ fun BackupScreen(
         contract = CreateDocument("application/json"),
         onResult = { uri ->
             if (uri != null) {
-                viewModel.saveBackupTo(
+                bloc.saveBackupTo(
                     outputStream = context.contentResolver.openOutputStream(uri),
                     onComplete = { exception ->
                         if (exception != null) {
@@ -188,7 +183,7 @@ fun BackupScreen(
             if (uri != null) {
                 context.contentResolver.openInputStream(uri)?.use { inputStream ->
                     inputStream.bufferedReader().use {
-                        viewModel.prepareBackupToRestore(
+                        bloc.prepareBackupToRestore(
                             it.readText(),
                             onComplete = {
                                 restoreDialog = true
@@ -207,7 +202,7 @@ fun BackupScreen(
             CollapsingTopAppBar(
                 collapsingTitle = CollapsingTitle.medium(titleText = stringResource(R.string.backup_restore_title)),
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -366,7 +361,7 @@ fun BackupScreen(
             onDismissRequest = { backupOptionsDialog = false },
             confirmButton = {
                 TextButton(onClick = {
-                    viewModel.createBackup(
+                    bloc.createBackup(
                         backupSettings = selectedOptions.contains(1),
                         onCreated = { backupCreated ->
                             if (backupCreated) {
@@ -400,7 +395,7 @@ fun BackupScreen(
                 key to stringResource(value)
             }.toMap(),
             onSelect = { value ->
-                viewModel.setAutoBackupInterval(value)
+                bloc.setAutoBackupInterval(value)
                 BackupWorker.setupWorker(context, value)
                 autoBackupIntervalDialog = false
             }
@@ -412,7 +407,7 @@ fun BackupScreen(
             entries = listOf(1, 2, 3, 4, 5).associateWith { it.toString() },
             onDismiss = { autoBackupsNumberDialog = false },
             onSelect = { value ->
-                viewModel.setAutoBackupsNumber(value)
+                bloc.setAutoBackupsNumber(value)
                 autoBackupsNumberDialog = false
             }
         )
@@ -428,7 +423,7 @@ fun BackupScreen(
                     var restoreSettings by rememberSaveable {
                         mutableStateOf(true)
                     }
-                    viewModel.backupData?.let { backupData ->
+                    bloc.backupData?.let { backupData ->
                         if (backupData.settings != null) {
                             Spacer(modifier = Modifier.height(8.dp))
                             Row(
@@ -454,7 +449,7 @@ fun BackupScreen(
             confirmButton = {
                 TextButton(
                     onClick = {
-                        viewModel.restoreBackup(
+                        bloc.restoreBackup(
                             onComplete = {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(
@@ -475,7 +470,7 @@ fun BackupScreen(
                 }
             }
         )
-    } else if (viewModel.restoreError) {
+    } else if (bloc.restoreError) {
         AlertDialog(
             title = {
                 Text(stringResource(R.string.restore_backup_error))
@@ -506,7 +501,7 @@ fun BackupScreen(
                                     )
                                 ) {
                                     Text(
-                                        text = viewModel.restoreExceptionString,
+                                        text = bloc.restoreExceptionString,
                                         style = MaterialTheme.typography.bodySmall,
                                         textAlign = TextAlign.Center,
                                         fontWeight = FontWeight(500),
@@ -518,7 +513,7 @@ fun BackupScreen(
                     }
                     Spacer(Modifier.height(12.dp))
                     Button(
-                        onClick = { clipboardManager.setText(AnnotatedString(text = viewModel.restoreExceptionString)) },
+                        onClick = { clipboardManager.setText(AnnotatedString(text = bloc.restoreExceptionString)) },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Icon(Icons.Rounded.ContentCopy, contentDescription = null)
@@ -527,9 +522,9 @@ fun BackupScreen(
                     }
                 }
             },
-            onDismissRequest = { viewModel.restoreError = false },
+            onDismissRequest = { bloc.restoreError = false },
             confirmButton = {
-                TextButton(onClick = { viewModel.restoreError = false }) {
+                TextButton(onClick = { bloc.restoreError = false }) {
                     Text(stringResource(R.string.dialog_ok))
                 }
             }

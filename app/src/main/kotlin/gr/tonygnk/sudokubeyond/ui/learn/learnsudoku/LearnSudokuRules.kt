@@ -38,22 +38,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.model.Cell
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBase
 
-@Destination(style = AnimatedNavigation::class)
+data object LearnSudokuRulesBloc : MainActivityBloc.PagesBloc
+
 @Composable
 fun LearnSudokuRules(
-    navigator: DestinationsNavigator,
+    finish: () -> Unit,
 ) {
     TutorialBase(
         title = stringResource(R.string.learn_sudoku_rules),
-        navigator = navigator
+        finish = finish
     ) {
         Column(
             modifier = Modifier

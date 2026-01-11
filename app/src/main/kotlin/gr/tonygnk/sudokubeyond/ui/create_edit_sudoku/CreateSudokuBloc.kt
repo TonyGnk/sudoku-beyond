@@ -22,9 +22,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.TextUnit
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.algorithm.QQWingController
 import gr.tonygnk.sudoku.core.model.Cell
 import gr.tonygnk.sudoku.core.types.GameDifficulty
@@ -34,6 +33,7 @@ import gr.tonygnk.sudoku.core.utils.SudokuParser
 import gr.tonygnk.sudoku.core.utils.SudokuUtils
 import gr.tonygnk.sudoku.core.utils.UndoRedoManager
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
@@ -41,7 +41,7 @@ import gr.tonygnk.sudokubeyond.data.datastore.ThemeSettingsManager
 import gr.tonygnk.sudokubeyond.domain.usecase.board.GetBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.InsertBoardUseCase
 import gr.tonygnk.sudokubeyond.domain.usecase.board.UpdateBoardUseCase
-import gr.tonygnk.sudokubeyond.navArgs
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import gr.tonygnk.sudokubeyond.ui.util.SudokuUIUtils
 import kotlinx.coroutines.Dispatchers
@@ -50,21 +50,28 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class CreateSudokuViewModel(
+/*
+ public final val gameUid: Long = -1,
+    public final val folderUid: Long? = null
+ */
+
+@OptIn(ExperimentalDecomposeApi::class)
+class CreateSudokuBloc(
+    blocContext: BlocContext,
+    val gameUid: Long,
+    private val folderUid: Long?,
     appSettingsManager: AppSettingsManager,
     themeSettingsManager: ThemeSettingsManager,
     private val getBoardUseCase: GetBoardUseCase,
     private val updateBoardUseCase: UpdateBoardUseCase,
     private val insertBoardUseCase: InsertBoardUseCase,
-    savedStateHandle: SavedStateHandle,
-) : ViewModel() {
-    private val _navArgs: CreateSudokuScreenNavArgs = savedStateHandle.navArgs()
-    val gameUid = _navArgs.gameUid
-    private val folderUid = _navArgs.folderUid
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
 
     init {
         if (gameUid != -1L) {
-            viewModelScope.launch(Dispatchers.IO) {
+            scope.launch(Dispatchers.IO) {
                 val board = getBoardUseCase(gameUid)
                 withContext(Dispatchers.Default) {
                     val sudokuParser = SudokuParser()
@@ -85,7 +92,7 @@ class CreateSudokuViewModel(
     val highlightIdentical = appSettingsManager.highlightIdentical
     private val inputMethod = appSettingsManager.inputMethod
         .stateIn(
-            viewModelScope,
+            scope,
             started = SharingStarted.Eagerly,
             initialValue = PreferencesConstants.DEFAULT_INPUT_METHOD
         )
@@ -295,7 +302,7 @@ class CreateSudokuViewModel(
     }
 
     private fun saveToDb(board: IntArray) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             var solvedBoard: String
             var initialBoard: String
             withContext(Dispatchers.Default) {
@@ -364,22 +371,26 @@ class CreateSudokuViewModel(
         gameBoard = new
     }
 
-    companion object {
-        val builder: (SavedStateHandle) -> CreateSudokuViewModel = { savedStateHandle ->
-            CreateSudokuViewModel(
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
-                themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                getBoardUseCase = GetBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                updateBoardUseCase = UpdateBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                insertBoardUseCase = InsertBoardUseCase(
-                    boardRepository = LibreSudokuApp.appModule.boardRepository
-                ),
-                savedStateHandle = savedStateHandle
-            )
-        }
+    companion object Companion {
+        operator fun invoke(
+            blocContext: BlocContext,
+            gameUid: Long,
+            folderUid: Long?,
+        ) = CreateSudokuBloc(
+            blocContext = blocContext,
+            gameUid = gameUid,
+            folderUid = folderUid,
+            appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+            getBoardUseCase = GetBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            updateBoardUseCase = UpdateBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+            insertBoardUseCase = InsertBoardUseCase(
+                boardRepository = LibreSudokuApp.appModule.boardRepository
+            ),
+        )
     }
 }

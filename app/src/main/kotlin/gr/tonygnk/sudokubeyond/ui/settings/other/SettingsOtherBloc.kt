@@ -18,54 +18,61 @@
 
 package gr.tonygnk.sudokubeyond.ui.settings.other
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.database.AppDatabase
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.data.datastore.TipCardsDataStore
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsOtherViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsOtherBloc(
+    blocContext: BlocContext,
+    val launchedFromGame: Boolean,
     private val settings: AppSettingsManager,
     private val tipCardsDataStore: TipCardsDataStore,
-    private val appDatabase: AppDatabase
-) : ViewModel() {
+    private val appDatabase: AppDatabase,
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val saveLastSelectedDifficultyType = settings.saveSelectedGameDifficultyType
     fun updateSaveLastSelectedDifficultyType(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setSaveSelectedGameDifficultyType(enabled)
         }
 
     val keepScreenOn = settings.keepScreenOn
     fun updateKeepScreenOn(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setKeepScreenOn(enabled)
         }
     }
 
     fun resetTipCards() {
-        viewModelScope.launch {
+        scope.launch {
             tipCardsDataStore.setStreakCard(true)
             tipCardsDataStore.setRecordCard(true)
         }
     }
 
     fun deleteAllTables() {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             appDatabase.clearAllTables()
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsOtherViewModel(
-                settings = LibreSudokuApp.appModule.appSettingsManager,
-                tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
-                appDatabase = LibreSudokuApp.appModule.appDatabase
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext, launchedFromGame: Boolean) = SettingsOtherBloc(
+            blocContext = blocContext,
+            launchedFromGame = launchedFromGame,
+            settings = LibreSudokuApp.appModule.appSettingsManager,
+            tipCardsDataStore = LibreSudokuApp.appModule.tipCardsDataStore,
+            appDatabase = LibreSudokuApp.appModule.appDatabase
+        )
     }
 }

@@ -18,49 +18,54 @@
 
 package gr.tonygnk.sudokubeyond.ui.settings.assistance
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsAssistanceViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsAssistanceBloc(
+    blocContext: BlocContext,
     private val settings: AppSettingsManager,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val remainingUse = settings.remainingUse
     fun updateRemainingUse(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setRemainingUse(enabled)
         }
     }
 
     val highlightIdentical = settings.highlightIdentical
     fun updateHighlightIdentical(enabled: Boolean) =
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setSameValuesHighlight(enabled)
         }
 
     val autoEraseNotes = settings.autoEraseNotes
     fun updateAutoEraseNotes(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setAutoEraseNotes(enabled)
         }
     }
 
     val highlightMistakes = settings.highlightMistakes
     fun updateMistakesHighlight(index: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settings.setHighlightMistakes(index)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsAssistanceViewModel(
-                settings = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = SettingsAssistanceBloc(
+            blocContext = blocContext,
+            settings = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }

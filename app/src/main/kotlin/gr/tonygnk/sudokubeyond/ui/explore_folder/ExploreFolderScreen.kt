@@ -123,7 +123,9 @@ import gr.tonygnk.sudokubeyond.data.database.model.Folder
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.data.database.model.SudokuBoard
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.CreateSudokuConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.ImportFromFileConfig
 import gr.tonygnk.sudokubeyond.ui.components.EmptyScreen
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
@@ -142,7 +144,7 @@ import kotlin.time.toKotlinDuration
 @Composable
 fun ExploreFolderScreen(
     bloc: ExploreFolderBloc,
-    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    navigate: (PagesConfig) -> Unit,
     finish: () -> Unit,
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -273,12 +275,12 @@ fun ExploreFolderScreen(
                             },
                             onPlayClick = { bloc.prepareSudokuToPlay(game.first) },
                             onEditClick = {
-//                             TODO   navigator.navigate(
-//                                    CreateSudokuScreenDestination(
-//                                        gameUid = game.first.uid,
-//                                        folderUid = folder!!.uid
-//                                    )
-//                                )
+                                navigate(
+                                    CreateSudokuConfig(
+                                        gameUid = game.first.uid,
+                                        folderUid = folder!!.uid
+                                    )
+                                )
                             },
                             onDeleteClick = {
                                 deleteBoardDialogBoard = game.first
@@ -307,7 +309,9 @@ fun ExploreFolderScreen(
     LaunchedEffect(bloc.readyToPlay, bloc.gameUidToPlay) {
         if (bloc.readyToPlay) {
             bloc.gameUidToPlay?.let {
-                //TODO navigator.navigate(GameScreenDestination(it, bloc.isPlayedBefore))
+                navigate(
+                    GameConfig(gameUid = it, playedBefore = bloc.isPlayedBefore)
+                )
                 bloc.readyToPlay = false
             }
         }
@@ -525,11 +529,7 @@ fun ExploreFolderScreen(
 
                                         1 -> {
                                             folder?.let {
-//                                             TODO   navigator.navigate(
-//                                                    CreateSudokuScreenDestination(
-//                                                        folderUid = it.uid
-//                                                    )
-//                                                )
+                                                navigate(CreateSudokuConfig(folderUid = it.uid))
                                             }
                                         }
 

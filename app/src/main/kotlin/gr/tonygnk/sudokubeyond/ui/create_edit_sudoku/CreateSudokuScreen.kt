@@ -61,10 +61,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Challenge
 import gr.tonygnk.sudoku.core.types.GameDifficulty.Custom
@@ -75,24 +71,20 @@ import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.types.GameType.Default12x12
 import gr.tonygnk.sudoku.core.types.GameType.Default6x6
 import gr.tonygnk.sudoku.core.types.GameType.Default9x9
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.extensions.resName
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolBarItem
 import gr.tonygnk.sudokubeyond.ui.game.components.ToolbarItem
 import gr.tonygnk.sudokubeyond.ui.util.ReverseArrangement
-import gr.tonygnk.sudokubeyond.ui.util.rememberSavedStateViewModel
 
-@Destination(
-    style = AnimatedNavigation::class,
-    navArgsDelegate = CreateSudokuScreenNavArgs::class
-)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateSudokuScreen(
-    viewModel: CreateSudokuViewModel = rememberSavedStateViewModel(CreateSudokuViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: CreateSudokuBloc,
+    finish: () -> Unit,
 ) {
     var importStringDialog by remember { mutableStateOf(false) }
     Scaffold(
@@ -100,14 +92,14 @@ fun CreateSudokuScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = if (viewModel.gameUid == -1L)
+                        text = if (bloc.gameUid == -1L)
                             stringResource(R.string.create_sudoku_title)
                         else
                             stringResource(R.string.edit_sudoku)
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null
@@ -150,7 +142,7 @@ fun CreateSudokuScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 12.dp)
         ) {
-            val highlightIdentical by viewModel.highlightIdentical.collectAsState(initial = PreferencesConstants.DEFAULT_HIGHLIGHT_IDENTICAL)
+            val highlightIdentical by bloc.highlightIdentical.collectAsState(initial = PreferencesConstants.DEFAULT_HIGHLIGHT_IDENTICAL)
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
@@ -160,7 +152,7 @@ fun CreateSudokuScreen(
                         var difficultyMenu by remember { mutableStateOf(false) }
                         val dropDownIconRotation by animateFloatAsState(if (difficultyMenu) 180f else 0f)
                         TextButton(onClick = { difficultyMenu = !difficultyMenu }) {
-                            Text(stringResource(viewModel.gameDifficulty.resName))
+                            Text(stringResource(bloc.gameDifficulty.resName))
                             Icon(
                                 modifier = Modifier.rotate(dropDownIconRotation),
                                 imageVector = Icons.Rounded.ArrowDropDown,
@@ -171,17 +163,17 @@ fun CreateSudokuScreen(
                             expanded = difficultyMenu,
                             onDismissRequest = { difficultyMenu = false },
                             onClick = {
-                                viewModel.changeGameDifficulty(it)
+                                bloc.changeGameDifficulty(it)
                             }
                         )
                     }
                     // allow changing a game type only when creating a new sudoku
-                    if (viewModel.gameUid == -1L) {
+                    if (bloc.gameUid == -1L) {
                         Box {
                             var gameTypeMenuExpanded by remember { mutableStateOf(false) }
                             val dropDownIconRotation by animateFloatAsState(if (gameTypeMenuExpanded) 180f else 0f)
                             TextButton(onClick = { gameTypeMenuExpanded = !gameTypeMenuExpanded }) {
-                                Text(stringResource(viewModel.gameType.resName))
+                                Text(stringResource(bloc.gameType.resName))
                                 Icon(
                                     modifier = Modifier.rotate(dropDownIconRotation),
                                     imageVector = Icons.Rounded.ArrowDropDown,
@@ -192,48 +184,48 @@ fun CreateSudokuScreen(
                                 expanded = gameTypeMenuExpanded,
                                 onDismissRequest = { gameTypeMenuExpanded = false },
                                 onClick = {
-                                    viewModel.changeGameType(it)
+                                    bloc.changeGameType(it)
                                 }
                             )
                         }
                     }
                 }
                 FilledTonalButton(
-                    enabled = !viewModel.gameBoard.flatten().all { it.value == 0 },
+                    enabled = !bloc.gameBoard.flatten().all { it.value == 0 },
                     onClick = {
-                        if (viewModel.saveGame()) {
-                            navigator.popBackStack()
+                        if (bloc.saveGame()) {
+                            finish()
                         }
                     }) {
                     Text(stringResource(R.string.action_save))
                 }
             }
 
-            val fontSizeFactor by viewModel.fontSize.collectAsState(initial = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
-            val fontSizeValue by remember(fontSizeFactor, viewModel.gameType) {
+            val fontSizeFactor by bloc.fontSize.collectAsState(initial = PreferencesConstants.DEFAULT_FONT_SIZE_FACTOR)
+            val fontSizeValue by remember(fontSizeFactor, bloc.gameType) {
                 mutableStateOf(
-                    viewModel.getFontSize(factor = fontSizeFactor)
+                    bloc.getFontSize(factor = fontSizeFactor)
                 )
             }
 
-            val positionLines by viewModel.positionLines.collectAsState(initial = PreferencesConstants.DEFAULT_POSITION_LINES)
-            val crossHighlight by viewModel.crossHighlight.collectAsState(initial = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT)
+            val positionLines by bloc.positionLines.collectAsState(initial = PreferencesConstants.DEFAULT_POSITION_LINES)
+            val crossHighlight by bloc.crossHighlight.collectAsState(initial = PreferencesConstants.DEFAULT_BOARD_CROSS_HIGHLIGHT)
             Board(
                 modifier = Modifier.padding(vertical = 12.dp),
-                size = viewModel.gameType.size,
+                size = bloc.gameType.size,
                 mainTextSize = fontSizeValue,
                 autoFontSize = fontSizeFactor == 0,
-                board = viewModel.gameBoard,
-                selectedCell = viewModel.currCell,
+                board = bloc.gameBoard,
+                selectedCell = bloc.currCell,
                 onClick = { cell ->
-                    viewModel.processInput(cell = cell)
+                    bloc.processInput(cell = cell)
                 },
                 identicalNumbersHighlight = highlightIdentical,
                 positionLines = positionLines,
                 crossHighlight = crossHighlight
             )
 
-            val funKeyboardOverNum by viewModel.funKeyboardOverNum.collectAsStateWithLifecycle(
+            val funKeyboardOverNum by bloc.funKeyboardOverNum.collectAsStateWithLifecycle(
                 initialValue = PreferencesConstants.DEFAULT_FUN_KEYBOARD_OVER_NUM
             )
 
@@ -241,18 +233,18 @@ fun CreateSudokuScreen(
                 verticalArrangement = if (funKeyboardOverNum) ReverseArrangement else Arrangement.Top
             ) {
                 DefaultGameKeyboard(
-                    size = viewModel.gameType.size,
+                    size = bloc.gameType.size,
                     remainingUses = null,
                     onClick = {
-                        viewModel.processInputKeyboard(number = it)
+                        bloc.processInputKeyboard(number = it)
                     },
                     onLongClick = {
-                        viewModel.processInputKeyboard(
+                        bloc.processInputKeyboard(
                             number = it,
                             longTap = true
                         )
                     },
-                    selected = viewModel.digitFirstNumber
+                    selected = bloc.digitFirstNumber
                 )
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -261,20 +253,20 @@ fun CreateSudokuScreen(
                     ToolbarItem(
                         modifier = Modifier.weight(0.5f),
                         painter = painterResource(R.drawable.ic_round_undo_24),
-                        onClick = { viewModel.toolbarClick(ToolBarItem.Undo) }
+                        onClick = { bloc.toolbarClick(ToolBarItem.Undo) }
                     )
 
                     ToolbarItem(
                         modifier = Modifier.weight(0.5f),
                         painter = rememberVectorPainter(Icons.AutoMirrored.Rounded.Redo),
-                        onClick = { viewModel.toolbarClick(ToolBarItem.Redo) }
+                        onClick = { bloc.toolbarClick(ToolBarItem.Redo) }
                     )
 
                     ToolbarItem(
                         modifier = Modifier.weight(1f),
                         painter = painterResource(R.drawable.ic_eraser_24),
                         onClick = {
-                            viewModel.toolbarClick(ToolBarItem.Remove)
+                            bloc.toolbarClick(ToolBarItem.Remove)
                         }
                     )
                 }
@@ -282,48 +274,48 @@ fun CreateSudokuScreen(
 
             if (importStringDialog) {
                 ImportStringSudokuDialog(
-                    textValue = viewModel.importStringValue,
+                    textValue = bloc.importStringValue,
                     onTextChange = {
-                        viewModel.importStringValue = it
-                        viewModel.importTextFieldError = false
+                        bloc.importStringValue = it
+                        bloc.importTextFieldError = false
                     },
-                    isError = viewModel.importTextFieldError,
+                    isError = bloc.importTextFieldError,
                     onConfirm = {
-                        viewModel.setFromString(viewModel.importStringValue.trim()).also {
-                            viewModel.importTextFieldError = !it
+                        bloc.setFromString(bloc.importStringValue.trim()).also {
+                            bloc.importTextFieldError = !it
                             if (it) {
                                 importStringDialog = false
-                                viewModel.importStringValue = ""
+                                bloc.importStringValue = ""
                             }
                         }
                     },
                     onDismiss = { importStringDialog = false }
                 )
-            } else if (viewModel.multipleSolutionsDialog) {
+            } else if (bloc.multipleSolutionsDialog) {
                 AlertDialog(
                     title = { Text(stringResource(R.string.create_incorrect_puzzle)) },
                     text = {
                         Text(stringResource(R.string.multiple_solution_text))
                     },
-                    onDismissRequest = { viewModel.multipleSolutionsDialog = false },
+                    onDismissRequest = { bloc.multipleSolutionsDialog = false },
                     confirmButton = {
                         TextButton(onClick = {
-                            viewModel.multipleSolutionsDialog = false
+                            bloc.multipleSolutionsDialog = false
                         }) {
                             Text(stringResource(R.string.dialog_ok))
                         }
                     }
                 )
-            } else if (viewModel.noSolutionsDialog) {
+            } else if (bloc.noSolutionsDialog) {
                 AlertDialog(
                     title = { Text(stringResource(R.string.create_incorrect_puzzle)) },
                     text = {
                         Text(stringResource(R.string.no_solution_text))
                     },
-                    onDismissRequest = { viewModel.noSolutionsDialog = false },
+                    onDismissRequest = { bloc.noSolutionsDialog = false },
                     confirmButton = {
                         TextButton(onClick = {
-                            viewModel.noSolutionsDialog = false
+                            bloc.noSolutionsDialog = false
                         }) {
                             Text(stringResource(R.string.dialog_ok))
                         }

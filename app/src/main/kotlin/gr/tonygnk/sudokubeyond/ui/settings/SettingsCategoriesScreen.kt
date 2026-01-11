@@ -55,14 +55,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.destinations.AutoUpdateScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsAdvancedHintScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsAppearanceScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsAssistanceScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsGameplayScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsLanguageScreenDestination
-import gr.tonygnk.sudokubeyond.destinations.SettingsOtherScreenDestination
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AutoUpdateConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAppearanceConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAssistanceConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsGameplayConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsLanguageConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsOtherConfig
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
@@ -71,20 +70,20 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopApp
 import gr.tonygnk.sudokubeyond.ui.settings.components.AppThemePreviewItem
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
+data class SettingsCategoriesBloc(val launchedFromGame: Boolean) : MainActivityBloc.PagesBloc
+
 @Composable
 fun SettingsCategoriesScreen(
-    navigator: DestinationsNavigator,
-    launchedFromGame: Boolean = false
+    bloc: SettingsCategoriesBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
+    finish: () -> Unit,
 ) {
     val context = LocalContext.current
     val currentLanguage by remember { mutableStateOf(getCurrentLocaleString(context)) }
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.settings_title),
-        navigator = navigator
+        finish = finish
     ) { paddingValues ->
         ScrollbarLazyColumn(
             modifier = Modifier
@@ -96,7 +95,7 @@ fun SettingsCategoriesScreen(
                     title = stringResource(R.string.pref_appearance),
                     subtitle = stringResource(R.string.perf_appearance_summary),
                     onClick = {
-                        navigator.navigate(SettingsAppearanceScreenDestination())
+                        navigate(SettingsAppearanceConfig)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Palette)
                 )
@@ -107,7 +106,7 @@ fun SettingsCategoriesScreen(
                     title = stringResource(R.string.pref_gameplay),
                     subtitle = stringResource(R.string.perf_gameplay_summary),
                     onClick = {
-                        navigator.navigate(SettingsGameplayScreenDestination())
+                        navigate(SettingsGameplayConfig)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Extension)
                 )
@@ -118,7 +117,7 @@ fun SettingsCategoriesScreen(
                     title = stringResource(R.string.pref_assistance),
                     subtitle = stringResource(R.string.perf_assistance_summary),
                     onClick = {
-                        navigator.navigate(SettingsAssistanceScreenDestination())
+                        navigate(SettingsAssistanceConfig)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.TipsAndUpdates)
                 )
@@ -128,7 +127,9 @@ fun SettingsCategoriesScreen(
                 PreferenceRow(
                     title = stringResource(R.string.advanced_hint_title),
                     subtitle = stringResource(R.string.advanced_hint_summary),
-                    onClick = { navigator.navigate(SettingsAdvancedHintScreenDestination()) },
+                    onClick = {
+                        navigate(MainActivityBloc.PagesConfig.SettingsAdvancedHintConfig)
+                    },
                     painter = rememberVectorPainter(Icons.Rounded.AutoAwesome)
                 )
             }
@@ -138,7 +139,7 @@ fun SettingsCategoriesScreen(
                     title = stringResource(R.string.pref_app_language),
                     subtitle = currentLanguage,
                     onClick = {
-                        navigator.navigate(SettingsLanguageScreenDestination())
+                        navigate(SettingsLanguageConfig)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.Language)
                 )
@@ -149,7 +150,7 @@ fun SettingsCategoriesScreen(
                         title = stringResource(R.string.auto_update_title),
                         subtitle = stringResource(R.string.auto_updates_summary),
                         onClick = {
-                            navigator.navigate(AutoUpdateScreenDestination())
+                            navigate(AutoUpdateConfig)
                         },
                         painter = rememberVectorPainter(Icons.Rounded.SystemUpdate)
                     )
@@ -160,7 +161,7 @@ fun SettingsCategoriesScreen(
                     title = stringResource(R.string.pref_other),
                     subtitle = stringResource(R.string.perf_other_summary),
                     onClick = {
-                        navigator.navigate(SettingsOtherScreenDestination(launchedFromGame = launchedFromGame))
+                        navigate(SettingsOtherConfig(launchedFromGame = bloc.launchedFromGame))
                     },
                     painter = rememberVectorPainter(Icons.Outlined.MoreHoriz)
                 )
@@ -172,7 +173,7 @@ fun SettingsCategoriesScreen(
 @Composable
 fun SettingsCategory(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
 ) {
     Row(
         modifier = modifier
@@ -208,11 +209,11 @@ fun AppThemeItem(
             onClick = onClick,
             colorScheme = colorScheme.copy(
                 background =
-                if (amoledBlack && (darkTheme == 0 && isSystemInDarkTheme() || darkTheme == 2)) {
-                    Color.Black
-                } else {
-                    colorScheme.background
-                }
+                    if (amoledBlack && (darkTheme == 0 && isSystemInDarkTheme() || darkTheme == 2)) {
+                        Color.Black
+                    } else {
+                        colorScheme.background
+                    }
             ),
             shapes = MaterialTheme.shapes
         )
@@ -225,10 +226,10 @@ fun AppThemeItem(
 
 @Composable
 fun SettingsScaffoldLazyColumn(
-    navigator: DestinationsNavigator,
+    finish: () -> Unit,
     titleText: String,
     snackbarHostState: SnackbarHostState? = null,
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
@@ -244,7 +245,7 @@ fun SettingsScaffoldLazyColumn(
             CollapsingTopAppBar(
                 collapsingTitle = CollapsingTitle.medium(titleText = titleText),
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painter = painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null

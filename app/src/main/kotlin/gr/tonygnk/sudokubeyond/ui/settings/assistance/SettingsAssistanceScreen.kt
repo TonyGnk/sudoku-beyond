@@ -34,38 +34,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRowSwitch
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.settings.SelectionDialog
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsAssistanceScreen(
-    viewModel: SettingsAssistanceViewModel = rememberViewModel(SettingsAssistanceViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SettingsAssistanceBloc,
+    finish: () -> Unit,
 ) {
     var mistakesDialog by rememberSaveable { mutableStateOf(false) }
 
-    val highlightMistakes by viewModel.highlightMistakes.collectAsStateWithLifecycle(
+    val highlightMistakes by bloc.highlightMistakes.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_MISTAKES
     )
-    val autoEraseNotes by viewModel.autoEraseNotes.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTO_ERASE_NOTES)
-    val highlightIdentical by viewModel.highlightIdentical.collectAsStateWithLifecycle(
+    val autoEraseNotes by bloc.autoEraseNotes.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_AUTO_ERASE_NOTES)
+    val highlightIdentical by bloc.highlightIdentical.collectAsStateWithLifecycle(
         initialValue = PreferencesConstants.DEFAULT_HIGHLIGHT_IDENTICAL
     )
-    val remainingUse by viewModel.remainingUse.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_REMAINING_USES)
+    val remainingUse by bloc.remainingUse.collectAsStateWithLifecycle(initialValue = PreferencesConstants.DEFAULT_REMAINING_USES)
 
     SettingsScaffoldLazyColumn(
         titleText = stringResource(R.string.pref_assistance),
-        navigator = navigator
+        finish = finish
     ) { paddingValues ->
         ScrollbarLazyColumn(
             modifier = Modifier
@@ -92,7 +87,7 @@ fun SettingsAssistanceScreen(
                     subtitle = stringResource(R.string.pref_highlight_identical_summ),
                     checked = highlightIdentical,
                     onClick = {
-                        viewModel.updateHighlightIdentical(!highlightIdentical)
+                        bloc.updateHighlightIdentical(!highlightIdentical)
                     },
                     painter = rememberVectorPainter(Icons.Outlined.LooksOne)
                 )
@@ -103,7 +98,7 @@ fun SettingsAssistanceScreen(
                     title = stringResource(R.string.pref_remaining_uses),
                     subtitle = stringResource(R.string.pref_remaining_uses_summ),
                     checked = remainingUse,
-                    onClick = { viewModel.updateRemainingUse(!remainingUse) },
+                    onClick = { bloc.updateRemainingUse(!remainingUse) },
                     painter = rememberVectorPainter(Icons.Outlined.Pin)
                 )
 
@@ -113,7 +108,7 @@ fun SettingsAssistanceScreen(
                 PreferenceRowSwitch(
                     title = stringResource(R.string.pref_auto_erase_notes),
                     checked = autoEraseNotes,
-                    onClick = { viewModel.updateAutoEraseNotes(!autoEraseNotes) },
+                    onClick = { bloc.updateAutoEraseNotes(!autoEraseNotes) },
                     painter = rememberVectorPainter(Icons.Outlined.AutoFixHigh)
                 )
             }
@@ -129,7 +124,7 @@ fun SettingsAssistanceScreen(
                 ),
                 selected = highlightMistakes,
                 onSelect = { index ->
-                    viewModel.updateMistakesHighlight(index)
+                    bloc.updateMistakesHighlight(index)
                 },
                 onDismiss = { mistakesDialog = false }
             )

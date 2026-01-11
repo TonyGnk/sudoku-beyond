@@ -92,6 +92,8 @@ import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.extensions.resName
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsAdvancedHintConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
 import gr.tonygnk.sudokubeyond.ui.components.AdvancedHintContainer
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.game.components.DefaultGameKeyboard
@@ -257,11 +259,10 @@ fun GameScreen(
                                     bloc.giveUpDialog = true
                                 },
                                 onSettingsClick = {
-//                                 TODO   navigator.navigate(
-//                                        SettingsCategoriesScreenDestination(
-//                                            launchedFromGame = true
-//                                        )
-//                                    )
+                                    navigate(
+                                        SettingsCategoriesConfig(launchedFromGame = true)
+                                    )
+//
                                     bloc.showMenu = false
                                 },
                                 onExportClick = {
@@ -379,9 +380,7 @@ fun GameScreen(
                                     bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-//                                  TODO  navigator.navigate(
-//                                        SettingsAdvancedHintScreenDestination
-//                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
@@ -401,9 +400,7 @@ fun GameScreen(
                                     bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-//                                   TODO navigator.navigate(
-//                                        SettingsAdvancedHintScreenDestination
-//                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
@@ -693,9 +690,7 @@ fun GameScreen(
                                     bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-//                                  TODO  navigator.navigate(
-//                                        SettingsAdvancedHintScreenDestination
-//                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }
@@ -715,9 +710,7 @@ fun GameScreen(
                                     bloc.cancelAdvancedHint()
                                 },
                                 onSettingsClick = {
-//                                 TODO   navigator.navigate(
-//                                        SettingsAdvancedHintScreenDestination
-//                                    )
+                                    navigate(SettingsAdvancedHintConfig)
                                 }
                             )
                         }

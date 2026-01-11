@@ -18,7 +18,6 @@
 package gr.tonygnk.sudokubeyond.ui.app.composable
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Grain
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.MoreHoriz
@@ -46,7 +45,6 @@ fun AppNavigationBar(
         MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig,
         MainActivityBloc.PagesConfig.TopDestination.HomeConfig,
         MainActivityBloc.PagesConfig.TopDestination.MoreConfig,
-        MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph,
     )
 
     val isNavigationBarVisible: Boolean = directions.any { it == activeChild }
@@ -94,7 +92,6 @@ private fun MainActivityBloc.PagesConfig.TopDestination.label(): Int {
     return when (this) {
         is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> R.string.nav_bar_home
         is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> R.string.nav_bar_statistics
-        is MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph -> R.string.nav_bar_more
         is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> R.string.nav_bar_more
     }
 }
@@ -104,6 +101,5 @@ private fun MainActivityBloc.PagesConfig.TopDestination.icon(): ImageVector {
         is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> Icons.Rounded.Home
         is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> Icons.Rounded.Info
         is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> Icons.Rounded.MoreHoriz
-        is MainActivityBloc.PagesConfig.TopDestination.OldNavigationGraph -> Icons.Rounded.Grain
     }
 }

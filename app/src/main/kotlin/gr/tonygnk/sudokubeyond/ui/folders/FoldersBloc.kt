@@ -128,16 +128,16 @@ class FoldersBloc(
                 folderRepository = LibreSudokuApp.appModule.folderRepository
             ),
             deleteFolderUseCase = DeleteFolderUseCase(
-                folderRepository = LibreSudokuApp.appModule.folderRepository,
+                folderRepository = LibreSudokuApp.appModule.folderRepository
             ),
             getGamesInFolderUseCase = GetGamesInFolderUseCase(
-                boardRepository = LibreSudokuApp.appModule.boardRepository,
+                boardRepository = LibreSudokuApp.appModule.boardRepository
             ),
             countPuzzlesFolderUseCase = CountPuzzlesFolderUseCase(
-                folderRepository = LibreSudokuApp.appModule.folderRepository,
+                folderRepository = LibreSudokuApp.appModule.folderRepository
             ),
             getLastSavedGamesAnyFolderUseCase = GetLastSavedGamesAnyFolderUseCase(
-                folderRepository = LibreSudokuApp.appModule.folderRepository,
+                folderRepository = LibreSudokuApp.appModule.folderRepository
             )
         )
     }

@@ -20,28 +20,20 @@
 
 package gr.tonygnk.sudokubeyond
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.core.view.WindowCompat
 import com.arkivanov.decompose.DecomposeSettings
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import com.arkivanov.decompose.defaultComponentContext
 import com.arkivanov.decompose.jetpackcomponentcontext.asJetpackComponentContext
-import com.ramcosta.composedestinations.annotation.DeepLink
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.ui.app.composable.MainActivityScreen
 import gr.tonygnk.sudokubeyond.ui.app_crash.CrashActivity
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
-import gr.tonygnk.sudokubeyond.ui.util.findActivity
 
 val LocalBoardColors = staticCompositionLocalOf { SudokuBoardColorsImpl() }
 
@@ -66,32 +58,33 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
-@Destination(
-    deepLinks = [
-        DeepLink(
-            uriPattern = "content://",
-            mimeType = "*/*",
-            action = Intent.ACTION_VIEW
-        )
-    ]
-)
-@Composable
-fun HandleImportFromFileDeepLink(
-    navigator: DestinationsNavigator,
-) {
-    val context = LocalContext.current
-    LaunchedEffect(Unit) {
-        val activity = context.findActivity()
-        if (activity != null) {
-            val intentData = activity.intent.data
-            if (intentData != null) {
-//              TODO  navigator.navigate(
-//                    ImportFromFileScreenDestination(
-//                        fileUri = intentData.toString(),
-//                        fromDeepLink = true
-//                    )
-//                )
-            }
-        }
-    }
-}
+// TODO  Handle Deeplinks
+//@Destination(
+//    deepLinks = [
+//        DeepLink(
+//            uriPattern = "content://",
+//            mimeType = "*/*",
+//            action = Intent.ACTION_VIEW
+//        )
+//    ]
+//)
+//@Composable
+//fun HandleImportFromFileDeepLink(
+//    navigator: DestinationsNavigator,
+//) {
+//    val context = LocalContext.current
+//    LaunchedEffect(Unit) {
+//        val activity = context.findActivity()
+//        if (activity != null) {
+//            val intentData = activity.intent.data
+//            if (intentData != null) {
+////              navigator.navigate(
+////                    ImportFromFileScreenDestination(
+////                        fileUri = intentData.toString(),
+////                        fromDeepLink = true
+////                    )
+////                )
+//            }
+//        }
+//    }
+//}

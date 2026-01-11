@@ -74,6 +74,9 @@ import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsLanguageConfig
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
 import kotlinx.coroutines.Dispatchers
@@ -142,7 +145,7 @@ fun WelcomeScreen(
                         icon = Icons.Rounded.Language,
                         subtitle = currentLanguage,
                         onClick = {
-                            //TODO navigator.navigate(SettingsLanguageScreenDestination())
+                            navigate(SettingsLanguageConfig)
                         },
                     )
                     ItemRowBigIcon(
@@ -150,7 +153,7 @@ fun WelcomeScreen(
                         icon = Icons.Rounded.Restore,
                         subtitle = stringResource(R.string.onboard_restore_backup_description),
                         onClick = {
-                            //TODO  navigator.navigate(BackupScreenDestination)
+                            navigate(BackupConfig)
                         }
                     )
                     ItemRowBigIcon(
@@ -158,7 +161,7 @@ fun WelcomeScreen(
                         icon = Icons.Rounded.Settings,
                         subtitle = stringResource(R.string.onboard_settings_description),
                         onClick = {
-                            //TODO  navigator.navigate(SettingsCategoriesScreenDestination(false))
+                            navigate(SettingsCategoriesConfig(false))
                         }
                     )
                 }

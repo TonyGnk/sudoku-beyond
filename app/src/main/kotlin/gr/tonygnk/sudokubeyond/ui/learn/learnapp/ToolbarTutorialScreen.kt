@@ -25,18 +25,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.learn.components.TutorialBase
 import gr.tonygnk.sudokubeyond.ui.onboarding.FirstGameScreen
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@Destination(style = AnimatedNavigation::class)
+data object ToolbarTutorialBloc : MainActivityBloc.PagesBloc
+
 @Composable
-fun ToolbarTutorialScreen(navigator: DestinationsNavigator) {
+fun ToolbarTutorialScreen(
+    finish: () -> Unit,
+) {
     TutorialBase(
         title = stringResource(R.string.learn_app_toolbar),
-        navigator = navigator
+        finish = finish
     ) {
         FirstGameScreen()
         Text(

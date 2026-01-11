@@ -30,18 +30,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import gr.tonygnk.sudokubeyond.R
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TutorialBase(
     title: String,
-    navigator: DestinationsNavigator,
+    finish: () -> Unit,
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {
-        IconButton(onClick = {
-            navigator.popBackStack()
-        }) {
+        IconButton(onClick = finish) {
             Icon(
                 painter = painterResource(R.drawable.ic_round_arrow_back_24),
                 contentDescription = null

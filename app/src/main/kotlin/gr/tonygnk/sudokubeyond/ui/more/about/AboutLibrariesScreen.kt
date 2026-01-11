@@ -39,16 +39,15 @@ import com.mikepenz.aboutlibraries.ui.compose.LibrariesContainer
 import com.mikepenz.aboutlibraries.ui.compose.LibraryDefaults
 import com.mikepenz.aboutlibraries.ui.compose.android.produceLibraries
 import com.mikepenz.aboutlibraries.ui.compose.libraryColors
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 
-@Destination(style = AnimatedNavigation::class)
+data object AboutLibrariesBloc : MainActivityBloc.PagesBloc
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutLibrariesScreen(
-    navigator: DestinationsNavigator,
+    finish: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val libraries = produceLibraries()
@@ -60,7 +59,7 @@ fun AboutLibrariesScreen(
                 title = { Text(stringResource(R.string.libraries_licenses_title)) },
                 scrollBehavior = scrollBehavior,
                 navigationIcon = {
-                    IconButton(onClick = { navigator.popBackStack() }) {
+                    IconButton(onClick = finish) {
                         Icon(
                             painterResource(R.drawable.ic_round_arrow_back_24),
                             contentDescription = null

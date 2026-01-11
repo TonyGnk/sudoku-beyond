@@ -25,35 +25,30 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.arkivanov.decompose.ExperimentalDecomposeApi
-import com.ramcosta.composedestinations.DestinationsNavHost
 import gr.tonygnk.sudokubeyond.LocalBoardColors
-import gr.tonygnk.sudokubeyond.NavGraphs
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
-import gr.tonygnk.sudokubeyond.destinations.MoreScreenDestination
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
-import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryMoreBloc
-import gr.tonygnk.sudokubeyond.ui.app.bloc.TemporaryOldNavigation
+import gr.tonygnk.sudokubeyond.ui.backup.BackupBloc
+import gr.tonygnk.sudokubeyond.ui.backup.BackupScreen
 import gr.tonygnk.sudokubeyond.ui.components.ChildStack
 import gr.tonygnk.sudokubeyond.ui.components.ChildStackState
-import gr.tonygnk.sudokubeyond.ui.components.navigation_bar.NavigationBarComponent
+import gr.tonygnk.sudokubeyond.ui.create_edit_sudoku.CreateSudokuBloc
+import gr.tonygnk.sudokubeyond.ui.create_edit_sudoku.CreateSudokuScreen
 import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderBloc
 import gr.tonygnk.sudokubeyond.ui.explore_folder.ExploreFolderScreen
 import gr.tonygnk.sudokubeyond.ui.folders.FoldersBloc
@@ -68,9 +63,45 @@ import gr.tonygnk.sudokubeyond.ui.home.HomeBloc
 import gr.tonygnk.sudokubeyond.ui.home.HomeScreen
 import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileBloc
 import gr.tonygnk.sudokubeyond.ui.import_from_file.ImportFromFileScreen
+import gr.tonygnk.sudokubeyond.ui.learn.LearnBloc
+import gr.tonygnk.sudokubeyond.ui.learn.LearnScreen
+import gr.tonygnk.sudokubeyond.ui.learn.learnapp.ToolbarTutorialBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnapp.ToolbarTutorialScreen
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnBasic
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnBasicBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnHiddenPairs
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnHiddenPairsBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnNakedPairs
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnNakedPairsBloc
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuRules
+import gr.tonygnk.sudokubeyond.ui.learn.learnsudoku.LearnSudokuRulesBloc
+import gr.tonygnk.sudokubeyond.ui.more.MoreBloc
+import gr.tonygnk.sudokubeyond.ui.more.MoreScreen
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutBloc
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutLibrariesBloc
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutLibrariesScreen
+import gr.tonygnk.sudokubeyond.ui.more.about.AboutScreen
 import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeBloc
 import gr.tonygnk.sudokubeyond.ui.onboarding.WelcomeScreen
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategoriesBloc
+import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategoriesScreen
+import gr.tonygnk.sudokubeyond.ui.settings.advanced_hint.SettingsAdvancedHintBloc
+import gr.tonygnk.sudokubeyond.ui.settings.advanced_hint.SettingsAdvancedHintScreen
+import gr.tonygnk.sudokubeyond.ui.settings.appearance.SettingsAppearanceBloc
+import gr.tonygnk.sudokubeyond.ui.settings.appearance.SettingsAppearanceScreen
+import gr.tonygnk.sudokubeyond.ui.settings.assistance.SettingsAssistanceBloc
+import gr.tonygnk.sudokubeyond.ui.settings.assistance.SettingsAssistanceScreen
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.AutoUpdateBloc
+import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.AutoUpdateScreen
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
+import gr.tonygnk.sudokubeyond.ui.settings.boardtheme.SettingsBoardTheme
+import gr.tonygnk.sudokubeyond.ui.settings.boardtheme.SettingsBoardThemeBloc
+import gr.tonygnk.sudokubeyond.ui.settings.gameplay.SettingsGameplayBloc
+import gr.tonygnk.sudokubeyond.ui.settings.gameplay.SettingsGameplayScreen
+import gr.tonygnk.sudokubeyond.ui.settings.language.SettingsLanguageBloc
+import gr.tonygnk.sudokubeyond.ui.settings.language.SettingsLanguageScreen
+import gr.tonygnk.sudokubeyond.ui.settings.other.SettingsOtherBloc
+import gr.tonygnk.sudokubeyond.ui.settings.other.SettingsOtherScreen
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsScreen
 import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
@@ -118,16 +149,7 @@ private fun MainActivityContent(
         paletteStyle = settings.paletteStyle
     ) {
         val navController = rememberNavController()
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
 
-        var bottomBarState by rememberSaveable { mutableStateOf(false) }
-
-        LaunchedEffect(navBackStackEntry) {
-            bottomBarState = when (navBackStackEntry?.destination?.route) {
-                MoreScreenDestination.route -> true
-                else -> false
-            }
-        }
 //        LaunchedEffect(settings.firstLaunch) {
 //            if (settings.firstLaunch) {
 //                navController.navigate(
@@ -197,8 +219,12 @@ private fun MainActivityContent(
                     when (val bloc = child.instance) {
                         is HomeBloc -> HomeScreen(
                             bloc = bloc,
+                            navigate = stackState.onChildSelect,
                         )
-                        is TemporaryMoreBloc -> Text("More Screen Placeholder")
+                        is MoreBloc -> MoreScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                        )
                         is StatisticsBloc -> StatisticsScreen(
                             bloc = bloc,
                             navigate = stackState.onChildSelect,
@@ -240,25 +266,94 @@ private fun MainActivityContent(
                                 stackState.onChildSelect(MainActivityBloc.PagesConfig.TopDestination.HomeConfig)
                             }
                         )
-                        is TemporaryOldNavigation -> {
-                            Scaffold(
-                                bottomBar = {
-                                    NavigationBarComponent(
-                                        navController = navController,
-                                        isVisible = bottomBarState,
-                                        updateAvailable = latestRelease != null && latestRelease!!.name.toString() != settings.updateDismissedName
-                                    )
-                                },
-                                contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)
-                            ) { paddingValues ->
-                                DestinationsNavHost(
-                                    navGraph = NavGraphs.root,
-                                    navController = navController,
-                                    startRoute = NavGraphs.root.startRoute,
-                                    modifier = Modifier.padding(paddingValues)
-                                )
-                            }
-                        }
+                        is AboutBloc -> AboutScreen(
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+                        is AutoUpdateBloc -> AutoUpdateScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        LearnBloc -> LearnScreen(
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+
+                        LearnSudokuRulesBloc -> LearnSudokuRules(
+                            finish = stackState.onBackClick
+                        )
+
+                        LearnBasicBloc -> LearnBasic(
+                            finish = stackState.onBackClick
+                        )
+
+                        LearnNakedPairsBloc -> LearnNakedPairs(
+                            finish = stackState.onBackClick
+                        )
+
+                        LearnHiddenPairsBloc -> LearnHiddenPairs(
+                            finish = stackState.onBackClick
+                        )
+
+                        ToolbarTutorialBloc -> ToolbarTutorialScreen(
+                            finish = stackState.onBackClick
+                        )
+
+                        is BackupBloc -> BackupScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsCategoriesBloc -> SettingsCategoriesScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsAdvancedHintBloc -> SettingsAdvancedHintScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsAppearanceBloc -> SettingsAppearanceScreen(
+                            bloc = bloc,
+                            navigate = stackState.onChildSelect,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsAssistanceBloc -> SettingsAssistanceScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsGameplayBloc -> SettingsGameplayScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        SettingsLanguageBloc -> SettingsLanguageScreen(
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsBoardThemeBloc -> SettingsBoardTheme(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        is SettingsOtherBloc -> SettingsOtherScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
+
+                        AboutLibrariesBloc -> AboutLibrariesScreen(
+                            finish = stackState.onBackClick
+                        )
+
+                        is CreateSudokuBloc -> CreateSudokuScreen(
+                            bloc = bloc,
+                            finish = stackState.onBackClick
+                        )
                     }
                 }
             }

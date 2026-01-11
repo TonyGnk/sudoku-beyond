@@ -76,6 +76,8 @@ import gr.tonygnk.sudoku.core.utils.toFormattedString
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.data.database.model.SavedGame
 import gr.tonygnk.sudokubeyond.extensions.resName
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.GameConfig
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.components.board.BoardPreview
 import kotlinx.coroutines.runBlocking
@@ -87,6 +89,7 @@ import kotlin.time.toKotlinDuration
 @Composable
 fun HomeScreen(
     bloc: HomeBloc,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit,
 ) {
     var continueGameDialog by rememberSaveable { mutableStateOf(false) }
     var lastGamesBottomSheet by rememberSaveable {
@@ -127,12 +130,9 @@ fun HomeScreen(
                 runBlocking {
                     //viewModel.saveToDatabase()
                     val saved = lastGame?.completed ?: false
-//                   TODO navigator.navigate(
-//                        GameScreenDestination(
-//                            gameUid = viewModel.insertedBoardUid,
-//                            playedBefore = saved
-//                        )
-//                    )
+                    navigate(
+                        GameConfig(gameUid = bloc.insertedBoardUid, playedBefore = saved)
+                    )
                 }
             }
 
@@ -163,12 +163,7 @@ fun HomeScreen(
                         Button(onClick = {
                             if (lastGames.size <= 1) {
                                 lastGame?.let {
-//                                  TODO  navigator.navigate(
-//                                        GameScreenDestination(
-//                                            gameUid = it.uid,
-//                                            playedBefore = true
-//                                        )
-//                                    )
+                                    GameConfig(gameUid = it.uid, playedBefore = true)
                                 }
                             } else {
                                 lastGamesBottomSheet = true
@@ -253,12 +248,7 @@ fun HomeScreen(
                             type = stringResource(item.second.type.resName),
                             savedGame = item.first,
                             onClick = {
-//                              TODO  navigator.navigate(
-//                                    GameScreenDestination(
-//                                        gameUid = item.first.uid,
-//                                        playedBefore = true
-//                                    )
-//                                )
+                                GameConfig(gameUid = item.first.uid, playedBefore = true)
                                 lastGamesBottomSheet = false
                             }
                         )

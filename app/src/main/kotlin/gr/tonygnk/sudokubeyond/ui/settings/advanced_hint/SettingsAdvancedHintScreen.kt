@@ -42,12 +42,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.PreferencesConstants
-import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
-import gr.tonygnk.sudokubeyond.ui.components.AnimatedNavigation
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.gameshistory.ColorfulBadge
@@ -55,22 +52,20 @@ import gr.tonygnk.sudokubeyond.ui.settings.SettingsCategory
 import gr.tonygnk.sudokubeyond.ui.settings.SettingsScaffoldLazyColumn
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.blend
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
-import gr.tonygnk.sudokubeyond.ui.util.rememberViewModel
 
-@Destination(style = AnimatedNavigation::class)
 @Composable
 fun SettingsAdvancedHintScreen(
-    viewModel: SettingsAdvancedHintViewModel = rememberViewModel(SettingsAdvancedHintViewModel.builder),
-    navigator: DestinationsNavigator,
+    bloc: SettingsAdvancedHintBloc,
+    finish: () -> Unit,
 ) {
-    val advancedHintEnabled by viewModel.advancedHintEnabled.collectAsStateWithLifecycle(
+    val advancedHintEnabled by bloc.advancedHintEnabled.collectAsStateWithLifecycle(
         PreferencesConstants.DEFAULT_ADVANCED_HINT
     )
-    val advancedHintSettings by viewModel.advancedHintSettings.collectAsStateWithLifecycle(
+    val advancedHintSettings by bloc.advancedHintSettings.collectAsStateWithLifecycle(
         AdvancedHintSettings()
     )
     SettingsScaffoldLazyColumn(
-        navigator = navigator,
+        finish = finish,
         titleText = stringResource(R.string.advanced_hint_title)
     ) { paddingValues ->
         ScrollbarLazyColumn(
@@ -83,7 +78,7 @@ fun SettingsAdvancedHintScreen(
             item {
                 BigCardSwitch(
                     checked = advancedHintEnabled,
-                    onClick = { viewModel.setAdvancedHintEnabled(!advancedHintEnabled) }
+                    onClick = { bloc.setAdvancedHintEnabled(!advancedHintEnabled) }
                 )
             }
             item { SettingsCategory(title = stringResource(R.string.settings_advanced_hint_category_techniques)) }
@@ -92,7 +87,7 @@ fun SettingsAdvancedHintScreen(
                     title = stringResource(R.string.hint_wrong_value_title),
                     checked = advancedHintSettings.checkWrongValue,
                     onClick = {
-                        viewModel.updateAdvancedHintSettings(
+                        bloc.updateAdvancedHintSettings(
                             advancedHintSettings.copy(
                                 checkWrongValue = !advancedHintSettings.checkWrongValue
                             )
@@ -105,7 +100,7 @@ fun SettingsAdvancedHintScreen(
                     title = stringResource(R.string.hint_full_house_group_title),
                     checked = advancedHintSettings.fullHouse,
                     onClick = {
-                        viewModel.updateAdvancedHintSettings(
+                        bloc.updateAdvancedHintSettings(
                             advancedHintSettings.copy(
                                 fullHouse = !advancedHintSettings.fullHouse
                             )
@@ -118,7 +113,7 @@ fun SettingsAdvancedHintScreen(
                     title = stringResource(R.string.hint_naked_single_title),
                     checked = advancedHintSettings.nakedSingle,
                     onClick = {
-                        viewModel.updateAdvancedHintSettings(
+                        bloc.updateAdvancedHintSettings(
                             advancedHintSettings.copy(
                                 nakedSingle = !advancedHintSettings.nakedSingle
                             )
@@ -131,7 +126,7 @@ fun SettingsAdvancedHintScreen(
                     title = stringResource(R.string.hint_hidden_single_title),
                     checked = advancedHintSettings.hiddenSingle,
                     onClick = {
-                        viewModel.updateAdvancedHintSettings(
+                        bloc.updateAdvancedHintSettings(
                             advancedHintSettings.copy(
                                 hiddenSingle = !advancedHintSettings.hiddenSingle
                             )

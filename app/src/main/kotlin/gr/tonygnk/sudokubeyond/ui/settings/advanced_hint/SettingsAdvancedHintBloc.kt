@@ -18,38 +18,43 @@
 
 package gr.tonygnk.sudokubeyond.ui.settings.advanced_hint
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import androidx.lifecycle.coroutineScope
+import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudoku.core.hint.AdvancedHintSettings
+import gr.tonygnk.sudokubeyond.LibreSudokuApp
+import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
-import gr.tonygnk.sudokubeyond.ui.util.viewModelBuilder
+import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class SettingsAdvancedHintViewModel(
+@OptIn(ExperimentalDecomposeApi::class)
+class SettingsAdvancedHintBloc(
+    blocContext: BlocContext,
     private val settingsManager: AppSettingsManager,
-) : ViewModel() {
+) : MainActivityBloc.PagesBloc, BlocContext by blocContext {
+
+    private val scope = lifecycle.coroutineScope
+
     val advancedHintEnabled = settingsManager.advancedHintEnabled
     val advancedHintSettings = settingsManager.advancedHintSettings
 
     fun setAdvancedHintEnabled(enabled: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settingsManager.setAdvancedHint(enabled)
         }
     }
 
     fun updateAdvancedHintSettings(settings: AdvancedHintSettings) {
-        viewModelScope.launch(Dispatchers.IO) {
+        scope.launch(Dispatchers.IO) {
             settingsManager.updateAdvancedHintSettings(settings)
         }
     }
 
-    companion object {
-        val builder = viewModelBuilder {
-            SettingsAdvancedHintViewModel(
-                settingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
-        }
+    companion object Companion {
+        operator fun invoke(blocContext: BlocContext) = SettingsAdvancedHintBloc(
+            blocContext = blocContext,
+            settingsManager = LibreSudokuApp.appModule.appSettingsManager
+        )
     }
 }
