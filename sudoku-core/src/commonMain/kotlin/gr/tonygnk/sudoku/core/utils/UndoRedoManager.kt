@@ -35,11 +35,12 @@ class UndoRedoManager(
     constructor() : this(mutableListOf(), mutableListOf())
 
     fun undo(current: GameState): GameState? {
-        if (undoStack.isEmpty()) {
+        if (undoStack.size < 2) {
             return null
         }
         redoStack.add(current)
-        return undoStack.removeLast()
+        undoStack.removeLast()
+        return undoStack.last()
     }
 
     fun redo(current: GameState): GameState? {
@@ -55,7 +56,7 @@ class UndoRedoManager(
         redoStack.clear()
     }
 
-    fun canUndo(): Boolean = undoStack.isNotEmpty()
+    fun canUndo(): Boolean = undoStack.size > 1
     fun canRedo(): Boolean = redoStack.isNotEmpty()
 
     fun reset(initial: GameState) {
