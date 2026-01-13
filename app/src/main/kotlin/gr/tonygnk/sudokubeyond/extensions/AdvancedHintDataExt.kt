@@ -28,7 +28,7 @@ val AdvancedHintData.titleRes: Int
         "hint_naked_single_title" -> R.string.hint_naked_single_title
         "hint_full_house_group_title" -> R.string.hint_full_house_group_title
         "hint_hidden_single_title" -> R.string.hint_hidden_single_title
-        else -> 0
+        else -> R.string.advanced_hint_title // TODO Fallback for unknown hint types
     }
 
 val AdvancedHintData.textResWithArg: Pair<Int, List<String>>
@@ -38,7 +38,7 @@ val AdvancedHintData.textResWithArg: Pair<Int, List<String>>
             "hint_naked_single_detail" -> R.string.hint_naked_single_detail
             "hint_full_house_group_detail" -> R.string.hint_full_house_group_detail
             "hint_hidden_single_detail" -> R.string.hint_hidden_single_detail
-            else -> 0
+            else -> R.string.advanced_hint_in_development // TODO Fallback for unknown hint types
         }
         return Pair(resId, this.textKeyWithArg.second)
     }

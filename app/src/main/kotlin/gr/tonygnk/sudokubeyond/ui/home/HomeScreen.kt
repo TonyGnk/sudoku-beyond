@@ -247,7 +247,7 @@ fun HomeScreen(
                             type = stringResource(item.second.type.resName),
                             savedGame = item.first,
                             onClick = {
-                                GameConfig(gameUid = item.first.uid, playedBefore = true)
+                                navigate(GameConfig(gameUid = item.first.uid, playedBefore = true))
                                 lastGamesBottomSheet = false
                             }
                         )
