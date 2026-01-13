@@ -22,6 +22,7 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -56,24 +57,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.outlined.DriveFileMove
-import androidx.compose.material.icons.automirrored.outlined.NoteAdd
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.AddCircleOutline
-import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.AddCircleOutline
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.EditOff
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
-import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
@@ -109,7 +92,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -229,7 +211,10 @@ fun ExploreFolderScreen(
                         coroutineScope.launch { lazyListState.animateScrollToItem(0) }
                     }
                 ) {
-                    Icon(Icons.Rounded.KeyboardArrowUp, contentDescription = null)
+                    Icon(
+                        painter = painterResource(R.drawable.ic_keyboard_arrow_up),
+                        contentDescription = null
+                    )
                 }
             }
         }
@@ -296,7 +281,10 @@ fun ExploreFolderScreen(
                         Button(onClick = {
                             addSudokuBottomSheet = true
                         }) {
-                            Icon(Icons.Rounded.Add, contentDescription = null)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add),
+                                contentDescription = null
+                            )
                             Spacer(modifier = Modifier.width(12.dp))
                             Text(stringResource(R.string.add_to_folder))
                         }
@@ -331,7 +319,12 @@ fun ExploreFolderScreen(
 
     if (deleteBoardDialog) {
         AlertDialog(
-            icon = { Icon(Icons.Outlined.Delete, contentDescription = null) },
+            icon = {
+                Icon(
+                    painter = painterResource(R.drawable.ic_delete),
+                    contentDescription = null
+                )
+            },
             title = { Text(stringResource(R.string.dialog_delete_selected)) },
             text = {
                 Text(
@@ -415,7 +408,7 @@ fun ExploreFolderScreen(
                                         Text(stringResource(selectedDifficulty.resName))
                                         Icon(
                                             modifier = Modifier.rotate(dropDownIconRotation),
-                                            imageVector = Icons.Rounded.ArrowDropDown,
+                                            painter = painterResource(R.drawable.ic_arrow_drop_down),
                                             contentDescription = null
                                         )
                                     }
@@ -441,7 +434,7 @@ fun ExploreFolderScreen(
                                         Text(stringResource(selectedType.resName))
                                         Icon(
                                             modifier = Modifier.rotate(dropDownIconRotation),
-                                            imageVector = Icons.Rounded.ArrowDropDown,
+                                            painter = painterResource(R.drawable.ic_arrow_drop_down),
                                             contentDescription = null
                                         )
                                     }
@@ -506,15 +499,15 @@ fun ExploreFolderScreen(
                     listOf(
                         Pair(
                             stringResource(R.string.action_generate),
-                            Icons.Outlined.AddCircleOutline
+                            R.drawable.ic_add_circle
                         ),
                         Pair(
                             stringResource(R.string.add_to_folder_create_new),
-                            Icons.Outlined.Create
+                            R.drawable.ic_create
                         ),
                         Pair(
                             stringResource(R.string.add_to_folder_from_file),
-                            Icons.AutoMirrored.Outlined.NoteAdd
+                            R.drawable.ic_note_add
                         )
                     ).forEachIndexed { index, item ->
                         Row(
@@ -544,7 +537,7 @@ fun ExploreFolderScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = item.second,
+                                painter = painterResource(item.second),
                                 contentDescription = null,
                                 modifier = Modifier.padding(12.dp)
                             )
@@ -595,7 +588,7 @@ fun GameInFolderWidget(
                 modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.CheckCircle,
+                    painter = painterResource(R.drawable.ic_check_circle),
                     tint = MaterialTheme.colorScheme.primary,
                     contentDescription = null,
                     modifier = Modifier.padding(end = 12.dp)
@@ -653,7 +646,7 @@ fun GameInFolderWidget(
                         horizontalArrangement = Arrangement.SpaceAround,
                     ) {
                         IconWithText(
-                            imageVector = Icons.Rounded.PlayArrow,
+                            drawableRes = R.drawable.ic_play,
                             text =
                                 if (savedGame == null || !savedGame.canContinue)
                                     stringResource(R.string.action_play)
@@ -663,13 +656,13 @@ fun GameInFolderWidget(
                             enabled = savedGame?.canContinue ?: true
                         )
                         IconWithText(
-                            imageVector = if (savedGame == null) Icons.Rounded.Edit else Icons.Rounded.EditOff,
+                            drawableRes = if (savedGame == null) R.drawable.ic_create else R.drawable.ic_edit_off,
                             text = stringResource(R.string.action_edit),
                             onClick = onEditClick,
                             enabled = savedGame == null
                         )
                         IconWithText(
-                            imageVector = Icons.Outlined.Delete,
+                            drawableRes = R.drawable.ic_delete,
                             text = stringResource(R.string.action_delete),
                             onClick = onDeleteClick
                         )
@@ -682,7 +675,7 @@ fun GameInFolderWidget(
 
 @Composable
 private fun IconWithText(
-    imageVector: ImageVector,
+    @DrawableRes drawableRes: Int,
     text: String,
     enabled: Boolean = true,
     onClick: () -> Unit,
@@ -694,7 +687,10 @@ private fun IconWithText(
             onClick = onClick,
             enabled = enabled
         ) {
-            Icon(imageVector, contentDescription = null)
+            Icon(
+                painter = painterResource(drawableRes),
+                contentDescription = null
+            )
         }
         Text(
             text = text,
@@ -715,7 +711,7 @@ private fun DefaultTopAppBar(
         navigationIcon = {
             IconButton(onClick = navigateBack) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                    painter = painterResource(R.drawable.ic_arrow_small_left),
                     contentDescription = null
                 )
             }
@@ -725,7 +721,7 @@ private fun DefaultTopAppBar(
             Box {
                 IconButton(onClick = { showMenu = !showMenu }) {
                     Icon(
-                        Icons.Default.MoreVert,
+                        painter = painterResource(R.drawable.ic_more_vert),
                         contentDescription = null
                     )
                 }
@@ -737,7 +733,7 @@ private fun DefaultTopAppBar(
                         DropdownMenuItem(
                             leadingIcon = {
                                 Icon(
-                                    Icons.Rounded.AddCircleOutline,
+                                    painter = painterResource(R.drawable.ic_add_circle),
                                     contentDescription = null
                                 )
                             },
@@ -769,25 +765,28 @@ private fun SelectionTopAppbar(
         title = title,
         navigationIcon = {
             IconButton(onClick = onCloseClick) {
-                Icon(Icons.Rounded.Close, contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_close),
+                    contentDescription = null
+                )
             }
         },
         actions = {
             IconButton(onClick = onClickMoveSelected) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.DriveFileMove,
+                    painter = painterResource(R.drawable.ic_drive_file_move),
                     contentDescription = null
                 )
             }
             IconButton(onClick = onClickDeleteSelected) {
                 Icon(
-                    imageVector = Icons.Rounded.Delete,
+                    painter = painterResource(R.drawable.ic_delete),
                     contentDescription = null
                 )
             }
             IconButton(onClick = onClickSelectAll) {
                 Icon(
-                    painterResource(R.drawable.ic_outline_select_all_24),
+                    painter = painterResource(R.drawable.ic_square_dashed),
                     contentDescription = null
                 )
             }
@@ -807,7 +806,7 @@ private fun MoveSudokuToFolderDialog(
 ) {
     AlertDialog(
         modifier = modifier,
-        icon = { Icon(Icons.AutoMirrored.Outlined.DriveFileMove, contentDescription = null) },
+        icon = { Icon(painter = painterResource(R.drawable.ic_drive_file_move), contentDescription = null) },
         title = { Text(stringResource(R.string.action_move_selected)) },
         onDismissRequest = onDismiss,
         confirmButton = {
@@ -845,7 +844,7 @@ private fun MoveSudokuToFolderDialog(
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Icon(
-                                    imageVector = Icons.Outlined.Folder,
+                                    painter = painterResource(R.drawable.ic_folder),
                                     contentDescription = null,
                                     modifier = Modifier.padding(horizontal = 12.dp)
                                 )

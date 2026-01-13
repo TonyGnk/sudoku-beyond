@@ -17,10 +17,6 @@
 
 package gr.tonygnk.sudokubeyond.ui.app.composable
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Info
-import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -28,7 +24,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import gr.tonygnk.sudokubeyond.R
@@ -62,13 +58,13 @@ fun AppNavigationBar(
                             }
                         ) {
                             Icon(
-                                imageVector = destination.icon(),
+                                painter = painterResource(destination.icon()),
                                 contentDescription = null
                             )
                         }
                     } else {
                         Icon(
-                            imageVector = destination.icon(),
+                            painter = painterResource(destination.icon()),
                             contentDescription = null
                         )
                     }
@@ -96,10 +92,10 @@ private fun MainActivityBloc.PagesConfig.TopDestination.label(): Int {
     }
 }
 
-private fun MainActivityBloc.PagesConfig.TopDestination.icon(): ImageVector {
+private fun MainActivityBloc.PagesConfig.TopDestination.icon(): Int {
     return when (this) {
-        is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> Icons.Rounded.Home
-        is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> Icons.Rounded.Info
-        is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> Icons.Rounded.MoreHoriz
+        is MainActivityBloc.PagesConfig.TopDestination.HomeConfig -> R.drawable.ic_home
+        is MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig -> R.drawable.ic_info
+        is MainActivityBloc.PagesConfig.TopDestination.MoreConfig -> R.drawable.ic_more_horiz
     }
 }

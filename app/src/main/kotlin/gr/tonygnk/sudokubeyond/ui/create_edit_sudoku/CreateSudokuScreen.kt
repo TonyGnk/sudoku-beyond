@@ -27,10 +27,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Redo
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.rounded.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -55,7 +51,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -101,7 +97,7 @@ fun CreateSudokuScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -111,7 +107,7 @@ fun CreateSudokuScreen(
                     Box {
                         IconButton(onClick = { showMenu = !showMenu }) {
                             Icon(
-                                Icons.Default.MoreVert,
+                                painter = painterResource(R.drawable.ic_more_vert),
                                 contentDescription = null
                             )
                         }
@@ -154,8 +150,8 @@ fun CreateSudokuScreen(
                         TextButton(onClick = { difficultyMenu = !difficultyMenu }) {
                             Text(stringResource(bloc.gameDifficulty.resName))
                             Icon(
+                                painter = painterResource(R.drawable.ic_arrow_drop_down),
                                 modifier = Modifier.rotate(dropDownIconRotation),
-                                imageVector = Icons.Rounded.ArrowDropDown,
                                 contentDescription = null
                             )
                         }
@@ -175,8 +171,8 @@ fun CreateSudokuScreen(
                             TextButton(onClick = { gameTypeMenuExpanded = !gameTypeMenuExpanded }) {
                                 Text(stringResource(bloc.gameType.resName))
                                 Icon(
+                                    painter = painterResource(R.drawable.ic_arrow_drop_down),
                                     modifier = Modifier.rotate(dropDownIconRotation),
-                                    imageVector = Icons.Rounded.ArrowDropDown,
                                     contentDescription = null
                                 )
                             }
@@ -252,19 +248,19 @@ fun CreateSudokuScreen(
                 ) {
                     ToolbarItem(
                         modifier = Modifier.weight(0.5f),
-                        painter = painterResource(R.drawable.ic_round_undo_24),
+                        drawableRes = R.drawable.ic_undo,
                         onClick = { bloc.toolbarClick(ToolBarItem.Undo) }
                     )
-
                     ToolbarItem(
-                        modifier = Modifier.weight(0.5f),
-                        painter = rememberVectorPainter(Icons.AutoMirrored.Rounded.Redo),
+                        modifier = Modifier
+                            .weight(0.5f)
+                            .graphicsLayer(scaleX = -1f),
+                        drawableRes = R.drawable.ic_undo,
                         onClick = { bloc.toolbarClick(ToolBarItem.Redo) }
                     )
-
                     ToolbarItem(
                         modifier = Modifier.weight(1f),
-                        painter = painterResource(R.drawable.ic_eraser_24),
+                        drawableRes = R.drawable.ic_eraser,
                         onClick = {
                             bloc.toolbarClick(ToolBarItem.Remove)
                         }

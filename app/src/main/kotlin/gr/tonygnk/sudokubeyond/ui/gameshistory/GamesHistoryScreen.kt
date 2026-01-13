@@ -39,8 +39,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDownward
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
@@ -116,7 +114,7 @@ fun GamesHistoryScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -128,7 +126,7 @@ fun GamesHistoryScreen(
                         }
                     }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_filter_list_24),
+                            painter = painterResource(R.drawable.ic_filter_list),
                             contentDescription = null
                         )
                     }
@@ -222,7 +220,7 @@ fun GamesHistoryScreen(
                         }) {
                             Icon(
                                 modifier = Modifier.rotate(iconRotation),
-                                imageVector = Icons.Rounded.ArrowDownward,
+                                painter = painterResource(R.drawable.ic_arrow_downward),
                                 contentDescription = null
                             )
                         }

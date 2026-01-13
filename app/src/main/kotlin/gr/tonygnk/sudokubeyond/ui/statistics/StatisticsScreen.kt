@@ -109,7 +109,7 @@ fun StatisticsScreen(
                 actions = {
                     IconButton(onClick = { navigate(GamesHistoryConfig) }) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_history_24),
+                            painter = painterResource(R.drawable.ic_history),
                             contentDescription = null
                         )
                     }
@@ -176,7 +176,7 @@ fun StatisticsScreen(
                 }
                 StatisticsSection(
                     title = stringResource(R.string.time),
-                    painter = painterResource(R.drawable.ic_round_hourglass_empty_24),
+                    painter = painterResource(R.drawable.ic_hourglass_end),
                     statRows = listOf(
                         listOf(stringResource(R.string.best_time), bestTime),
                         listOf(stringResource(R.string.average_time), averageTime),
@@ -227,7 +227,7 @@ fun StatisticsScreen(
 
                     StatisticsSection(
                         title = stringResource(R.string.win_streak),
-                        painter = painterResource(R.drawable.ic_outline_verified_24),
+                        painter = painterResource(R.drawable.ic_verified),
                         statRows = listOf(
                             listOf(stringResource(R.string.current_streak), currentStreak),
                             listOf(stringResource(R.string.best_streak), maxStreak)
@@ -239,7 +239,7 @@ fun StatisticsScreen(
                             modifier = Modifier.padding(horizontal = 12.dp),
                             title = stringResource(R.string.win_streak),
                             details = stringResource(R.string.tip_card_win_streak_summ),
-                            painter = painterResource(R.drawable.ic_outline_verified_24),
+                            painter = painterResource(R.drawable.ic_verified),
                             onCloseClicked = { bloc.setStreakTipCard(false) }
                         )
                     }
@@ -254,7 +254,7 @@ fun StatisticsScreen(
                             } else {
                                 ""
                             },
-                    painter = painterResource(R.drawable.ic_outline_star_24)
+                    painter = painterResource(R.drawable.ic_star)
                 )
                 Box(
                     modifier = Modifier
@@ -300,7 +300,7 @@ fun StatisticsScreen(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                         title = stringResource(R.string.tip_card_records_list_title),
                         details = stringResource(R.string.tip_card_records_list_summ),
-                        painter = painterResource(R.drawable.ic_outline_help_outline_24),
+                        painter = painterResource(R.drawable.ic_help),
                         onCloseClicked = { bloc.setRecordTipCard(false) }
                     )
                 }
@@ -354,7 +354,7 @@ fun OverallStatistics(
     StatisticsSection(
         modifier = modifier,
         title = stringResource(R.string.games),
-        painter = painterResource(R.drawable.ic_rounded_stadia_controller_24),
+        painter = painterResource(R.drawable.ic_console_controller),
         statRows = statsRow
     )
 }

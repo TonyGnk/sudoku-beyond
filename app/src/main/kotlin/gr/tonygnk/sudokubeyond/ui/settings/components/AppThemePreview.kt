@@ -27,18 +27,33 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.*
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
 
@@ -49,7 +64,7 @@ fun AppThemePreviewItem(
     selected: Boolean,
     colorScheme: ColorScheme,
     shapes: Shapes,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -83,14 +98,12 @@ fun AppThemePreviewItem(
                 exit = fadeOut() + scaleOut()
             ) {
                 Icon(
-                    imageVector = Icons.Filled.CheckCircle,
+                    painter = painterResource(R.drawable.ic_check_circle),
                     contentDescription = null,
                     tint = colorScheme.primary
                 )
             }
         }
-
-
         Box(
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp)

@@ -41,10 +41,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.rounded.AutoAwesome
-import androidx.compose.material.icons.rounded.PlayCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
@@ -69,7 +65,6 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -187,7 +182,7 @@ fun GameScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -224,9 +219,9 @@ fun GameScreen(
                                 modifier = Modifier.rotate(rotationAngle),
                                 painter = painterResource(
                                     if (bloc.gamePlaying) {
-                                        R.drawable.ic_round_pause_24
+                                        R.drawable.ic_pause_circle
                                     } else {
-                                        R.drawable.ic_round_play_24
+                                        R.drawable.ic_play_circle
                                     }
                                 ),
                                 contentDescription = null
@@ -238,7 +233,7 @@ fun GameScreen(
                         IconButton(onClick = { bloc.restartDialog = true }) {
                             Icon(
                                 modifier = Modifier.rotate(restartButtonAnimation),
-                                painter = painterResource(R.drawable.ic_round_replay_24),
+                                painter = painterResource(R.drawable.ic_restart),
                                 contentDescription = null
                             )
                         }
@@ -247,7 +242,7 @@ fun GameScreen(
                         Box {
                             IconButton(onClick = { bloc.showMenu = !bloc.showMenu }) {
                                 Icon(
-                                    Icons.Default.MoreVert,
+                                    painter = painterResource(R.drawable.ic_more_vert),
                                     contentDescription = null
                                 )
                             }
@@ -262,7 +257,6 @@ fun GameScreen(
                                     navigate(
                                         SettingsCategoriesConfig(launchedFromGame = true)
                                     )
-//
                                     bloc.showMenu = false
                                 },
                                 onExportClick = {
@@ -317,7 +311,7 @@ fun GameScreen(
                             exit = shrinkVertically(clip = false) + fadeOut()
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.PlayCircle,
+                                painter = painterResource(R.drawable.ic_play_circle),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(48.dp)
@@ -476,7 +470,7 @@ fun GameScreen(
                                                     }
                                                 )
                                                 ToolbarItem(
-                                                    painter = painterResource(R.drawable.ic_round_undo_24),
+                                                    drawableRes = R.drawable.ic_undo,
                                                     onClick = { bloc.toolbarClick(ToolBarItem.Undo) },
                                                     onLongClick = {
                                                         bloc.showUndoRedoMenu = true
@@ -490,7 +484,7 @@ fun GameScreen(
                                             if (!hintsDisabled) {
                                                 ToolbarItem(
                                                     modifier = Modifier.weight(1f),
-                                                    painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                    drawableRes = R.drawable.ic_tips_and_updates,
                                                     enabled = bloc.currCell.row >= 0 && bloc.currCell.col >= 0,
                                                     onClick = { bloc.toolbarClick(ToolBarItem.Hint) }
                                                 )
@@ -510,7 +504,7 @@ fun GameScreen(
                                                     }
                                                 )
                                                 ToolbarItem(
-                                                    painter = painterResource(R.drawable.ic_round_edit_24),
+                                                    drawableRes = R.drawable.ic_create,
                                                     toggled = bloc.notesToggled,
                                                     onClick = { bloc.toolbarClick(ToolBarItem.Note) },
                                                     onLongClick = {
@@ -526,7 +520,7 @@ fun GameScreen(
                                             }
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
-                                                painter = painterResource(R.drawable.ic_eraser_24),
+                                                drawableRes = R.drawable.ic_eraser,
                                                 toggled = bloc.eraseButtonToggled,
                                                 onClick = {
                                                     bloc.toolbarClick(ToolBarItem.Remove)
@@ -543,7 +537,7 @@ fun GameScreen(
                                             if (advancedHintEnabled) {
                                                 ToolbarItem(
                                                     modifier = Modifier.weight(1f),
-                                                    painter = rememberVectorPainter(Icons.Rounded.AutoAwesome),
+                                                    drawableRes = R.drawable.ic_sparkles,
                                                     onClick = {
                                                         if (bloc.gamePlaying) {
                                                             bloc.getAdvancedHint()
@@ -627,11 +621,9 @@ fun GameScreen(
                             exit = shrinkVertically(clip = false) + fadeOut()
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.PlayCircle,
+                                painter = painterResource(R.drawable.ic_play_circle_solid),
                                 contentDescription = null,
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .shadow(12.dp)
+                                modifier = Modifier.size(56.dp)
                             )
                         }
                     }
@@ -747,11 +739,10 @@ fun GameScreen(
                                                 onRedoClick = { bloc.toolbarClick(ToolBarItem.Redo) }
                                             )
                                             ToolbarItem(
-                                                painter = painterResource(R.drawable.ic_round_undo_24),
+                                                drawableRes = R.drawable.ic_undo,
                                                 onClick = { bloc.toolbarClick(ToolBarItem.Undo) },
                                                 onLongClick = { bloc.showUndoRedoMenu = true }
                                             )
-
                                         }
                                         val hintsDisabled by bloc.disableHints.collectAsStateWithLifecycle(
                                             initialValue = PreferencesConstants.DEFAULT_HINTS_DISABLED
@@ -759,7 +750,7 @@ fun GameScreen(
                                         if (!hintsDisabled) {
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
-                                                painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                                                drawableRes = R.drawable.ic_tips_and_updates,
                                                 enabled = bloc.currCell.row >= 0 && bloc.currCell.col >= 0,
                                                 onClick = { bloc.toolbarClick(ToolBarItem.Hint) }
                                             )
@@ -777,7 +768,7 @@ fun GameScreen(
                                                 onRenderNotesClick = { renderNotes = !renderNotes }
                                             )
                                             ToolbarItem(
-                                                painter = painterResource(R.drawable.ic_round_edit_24),
+                                                drawableRes = R.drawable.ic_create,
                                                 toggled = bloc.notesToggled,
                                                 onClick = { bloc.toolbarClick(ToolBarItem.Note) },
                                                 onLongClick = {
@@ -793,7 +784,7 @@ fun GameScreen(
                                         }
                                         ToolbarItem(
                                             modifier = Modifier.weight(1f),
-                                            painter = painterResource(R.drawable.ic_eraser_24),
+                                            drawableRes = R.drawable.ic_eraser,
                                             toggled = bloc.eraseButtonToggled,
                                             onClick = {
                                                 bloc.toolbarClick(ToolBarItem.Remove)
@@ -810,7 +801,7 @@ fun GameScreen(
                                         if (advancedHintEnabled) {
                                             ToolbarItem(
                                                 modifier = Modifier.weight(1f),
-                                                painter = rememberVectorPainter(Icons.Rounded.AutoAwesome),
+                                                drawableRes = R.drawable.ic_sparkles,
                                                 onClick = {
                                                     if (bloc.gamePlaying) {
                                                         bloc.getAdvancedHint()

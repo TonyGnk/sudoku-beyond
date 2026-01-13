@@ -18,6 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
@@ -39,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,13 +52,13 @@ import gr.tonygnk.sudokubeyond.ui.util.LightDarkPreview
 fun PreferenceRow(
     modifier: Modifier = Modifier,
     title: String,
-    painter: Painter? = null,
+    @DrawableRes drawableRes: Int? = null,
     onClick: () -> Unit = { },
     onLongClick: (() -> Unit)? = null,
     subtitle: String? = null,
     enabled: Boolean = true,
     action: @Composable (() -> Unit)? = null,
-    shape: Shape = RoundedCornerShape(0.dp)
+    shape: Shape = RoundedCornerShape(0.dp),
 ) {
     val height = if (subtitle != null) 85.dp else 65.dp
 
@@ -83,9 +83,9 @@ fun PreferenceRow(
             .padding(vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (painter != null) {
+        if (drawableRes != null) {
             Icon(
-                painter = painter,
+                painter = painterResource(drawableRes),
                 modifier = Modifier
                     .padding(horizontal = 16.dp)
                     .size(24.dp),
@@ -94,7 +94,7 @@ fun PreferenceRow(
         }
         Column(
             Modifier
-                .padding(horizontal = if (painter != null) 0.dp else 16.dp)
+                .padding(horizontal = if (drawableRes != null) 0.dp else 16.dp)
                 .weight(1f),
         ) {
             Text(
@@ -128,16 +128,16 @@ fun PreferenceRowSwitch(
     modifier: Modifier = Modifier,
     title: String,
     checked: Boolean,
-    painter: Painter? = null,
+    @DrawableRes drawableRes: Int? = null,
     onClick: () -> Unit = { },
     subtitle: String? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
 ) {
 
     PreferenceRow(
         modifier = modifier,
         title = title,
-        painter = painter,
+        drawableRes = drawableRes,
         onClick = onClick,
         subtitle = subtitle,
         action = {
@@ -165,7 +165,7 @@ private fun PreferenceRowPreview() {
                 PreferenceRow(
                     title = "Preference row with icon",
                     subtitle = "Preference with icon",
-                    painter = painterResource(R.drawable.ic_settings_24)
+                    drawableRes = R.drawable.ic_settings,
                 )
             }
         }
@@ -187,7 +187,7 @@ private fun PreferenceRowSwitchPreview() {
                 PreferenceRowSwitch(
                     title = "Preference row with switch and icon",
                     subtitle = "Preference summary",
-                    painter = painterResource(R.drawable.ic_settings_24),
+                    drawableRes = R.drawable.ic_settings,
                     onClick = { },
                     checked = false
                 )
@@ -200,7 +200,7 @@ private fun PreferenceRowSwitchPreview() {
                 PreferenceRowSwitch(
                     title = "Preference row with switch and icon",
                     subtitle = "Preference summary",
-                    painter = painterResource(R.drawable.ic_settings_24),
+                    drawableRes =R.drawable.ic_settings,
                     onClick = { },
                     checked = true
                 )

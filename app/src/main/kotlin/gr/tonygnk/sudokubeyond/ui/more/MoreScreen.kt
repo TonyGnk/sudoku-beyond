@@ -46,10 +46,6 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.SettingsBackupRestore
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -70,7 +66,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -132,35 +127,35 @@ fun MoreScreen(
 
             PreferenceRow(
                 title = stringResource(R.string.settings_title),
-                painter = painterResource(R.drawable.ic_settings_24),
+                drawableRes = R.drawable.ic_settings,
                 onClick = {
                     navigate(MainActivityBloc.PagesConfig.SettingsCategoriesConfig())
                 }
             )
             PreferenceRow(
                 title = stringResource(R.string.backup_restore_title),
-                painter = rememberVectorPainter(image = Icons.Rounded.SettingsBackupRestore),
+                drawableRes = R.drawable.ic_file_backup,
                 onClick = {
                     navigate(BackupConfig)
                 }
             )
             PreferenceRow(
                 title = stringResource(R.string.title_folders),
-                painter = rememberVectorPainter(Icons.Outlined.Folder),
+                drawableRes = R.drawable.ic_folder,
                 onClick = {
                     navigate(FoldersConfig)
                 }
             )
             PreferenceRow(
                 title = stringResource(R.string.learn_screen_title),
-                painter = painterResource(R.drawable.ic_outline_help_outline_24),
+                drawableRes = R.drawable.ic_help,
                 onClick = {
                     navigate(LearnConfig)
                 }
             )
             PreferenceRow(
                 title = stringResource(R.string.about_title),
-                painter = painterResource(R.drawable.ic_outline_info_24),
+                drawableRes = R.drawable.ic_info,
                 onClick = {
                     navigate(AboutConfig)
                 }
@@ -269,7 +264,7 @@ fun UpdateFoundBox(
                     )
                     IconButton(onClick = onDismissed) {
                         Icon(
-                            imageVector = Icons.Rounded.Close,
+                            painter = painterResource(R.drawable.ic_close),
                             contentDescription = null
                         )
                     }

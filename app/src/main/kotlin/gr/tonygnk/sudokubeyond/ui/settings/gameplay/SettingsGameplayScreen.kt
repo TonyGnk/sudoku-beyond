@@ -20,20 +20,12 @@ package gr.tonygnk.sudokubeyond.ui.settings.gameplay
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Block
-import androidx.compose.material.icons.outlined.EditNote
-import androidx.compose.material.icons.outlined.HistoryToggleOff
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.SwitchAccessShortcut
-import androidx.compose.material.icons.outlined.VisibilityOff
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gr.tonygnk.sudokubeyond.R
@@ -78,7 +70,7 @@ fun SettingsGameplayScreen(
                         else -> ""
                     },
                     onClick = { inputMethodDialog = true },
-                    painter = rememberVectorPainter(Icons.Outlined.EditNote)
+                    drawableRes = R.drawable.ic_edit_note
                 )
             }
 
@@ -88,7 +80,7 @@ fun SettingsGameplayScreen(
                     subtitle = stringResource(R.string.pref_mistakes_limit_summ),
                     checked = mistakesLimit,
                     onClick = { bloc.updateMistakesLimit(!mistakesLimit) },
-                    painter = rememberVectorPainter(Icons.Outlined.Block)
+                    drawableRes = R.drawable.ic_block
                 )
             }
 
@@ -98,7 +90,7 @@ fun SettingsGameplayScreen(
                     subtitle = stringResource(R.string.pref_disable_hints_summ),
                     checked = hintDisabled,
                     onClick = { bloc.updateHintDisabled(!hintDisabled) },
-                    painter = rememberVectorPainter(Icons.Outlined.VisibilityOff)
+                    drawableRes = R.drawable.ic_visibility_off
                 )
             }
 
@@ -107,7 +99,7 @@ fun SettingsGameplayScreen(
                     title = stringResource(R.string.pref_show_timer),
                     checked = timerEnabled,
                     onClick = { bloc.updateTimer(!timerEnabled) },
-                    painter = rememberVectorPainter(Icons.Outlined.Schedule)
+                    drawableRes = R.drawable.ic_schedule
                 )
             }
 
@@ -116,11 +108,12 @@ fun SettingsGameplayScreen(
                     title = stringResource(R.string.pref_reset_timer),
                     checked = resetTimer,
                     onClick = { bloc.updateCanResetTimer(!resetTimer) },
-                    painter = rememberVectorPainter(Icons.Outlined.HistoryToggleOff)
+                    drawableRes = R.drawable.ic_history_toggle_off
                 )
             }
 
             item {
+                // TODO
                 PreferenceRowSwitch(
                     title = stringResource(R.string.pref_fun_keyboard_over_num),
                     subtitle = stringResource(R.string.pref_fun_keyboard_over_num_subtitle),
@@ -128,7 +121,7 @@ fun SettingsGameplayScreen(
                     onClick = {
                         bloc.updateFunKeyboardOverNum(!funKeyboardOverNum)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.SwitchAccessShortcut)
+                    drawableRes = R.drawable.ic_switch_access_shortcut
                 )
             }
         }

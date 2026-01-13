@@ -24,6 +24,7 @@ import android.os.Environment
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.contract.ActivityResultContracts.CreateDocument
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -37,12 +38,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.FileDownload
-import androidx.compose.material.icons.rounded.FileUpload
-import androidx.compose.material.icons.rounded.History
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -69,8 +64,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -204,7 +197,7 @@ fun BackupScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -224,7 +217,7 @@ fun BackupScreen(
                             R.string.last_backup_date,
                             date.format(AppSettingsManager.dateFormat(dateFormat))
                         ),
-                        icon = Icons.Rounded.History,
+                        drawableRes = R.drawable.ic_history,
                         modifier = Modifier.padding(bottom = 8.dp)
                     )
                 }
@@ -233,7 +226,7 @@ fun BackupScreen(
                 PreferenceRow(
                     title = stringResource(R.string.action_create_backup),
                     subtitle = stringResource(R.string.create_backup_description),
-                    painter = rememberVectorPainter(image = Icons.Rounded.FileUpload),
+                    drawableRes = R.drawable.ic_file_upload,
                     onClick = { backupOptionsDialog = true }
                 )
             }
@@ -241,7 +234,7 @@ fun BackupScreen(
                 PreferenceRow(
                     title = stringResource(R.string.action_restore),
                     subtitle = stringResource(R.string.restore_description),
-                    painter = rememberVectorPainter(image = Icons.Rounded.FileDownload),
+                    drawableRes = R.drawable.ic_file_download,
                     onClick = { selectFileToRestore.launch(arrayOf("application/json")) }
                 )
             }
@@ -253,7 +246,7 @@ fun BackupScreen(
                     GrantPermissionCard(
                         title = stringResource(R.string.auto_backup_folder_access),
                         details = stringResource(R.string.auto_backup_folder_access_description),
-                        painter = rememberVectorPainter(image = Icons.Outlined.Folder),
+                        drawableRes = R.drawable.ic_folder,
                         confirmButton = {
                             Button(
                                 onClick = { requestDirectoryAccess.launch(null) },
@@ -516,7 +509,10 @@ fun BackupScreen(
                         onClick = { clipboardManager.setText(AnnotatedString(text = bloc.restoreExceptionString)) },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
-                        Icon(Icons.Rounded.ContentCopy, contentDescription = null)
+                        Icon(
+                            painter = painterResource(R.drawable.ic_content_copy),
+                            contentDescription = null
+                        )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(stringResource(R.string.export_string_copy))
                     }
@@ -535,7 +531,7 @@ fun BackupScreen(
 @Composable
 fun CardRow(
     text: String,
-    icon: ImageVector,
+    @DrawableRes drawableRes: Int,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -553,7 +549,7 @@ fun CardRow(
                 .background(MaterialTheme.colorScheme.surfaceVariant.harmonizeWithPrimary())
         ) {
             Icon(
-                imageVector = icon,
+                painter = painterResource(drawableRes),
                 contentDescription = null,
                 modifier = Modifier.padding(6.dp)
             )

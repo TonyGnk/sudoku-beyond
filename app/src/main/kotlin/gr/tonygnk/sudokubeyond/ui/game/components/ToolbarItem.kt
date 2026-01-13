@@ -18,6 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.ui.game.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -34,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.R
@@ -53,11 +53,11 @@ enum class ToolBarItem {
 @Composable
 fun ToolbarItem(
     modifier: Modifier = Modifier,
-    painter: Painter,
+    @DrawableRes drawableRes: Int,
     toggled: Boolean = false,
     enabled: Boolean = true,
     onClick: () -> Unit = { },
-    onLongClick: () -> Unit = { }
+    onLongClick: () -> Unit = { },
 ) {
     Box(
         modifier = modifier
@@ -77,7 +77,7 @@ fun ToolbarItem(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                painter = painter,
+                painter = painterResource(drawableRes),
                 contentDescription = null,
                 tint = if (enabled) {
                     if (toggled) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onSurface
@@ -97,11 +97,11 @@ private fun KeyboardItemPreview() {
             Row {
                 ToolbarItem(
                     modifier = Modifier.weight(1f),
-                    painter = painterResource(R.drawable.ic_round_edit_24)
+                    drawableRes = R.drawable.ic_create
                 )
                 ToolbarItem(
                     modifier = Modifier.weight(1f),
-                    painter = painterResource(R.drawable.ic_round_edit_24),
+                    drawableRes = R.drawable.ic_create,
                     toggled = true
                 )
             }

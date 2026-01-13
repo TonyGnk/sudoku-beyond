@@ -25,6 +25,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -54,12 +55,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowRightAlt
-import androidx.compose.material.icons.outlined.BugReport
-import androidx.compose.material.icons.outlined.Verified
-import androidx.compose.material.icons.rounded.Block
-import androidx.compose.material.icons.rounded.Verified
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -87,7 +82,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.compositeOver
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -182,7 +176,7 @@ fun AutoUpdateScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -283,7 +277,7 @@ fun AutoUpdateScreen(
                                     subtitle = if (checkingForUpdates) stringResource(R.string.check_for_update_checking_summary) else stringResource(
                                         R.string.check_for_update_latest_summary
                                     ),
-                                    icon = if (checkingForUpdates) null else Icons.Rounded.Verified,
+                                    drawableRes = if (checkingForUpdates) null else R.drawable.ic_verified,
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .animateContentSize()
@@ -306,7 +300,7 @@ fun AutoUpdateScreen(
                     UpdateChannelItem(
                         title = stringResource(R.string.update_channel_stable),
                         subtitle = stringResource(R.string.update_channel_stable_summary),
-                        icon = Icons.Outlined.Verified,
+                        drawableRes = R.drawable.ic_verified,
                         onClick = {
                             bloc.updateAutoUpdateChannel(UpdateChannel.Stable)
                         },
@@ -315,7 +309,7 @@ fun AutoUpdateScreen(
                     UpdateChannelItem(
                         title = stringResource(R.string.update_channel_beta),
                         subtitle = stringResource(R.string.update_channel_beta_summary),
-                        icon = Icons.Outlined.BugReport,
+                        drawableRes = R.drawable.ic_bug_report,
                         selectedColor = with(MaterialTheme.colorScheme) {
                             Color.Yellow.blend(
                                 primary,
@@ -330,7 +324,7 @@ fun AutoUpdateScreen(
                     UpdateChannelItem(
                         title = stringResource(R.string.update_channel_disable),
                         subtitle = stringResource(R.string.update_channel_disable_summary),
-                        icon = Icons.Rounded.Block,
+                        drawableRes = R.drawable.ic_block,
                         selectedColor = with(MaterialTheme.colorScheme) {
                             Color.Red.blend(
                                 primary,
@@ -398,7 +392,7 @@ fun AutoUpdateScreen(
 fun UpdateChannelItem(
     title: String,
     subtitle: String,
-    icon: ImageVector,
+    @DrawableRes drawableRes: Int,
     onClick: () -> Unit,
     selected: Boolean,
     modifier: Modifier = Modifier,
@@ -421,7 +415,7 @@ fun UpdateChannelItem(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Icon(
-            imageVector = icon,
+            painter = painterResource(drawableRes),
             contentDescription = null
         )
         Column(
@@ -525,7 +519,7 @@ fun NewUpdateContainer(
             modifier = Modifier.fillMaxWidth()
         ) {
             Icon(
-                imageVector = Icons.Rounded.Verified,
+                painter = painterResource(R.drawable.ic_verified),
                 contentDescription = null,
                 tint = with(MaterialTheme.colorScheme) {
                     onPrimaryContainer.blend(
@@ -551,7 +545,7 @@ fun NewUpdateContainer(
                         text = currentVersion.toVersionString(),
                     )
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.ArrowRightAlt,
+                        painter = painterResource(R.drawable.ic_arrow_right),
                         contentDescription = null,
                         modifier = Modifier.padding(horizontal = 4.dp)
                     )
@@ -602,7 +596,7 @@ fun CheckingUpdateContainer(
     containerColor: Color = with(MaterialTheme.colorScheme) {
         primaryContainer
     },
-    icon: ImageVector? = null,
+    @DrawableRes drawableRes: Int? = null,
     action: @Composable ColumnScope.() -> Unit = { },
 ) {
     Box(
@@ -653,11 +647,11 @@ fun CheckingUpdateContainer(
         ) {
             CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimaryContainer) {
                 AnimatedVisibility(
-                    visible = icon != null,
+                    visible = drawableRes != null,
                 ) {
-                    if (icon != null) {
+                    if (drawableRes != null) {
                         Icon(
-                            imageVector = icon,
+                            painter = painterResource(drawableRes),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimaryContainer,
                             modifier = Modifier

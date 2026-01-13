@@ -27,11 +27,6 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Cancel
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Grade
-import androidx.compose.material.icons.rounded.Lightbulb
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -39,13 +34,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudoku.core.types.GameDifficulty
 import gr.tonygnk.sudoku.core.types.GameType
 import gr.tonygnk.sudoku.core.utils.toFormattedString
+import gr.tonygnk.sudokubeyond.R
+import gr.tonygnk.sudokubeyond.core.PreferencesConstants
 import gr.tonygnk.sudokubeyond.data.database.model.Record
 import gr.tonygnk.sudokubeyond.extensions.resName
 import kotlin.time.toKotlinDuration
@@ -148,7 +144,12 @@ fun AfterGameStats(
                         }"
                     )
                 },
-                icon = { Icon(Icons.Rounded.Grade, contentDescription = null) }
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_star),
+                        contentDescription = null
+                    )
+                }
             )
             StatBoxWithBottomPadding(
                 text = {
@@ -159,7 +160,11 @@ fun AfterGameStats(
                         )
                     )
                 },
-                icon = { Icon(Icons.Rounded.Lightbulb, contentDescription = null) }
+                icon = {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_light_bulb), contentDescription = null
+                    )
+                }
             )
             StatBoxWithBottomPadding(
                 text = {
@@ -170,7 +175,7 @@ fun AfterGameStats(
                         )
                     )
                 },
-                icon = { Icon(Icons.Rounded.Cancel, contentDescription = null) }
+                icon = { Icon(painter = painterResource(R.drawable.ic_cancel), contentDescription = null) }
             )
             StatBoxWithBottomPadding(
                 text = {
@@ -181,7 +186,7 @@ fun AfterGameStats(
                         )
                     )
                 },
-                icon = { Icon(Icons.Rounded.Edit, contentDescription = null) }
+                icon = { Icon(painter = painterResource(R.drawable.ic_create), contentDescription = null) }
             )
         }
     }

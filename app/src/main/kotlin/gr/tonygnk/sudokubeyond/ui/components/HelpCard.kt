@@ -18,6 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,8 +28,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.TipsAndUpdates
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -41,7 +40,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.R
@@ -55,7 +53,7 @@ fun HelpCard(
     title: String,
     details: String,
     painter: Painter?,
-    onCloseClicked: () -> Unit
+    onCloseClicked: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -87,7 +85,7 @@ fun HelpCard(
                 }
                 IconButton(onClick = onCloseClicked) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_round_close_24),
+                        painter = painterResource(R.drawable.ic_close),
                         contentDescription = null
                     )
                 }
@@ -107,7 +105,7 @@ fun HelpCardPreview() {
         HelpCard(
             title = "This is the title",
             details = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus arcu vitae elit congue scelerisque. Sed a vestibulum tellus. Suspendisse tristique dui eget nisi dictum tempus",
-            painter = painterResource(R.drawable.ic_outline_verified_24),
+            painter = painterResource(R.drawable.ic_verified),
             onCloseClicked = {}
         )
     }
@@ -118,8 +116,8 @@ fun GrantPermissionCard(
     modifier: Modifier = Modifier,
     title: String,
     details: String,
-    painter: Painter?,
-    confirmButton: @Composable ColumnScope.() -> Unit
+    @DrawableRes drawableRes: Int?,
+    confirmButton: @Composable ColumnScope.() -> Unit,
 ) {
     Box(
         modifier = modifier
@@ -139,14 +137,14 @@ fun GrantPermissionCard(
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (painter != null) {
+                    if (drawableRes != null) {
                         Box(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.surfaceVariant.harmonizeWithPrimary())
                         ) {
                             Icon(
-                                painter = painter,
+                                painter = painterResource(drawableRes),
                                 contentDescription = null,
                                 modifier = Modifier.padding(6.dp)
                             )
@@ -176,7 +174,7 @@ fun GrantPermissionCardPreview() {
         GrantPermissionCard(
             title = "This is the title",
             details = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam tempus arcu vitae elit congue scelerisque. Sed a vestibulum tellus. Suspendisse tristique dui eget nisi dictum tempus",
-            painter = rememberVectorPainter(image = Icons.Rounded.TipsAndUpdates),
+            drawableRes = R.drawable.ic_tips_and_updates,
             confirmButton = {
                 Button(
                     onClick = { },

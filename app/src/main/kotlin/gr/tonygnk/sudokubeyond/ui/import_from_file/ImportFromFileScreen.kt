@@ -39,10 +39,6 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.ArrowDropDown
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DropdownMenu
@@ -76,6 +72,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -146,7 +143,7 @@ fun ImportFromFileScreen(
                         }
                     }) {
                         Icon(
-                            imageVector = Icons.Rounded.Close,
+                            painter = painterResource(R.drawable.ic_close),
                             contentDescription = null
                         )
                     }
@@ -164,7 +161,7 @@ fun ImportFromFileScreen(
                         coroutineScope.launch { lazyGridState.animateScrollToItem(0) }
                     }
                 ) {
-                    Icon(Icons.Rounded.KeyboardArrowUp, contentDescription = null)
+                    Icon(painter = painterResource(R.drawable.ic_keyboard_arrow_up), contentDescription = null)
                 }
             }
         }
@@ -201,7 +198,7 @@ fun ImportFromFileScreen(
                             }
                             Icon(
                                 modifier = Modifier.rotate(dropDownIconRotation),
-                                imageVector = Icons.Rounded.ArrowDropDown,
+                                painter = painterResource(R.drawable.ic_arrow_drop_down),
                                 contentDescription = null
                             )
                         }

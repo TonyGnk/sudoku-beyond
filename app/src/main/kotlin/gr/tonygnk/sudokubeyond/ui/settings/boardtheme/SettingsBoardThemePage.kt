@@ -23,11 +23,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.rounded.FormatSize
-import androidx.compose.material.icons.rounded.GridGoldenratio
-import androidx.compose.material.icons.rounded.GridOn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -43,7 +38,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -103,7 +97,7 @@ fun SettingsBoardTheme(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -154,7 +148,7 @@ fun SettingsBoardTheme(
                 title = stringResource(R.string.pref_boardtheme_accent),
                 subtitle = stringResource(R.string.pref_boardtheme_accent_subtitle),
                 checked = monetSudokuBoard,
-                painter = rememberVectorPainter(Icons.Outlined.Palette),
+                drawableRes = R.drawable.ic_palette,
                 onClick = {
                     bloc.updateMonetSudokuBoardSetting(!monetSudokuBoard)
                 }
@@ -164,7 +158,7 @@ fun SettingsBoardTheme(
                 title = stringResource(R.string.pref_position_lines),
                 subtitle = stringResource(R.string.pref_position_lines_summ),
                 checked = positionLines,
-                painter = rememberVectorPainter(Icons.Rounded.GridGoldenratio),
+                drawableRes = R.drawable.ic_grid_golden_ratio,
                 onClick = { bloc.updatePositionLinesSetting(!positionLines) }
             )
 
@@ -172,7 +166,7 @@ fun SettingsBoardTheme(
                 title = stringResource(R.string.pref_cross_highlight),
                 subtitle = stringResource(R.string.pref_cross_highlight_subtitle),
                 checked = boardCrossHighlight,
-                painter = rememberVectorPainter(Icons.Rounded.GridOn),
+                drawableRes = R.drawable.ic_grid_on,
                 onClick = { bloc.updateBoardCrossHighlight(!boardCrossHighlight) }
             )
             PreferenceRow(
@@ -184,11 +178,10 @@ fun SettingsBoardTheme(
                     3 -> stringResource(R.string.pref_board_font_size_large)
                     else -> ""
                 },
-                painter = rememberVectorPainter(Icons.Rounded.FormatSize),
+                drawableRes = R.drawable.ic_format_size,
                 onClick = { fontSizeDialog = true }
             )
         }
-
         if (fontSizeDialog) {
             SelectionDialog(
                 title = stringResource(R.string.pref_board_font_size),

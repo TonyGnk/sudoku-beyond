@@ -25,9 +25,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.SettingsSuggest
-import androidx.compose.material.icons.rounded.AutoAwesome
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,12 +34,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
-import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudoku.core.hint.AdvancedHintData
+import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.extensions.textResWithArg
 import gr.tonygnk.sudokubeyond.extensions.titleRes
 
@@ -83,7 +81,7 @@ fun AdvancedHintContainer(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
-                                imageVector = Icons.Rounded.AutoAwesome,
+                                painter = painterResource(R.drawable.ic_auto_fix),
                                 contentDescription = null,
                                 modifier = Modifier.padding(horizontal = 12.dp),
                                 tint = with(MaterialTheme.colorScheme) {
@@ -104,7 +102,7 @@ fun AdvancedHintContainer(
                             modifier = Modifier.padding(end = 12.dp)
                         ) {
                             Icon(
-                                imageVector = Icons.Outlined.SettingsSuggest,
+                                painter = painterResource(R.drawable.ic_sliders),
                                 contentDescription = null
                             )
                         }

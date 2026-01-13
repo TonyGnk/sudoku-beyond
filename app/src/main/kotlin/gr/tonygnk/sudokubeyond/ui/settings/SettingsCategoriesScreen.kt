@@ -25,14 +25,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Extension
-import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.TipsAndUpdates
-import androidx.compose.material.icons.rounded.AutoAwesome
-import androidx.compose.material.icons.rounded.SystemUpdate
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -48,7 +40,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -97,7 +88,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(SettingsAppearanceConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.Palette)
+                    drawableRes = R.drawable.ic_palette
                 )
             }
 
@@ -108,7 +99,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(SettingsGameplayConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.Extension)
+                    drawableRes = R.drawable.ic_extension
                 )
             }
 
@@ -119,7 +110,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(SettingsAssistanceConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.TipsAndUpdates)
+                    drawableRes = R.drawable.ic_tips_and_updates
                 )
             }
 
@@ -130,7 +121,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(MainActivityBloc.PagesConfig.SettingsAdvancedHintConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Rounded.AutoAwesome)
+                    drawableRes = R.drawable.ic_sparkles
                 )
             }
 
@@ -141,7 +132,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(SettingsLanguageConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.Language)
+                    drawableRes = R.drawable.ic_launguage
                 )
             }
             if (!FlavorUtil.isFoss()) {
@@ -152,7 +143,7 @@ fun SettingsCategoriesScreen(
                         onClick = {
                             navigate(AutoUpdateConfig)
                         },
-                        painter = rememberVectorPainter(Icons.Rounded.SystemUpdate)
+                        drawableRes = R.drawable.ic_refresh
                     )
                 }
             }
@@ -163,7 +154,7 @@ fun SettingsCategoriesScreen(
                     onClick = {
                         navigate(SettingsOtherConfig(launchedFromGame = bloc.launchedFromGame))
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.MoreHoriz)
+                    drawableRes = R.drawable.ic_more_horiz
                 )
             }
         }
@@ -247,7 +238,7 @@ fun SettingsScaffoldLazyColumn(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }

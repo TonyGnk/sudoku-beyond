@@ -40,7 +40,7 @@ fun TutorialBase(
     navigationIcon: @Composable () -> Unit = {
         IconButton(onClick = finish) {
             Icon(
-                painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                painter = painterResource(R.drawable.ic_arrow_small_left),
                 contentDescription = null
             )
         }

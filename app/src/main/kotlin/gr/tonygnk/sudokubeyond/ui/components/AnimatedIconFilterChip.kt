@@ -19,20 +19,20 @@
 package gr.tonygnk.sudokubeyond.ui.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.painterResource
+import gr.tonygnk.sudokubeyond.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimatedIconFilterChip(
     selected: Boolean,
     label: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     FilterChip(
         selected = selected,
@@ -43,7 +43,7 @@ fun AnimatedIconFilterChip(
         leadingIcon = {
             AnimatedVisibility(selected) {
                 Icon(
-                    imageVector = Icons.Rounded.Done,
+                    painter = painterResource(R.drawable.ic_done),
                     contentDescription = null
                 )
             }

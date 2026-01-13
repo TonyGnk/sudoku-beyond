@@ -18,6 +18,8 @@
 
 package gr.tonygnk.sudokubeyond.ui.more.about
 
+import android.R.attr.contentDescription
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,10 +39,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.ContentCopy
-import androidx.compose.material.icons.rounded.Payments
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -53,13 +51,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
@@ -72,21 +69,16 @@ import gr.tonygnk.sudokubeyond.core.TELEGRAM_CHANNEL
 import gr.tonygnk.sudokubeyond.core.WEBLATE_ENGAGE
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.theme.ColorUtils.harmonizeWithPrimary
-import gr.tonygnk.sudokubeyond.ui.theme.icons.Bitcoin
-import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
-import gr.tonygnk.sudokubeyond.ui.theme.icons.LibreSudokuIconAlt
-import gr.tonygnk.sudokubeyond.ui.theme.icons.Mir
-import gr.tonygnk.sudokubeyond.ui.theme.icons.Ton
-import gr.tonygnk.sudokubeyond.ui.theme.icons.Usdt
 import gr.tonygnk.sudokubeyond.util.FlavorUtil
 
 data object AboutBloc : MainActivityBloc.PagesBloc
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Preview(showBackground = true)
 fun AboutScreen(
-    navigate: (MainActivityBloc.PagesConfig) -> Unit,
-    finish: () -> Unit,
+    navigate: (MainActivityBloc.PagesConfig) -> Unit = {},
+    finish: () -> Unit= {},
 ) {
     val uriHandler = LocalUriHandler.current
     val clipboardManager = LocalClipboardManager.current
@@ -98,7 +90,7 @@ fun AboutScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -112,22 +104,15 @@ fun AboutScreen(
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
         ) {
-
-            Box(
+            Icon(
                 modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surfaceContainerHighest)
-                    .align(Alignment.CenterHorizontally)
-            ) {
-                Icon(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .align(Alignment.Center)
-                        .size(48.dp),
-                    imageVector = Icons.Rounded.LibreSudokuIconAlt,
-                    contentDescription = null
-                )
-            }
+                    .size(86.dp),
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null
+            )
             Spacer(modifier = Modifier.height(16.dp))
             Row(
                 modifier = Modifier
@@ -170,25 +155,25 @@ fun AboutScreen(
                 AboutSectionBox(
                     title = stringResource(R.string.about_github_project),
                     subtitle = stringResource(R.string.about_github_source_code),
-                    icon = ImageVector.vectorResource(R.drawable.ic_github_24dp),
+                    drawableRes = R.drawable.ic_github,
                     onClick = { uriHandler.openUri(GITHUB_REPOSITORY) }
                 )
                 AboutSectionBox(
                     title = stringResource(R.string.weblate),
                     subtitle = stringResource(R.string.help_translate),
-                    icon = ImageVector.vectorResource(R.drawable.ic_weblate),
+                    drawableRes = R.drawable.ic_weblate,
                     onClick = { uriHandler.openUri(WEBLATE_ENGAGE) }
                 )
                 AboutSectionBox(
                     title = stringResource(R.string.telegram),
                     subtitle = stringResource(R.string.telegram_link),
-                    icon = Icons.Rounded.ExteraGram,
+                    drawableRes = R.drawable.ic_telegram,
                     onClick = { uriHandler.openUri(TELEGRAM_CHANNEL) }
                 )
                 AboutSectionBox(
                     title = stringResource(R.string.libraries_licenses),
                     subtitle = stringResource(R.string.libraries_licenses_title),
-                    icon = Icons.Outlined.Info,
+                    drawableRes = R.drawable.ic_info,
                     onClick = {
                         navigate(MainActivityBloc.PagesConfig.AboutLibrariesConfig)
                     }
@@ -211,7 +196,7 @@ fun AboutScreen(
                     ) {
                         Spacer(modifier = Modifier.width(4.dp))
                         Icon(
-                            imageVector = Icons.Rounded.Payments,
+                            painter = painterResource(R.drawable.ic_payments),
                             contentDescription = null
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -239,25 +224,25 @@ fun AboutScreen(
                         DonationItem(
                             title = stringResource(R.string.crypto_bitcoin),
                             information = CRYPTO_BTC,
-                            icon = Icons.Filled.Bitcoin,
+                            drawableRes = R.drawable.ic_coins_crypto,
                             onClick = { clipboardManager.setText(AnnotatedString(text = CRYPTO_BTC)) }
                         )
                         DonationItem(
                             title = stringResource(R.string.crypto_ton),
                             information = CRYPTO_TON,
-                            icon = Icons.Rounded.Ton,
+                            drawableRes = R.drawable.ic_crypto_ton,
                             onClick = { clipboardManager.setText(AnnotatedString(text = CRYPTO_TON)) }
                         )
                         DonationItem(
                             title = stringResource(R.string.crypto_usdt),
                             information = CRYPTO_USDT_TRC20,
-                            icon = Icons.Rounded.Usdt,
+                            drawableRes = R.drawable.ic_usdt,
                             onClick = { clipboardManager.setText(AnnotatedString(text = CRYPTO_USDT_TRC20)) }
                         )
                         DonationItem(
                             title = stringResource(R.string.card_mir),
                             information = CARD_MIR,
-                            icon = Icons.Filled.Mir,
+                            drawableRes = R.drawable.ic_mir,
                             onClick = { clipboardManager.setText(AnnotatedString(text = CARD_MIR.filter { it != ' ' })) }
                         )
                     }
@@ -272,7 +257,7 @@ fun AboutScreen(
 @Composable
 fun FlowRowScope.AboutSectionBox(
     title: String,
-    icon: ImageVector,
+    @DrawableRes drawableRes: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
@@ -293,7 +278,7 @@ fun FlowRowScope.AboutSectionBox(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = icon,
+                    painter = painterResource(drawableRes),
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface.harmonizeWithPrimary(),
                     modifier = Modifier.size(24.dp)
@@ -321,7 +306,7 @@ fun FlowRowScope.AboutSectionBox(
 fun DonationItem(
     title: String,
     information: String,
-    icon: ImageVector,
+    @DrawableRes drawableRes: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -341,7 +326,7 @@ fun DonationItem(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                imageVector = icon,
+                painter = painterResource(drawableRes),
                 contentDescription = null
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -358,7 +343,7 @@ fun DonationItem(
         }
         IconButton(onClick = onClick) {
             Icon(
-                imageVector = Icons.Rounded.ContentCopy,
+                painter = painterResource(R.drawable.ic_content_copy),
                 contentDescription = null
             )
         }

@@ -19,8 +19,6 @@
 package gr.tonygnk.sudokubeyond.ui.game.components
 
 import androidx.compose.foundation.layout.Row
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Redo
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -30,6 +28,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import gr.tonygnk.sudokubeyond.R
 
@@ -90,8 +90,9 @@ fun UndoRedoMenu(
                 text = { Text(stringResource(R.string.redo)) },
                 leadingIcon = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Rounded.Redo,
-                        contentDescription = null
+                        painter = painterResource(R.drawable.ic_undo),
+                        contentDescription = null,
+                        modifier = Modifier.graphicsLayer(scaleX = -1f),
                     )
                 },
                 onClick = {

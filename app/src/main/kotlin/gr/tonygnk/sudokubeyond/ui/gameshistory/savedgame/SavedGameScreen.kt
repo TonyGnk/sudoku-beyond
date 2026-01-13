@@ -39,9 +39,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Folder
 import androidx.compose.material3.AssistChip
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -122,7 +119,7 @@ fun SavedGameScreen(
                 navigationIcon = {
                     IconButton(onClick = finish) {
                         Icon(
-                            painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                            painter = painterResource(R.drawable.ic_arrow_small_left),
                             contentDescription = null
                         )
                     }
@@ -132,7 +129,7 @@ fun SavedGameScreen(
                     Box {
                         IconButton(onClick = { showMenu = !showMenu }) {
                             Icon(
-                                Icons.Default.MoreVert,
+                                painter = painterResource(R.drawable.ic_more_vert),
                                 contentDescription = null
                             )
                         }
@@ -277,7 +274,7 @@ fun SavedGameScreen(
                             AssistChip(
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Outlined.Folder,
+                                        painter = painterResource(R.drawable.ic_folder),
                                         contentDescription = null
                                     )
                                 },
@@ -459,7 +456,7 @@ fun SavedGameScreen(
                             AssistChip(
                                 leadingIcon = {
                                     Icon(
-                                        Icons.Outlined.Folder,
+                                        painter = painterResource(R.drawable.ic_folder),
                                         contentDescription = null
                                     )
                                 },

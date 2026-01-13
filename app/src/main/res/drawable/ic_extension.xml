@@ -1,0 +1,32 @@
+<!--
+  ~  Copyright (C) 2026 TonyGnk
+  ~
+  ~  This file is part of Sudoku Beyond.
+  ~  Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:scaleX="0.8333"
+        android:scaleY="0.8333">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="M13,24L11.431,24a1,1 0,0 1,-0.957 -1.291A11.2,11.2 0,0 0,11 20a2,2 0,0 0,-4 0,11.2 11.2,0 0,0 0.526,2.709A1,1 0,0 1,6.569 24L5,24a5.006,5.006 0,0 1,-5 -5L0,11A5.006,5.006 0,0 1,5 6h0.272A9.929,9.929 0,0 1,5 4a4,4 0,0 1,8 0,9.929 9.929,0 0,1 -0.272,2L13,6a5.006,5.006 0,0 1,5 4.773,10.01 10.01,0 0,1 2,-0.273 4,4 0,0 1,0 8,10.02 10.02,0 0,1 -2,-0.272L18,19A5.006,5.006 0,0 1,13 24ZM12.728,22L13,22a3,3 0,0 0,3 -3L16,16.931a1,1 0,0 1,1.291 -0.957A11.224,11.224 0,0 0,20 16.5a2,2 0,0 0,0 -4,11.224 11.224,0 0,0 -2.709,0.526A1,1 0,0 1,16 12.069L16,11a3,3 0,0 0,-3 -3L11.431,8a1,1 0,0 1,-0.957 -1.291A11.2,11.2 0,0 0,11 4,2 2,0 0,0 7,4a11.2,11.2 0,0 0,0.526 2.709A1,1 0,0 1,6.569 8L5,8a3,3 0,0 0,-3 3v8a3,3 0,0 0,3 3h0.272A9.929,9.929 0,0 1,5 20a4,4 0,0 1,8 0A9.929,9.929 0,0 1,12.728 22Z" />
+    </group>
+</vector>

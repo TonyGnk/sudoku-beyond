@@ -1,0 +1,33 @@
+<!--
+  ~  Copyright (C) 2026 TonyGnk
+  ~
+  ~  This file is part of Sudoku Beyond.
+  ~  Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
+  ~
+  ~  This program is free software: you can redistribute it and/or modify
+  ~  it under the terms of the GNU General Public License as published by
+  ~  the Free Software Foundation, either version 3 of the License, or
+  ~  (at your option) any later version.
+  ~
+  ~  This program is distributed in the hope that it will be useful,
+  ~  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~  GNU General Public License for more details.
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <group
+        android:pivotX="12"
+        android:pivotY="12"
+        android:scaleX="0.8333"
+        android:scaleY="0.8333">
+        <path
+            android:fillColor="#FF000000"
+            android:pathData="m6.874,16.515h-1.374v-1.415h1.298c0.394,0 0.715,0.321 0.715,0.715 0,0.368 -0.282,0.66 -0.639,0.7zM7.238,18.115h-1.752l0.013,1.785h1.738c0.493,0 0.893,-0.401 0.893,-0.893 0,-0.492 -0.401,-0.892 -0.893,-0.892zM13,17.5c0,3.59 -2.91,6.5 -6.5,6.5s-6.5,-2.91 -6.5,-6.5 2.91,-6.5 6.5,-6.5 6.5,2.91 6.5,6.5zM9.731,19.007c0,-0.734 -0.481,-1.507 -1.058,-1.843 0.275,-0.381 0.441,-0.844 0.441,-1.349 0,-1.106 -0.803,-2.022 -1.84,-2.252v-0.261c-0.001,-0.443 -0.361,-0.802 -0.804,-0.802s-0.8,0.356 -0.804,0.798v0.202h-0.666c-0.552,0 -1,0.448 -1,1v6c0,0.552 0.448,1 1,1h0.7v0.2c0,0.442 0.358,0.8 0.8,0.8s0.8,-0.358 0.8,-0.8v-0.2l0.231,-0.029c1.237,-0.146 2.2,-1.187 2.2,-2.463zM24,4v16c0,2.28 -3.225,4 -7.5,4 -0.731,0 -1.454,-0.053 -2.147,-0.155 -0.546,-0.081 -0.923,-0.59 -0.842,-1.137 0.082,-0.545 0.593,-0.913 1.137,-0.842 0.596,0.089 1.219,0.134 1.853,0.134 3.307,0 5.5,-1.204 5.5,-2v-1.231c-1.349,0.765 -3.28,1.231 -5.5,1.231 -0.18,0 -0.358,-0.003 -0.535,-0.01 -0.553,-0.02 -0.983,-0.482 -0.964,-1.034 0.02,-0.553 0.519,-1.006 1.034,-0.964 0.153,0.005 0.309,0.008 0.465,0.008 3.307,0 5.5,-1.204 5.5,-2v-1.231c-1.349,0.765 -3.28,1.231 -5.5,1.231 -0.18,0 -0.358,-0.003 -0.535,-0.01 -0.553,-0.02 -0.983,-0.482 -0.964,-1.034 0.02,-0.553 0.519,-1.009 1.034,-0.964 0.153,0.005 0.309,0.008 0.465,0.008 3.307,0 5.5,-1.204 5.5,-2v-1.231c-1.349,0.765 -3.28,1.231 -5.5,1.231 -4.275,0 -7.5,-1.72 -7.5,-4v-4c0,-2.28 3.225,-4 7.5,-4s7.5,1.72 7.5,4zM11,4c0,0.796 2.193,2 5.5,2s5.5,-1.204 5.5,-2 -2.193,-2 -5.5,-2 -5.5,1.204 -5.5,2zM22,8v-1.231c-1.349,0.765 -3.28,1.231 -5.5,1.231s-4.151,-0.466 -5.5,-1.231v1.231c0,0.796 2.193,2 5.5,2s5.5,-1.204 5.5,-2z"/>
+    </group>
+</vector>

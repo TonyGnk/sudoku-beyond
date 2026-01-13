@@ -44,7 +44,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -57,7 +56,7 @@ import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 @Composable
 fun FirstGameDialog(
     onFinished: () -> Unit,
-    onDismiss: () -> Unit = { }
+    onDismiss: () -> Unit = { },
 ) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(
@@ -99,7 +98,7 @@ fun FirstGameScreen() {
         ToolRow {
             ToolbarItem(
                 modifier = Modifier.weight(toolbarWeight),
-                painter = painterResource(R.drawable.ic_round_undo_24),
+                drawableRes = R.drawable.ic_undo,
                 onClick = { }
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -111,7 +110,7 @@ fun FirstGameScreen() {
         ToolRow {
             ToolbarItem(
                 modifier = Modifier.weight(toolbarWeight),
-                painter = painterResource(R.drawable.ic_lightbulb_stars_24),
+                drawableRes = R.drawable.ic_tips_and_updates,
                 onClick = { }
             )
             Spacer(modifier = Modifier.width(8.dp))
@@ -136,7 +135,7 @@ fun FirstGameScreen() {
                     onRenderNotesClick = { renderNotes = !renderNotes })
                 ToolbarItem(
                     toggled = noteToggled,
-                    painter = painterResource(R.drawable.ic_round_edit_24),
+                    drawableRes = R.drawable.ic_create,
                     onClick = { noteToggled = !noteToggled },
                     onLongClick = {
                         notesMenu = true
@@ -152,7 +151,7 @@ fun FirstGameScreen() {
         ToolRow {
             ToolbarItem(
                 modifier = Modifier.weight(toolbarWeight),
-                painter = painterResource(R.drawable.ic_eraser_24),
+                drawableRes = R.drawable.ic_eraser,
                 onClick = { }
             )
             Spacer(modifier = Modifier.width(8.dp))

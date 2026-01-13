@@ -18,6 +18,7 @@
 
 package gr.tonygnk.sudokubeyond.ui.onboarding
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
@@ -34,10 +35,6 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Language
-import androidx.compose.material.icons.rounded.Restore
-import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
@@ -55,8 +52,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -75,7 +72,6 @@ import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
-import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsCategoriesConfig
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.SettingsLanguageConfig
 import gr.tonygnk.sudokubeyond.ui.components.board.Board
 import gr.tonygnk.sudokubeyond.ui.util.getCurrentLocaleString
@@ -129,7 +125,6 @@ fun WelcomeScreen(
                         selectedCell = bloc.selectedCell,
                         onClick = { cell -> bloc.selectedCell = cell }
                     )
-
                     Button(
                         onClick = {
                             bloc.setFirstLaunch()
@@ -139,10 +134,9 @@ fun WelcomeScreen(
                     ) {
                         Text(stringResource(R.string.action_start))
                     }
-
                     ItemRowBigIcon(
                         title = stringResource(R.string.pref_app_language),
-                        icon = Icons.Rounded.Language,
+                        drawableRes = R.drawable.ic_launguage,
                         subtitle = currentLanguage,
                         onClick = {
                             navigate(SettingsLanguageConfig)
@@ -150,20 +144,21 @@ fun WelcomeScreen(
                     )
                     ItemRowBigIcon(
                         title = stringResource(R.string.onboard_restore_backup),
-                        icon = Icons.Rounded.Restore,
+                        drawableRes = R.drawable.ic_history_toggle_off,
                         subtitle = stringResource(R.string.onboard_restore_backup_description),
                         onClick = {
                             navigate(BackupConfig)
                         }
                     )
-                    ItemRowBigIcon(
-                        title = stringResource(R.string.settings_title),
-                        icon = Icons.Rounded.Settings,
-                        subtitle = stringResource(R.string.onboard_settings_description),
-                        onClick = {
-                            navigate(SettingsCategoriesConfig(false))
-                        }
-                    )
+                    //TODO
+//                    ItemRowBigIcon(
+//                        title = stringResource(R.string.settings_title),
+//                        icon = Icons.Rounded.Settings,
+//                        subtitle = stringResource(R.string.onboard_settings_description),
+//                        onClick = {
+//                            navigate(SettingsCategoriesConfig(false))
+//                        }
+//                    )
                 }
             }
         }
@@ -174,7 +169,7 @@ fun WelcomeScreen(
 @Composable
 fun ItemRowBigIcon(
     title: String,
-    icon: ImageVector,
+    @DrawableRes drawableRes: Int,
     modifier: Modifier = Modifier,
     trailing: @Composable () -> Unit = { },
     onClick: () -> Unit = { },
@@ -212,7 +207,7 @@ fun ItemRowBigIcon(
                     )
                 ) {
                     Icon(
-                        imageVector = icon,
+                        painter = painterResource(drawableRes),
                         contentDescription = null,
                         modifier = Modifier
                             .size(iconSize)

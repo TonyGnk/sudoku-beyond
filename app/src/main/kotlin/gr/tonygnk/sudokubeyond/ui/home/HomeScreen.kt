@@ -38,8 +38,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -64,6 +62,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -309,8 +308,9 @@ fun HorizontalPicker(
     ) {
         IconButton(onClick = onLeftClick) {
             Icon(
-                painter = painterResource(R.drawable.ic_round_keyboard_arrow_left_24),
-                contentDescription = null
+                painter = painterResource(R.drawable.ic_angle_small_right),
+                contentDescription = null,
+                modifier = Modifier.rotate(180f)
             )
         }
         AnimatedContent(
@@ -321,7 +321,7 @@ fun HorizontalPicker(
         }
         IconButton(onClick = onRightClick) {
             Icon(
-                painter = painterResource(R.drawable.ic_round_keyboard_arrow_right_24),
+                painter = painterResource(R.drawable.ic_angle_small_right),
                 contentDescription = null
             )
         }
@@ -393,7 +393,7 @@ fun SavedSudokuPreview(
                 onClick = onClick
             ) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
+                    painter = painterResource(R.drawable.ic_angle_right),
                     contentDescription = null
                 )
             }

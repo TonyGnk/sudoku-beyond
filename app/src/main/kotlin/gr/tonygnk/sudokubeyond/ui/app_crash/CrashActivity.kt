@@ -37,9 +37,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.BugReport
-import androidx.compose.material.icons.rounded.RestartAlt
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,7 +72,6 @@ import gr.tonygnk.sudokubeyond.core.TELEGRAM_CHANNEL
 import gr.tonygnk.sudokubeyond.core.utils.GlobalExceptionHandler.Companion.getExceptionString
 import gr.tonygnk.sudokubeyond.ui.components.ScrollbarLazyColumn
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
-import gr.tonygnk.sudokubeyond.ui.theme.icons.ExteraGram
 
 class CrashActivity : ComponentActivity() {
     @OptIn(ExperimentalDecomposeApi::class)
@@ -120,7 +116,7 @@ class CrashActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Icon(
-                            imageVector = Icons.Rounded.BugReport,
+                            painter = painterResource(R.drawable.ic_bug_report),
                             contentDescription = null,
                             tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.size(48.dp)
@@ -173,7 +169,7 @@ class CrashActivity : ComponentActivity() {
                                 uriHandler.openUri(GITHUB_NEW_ISSUE)
                             }) {
                                 Icon(
-                                    painterResource(R.drawable.ic_github_24dp),
+                                    painterResource(R.drawable.ic_github),
                                     contentDescription = null
                                 )
                                 Spacer(Modifier.width(8.dp))
@@ -191,7 +187,10 @@ class CrashActivity : ComponentActivity() {
                                     }
                                 )
                             }) {
-                                Icon(Icons.Rounded.RestartAlt, contentDescription = null)
+                                Icon(
+                                    painter = painterResource(R.drawable.ic_restart),
+                                    contentDescription = null
+                                )
                                 Spacer(Modifier.width(8.dp))
                                 Text(stringResource(R.string.action_restart_app))
                             }
@@ -203,7 +202,7 @@ class CrashActivity : ComponentActivity() {
                                     uriHandler.openUri(TELEGRAM_CHANNEL)
                                 }) {
                                     Icon(
-                                        imageVector = Icons.Rounded.ExteraGram,
+                                        painter = painterResource(R.drawable.ic_telegram),
                                         contentDescription = null
                                     )
                                 }
@@ -211,7 +210,7 @@ class CrashActivity : ComponentActivity() {
                                     uriHandler.openUri(GITHUB_REPOSITORY)
                                 }) {
                                     Icon(
-                                        painter = painterResource(R.drawable.ic_github_24dp),
+                                        painter = painterResource(R.drawable.ic_github),
                                         contentDescription = null
                                     )
                                 }

@@ -26,12 +26,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Contrast
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.EditCalendar
-import androidx.compose.material.icons.outlined.Palette
-import androidx.compose.material.icons.outlined.Tag
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -42,7 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -116,7 +109,7 @@ fun SettingsAppearanceScreen(
                         else -> ""
                     },
                     onClick = { darkModeDialog = true },
-                    painter = rememberVectorPainter(Icons.Outlined.DarkMode)
+                    drawableRes = R.drawable.ic_dark_mode
                 )
             }
 
@@ -212,7 +205,7 @@ fun SettingsAppearanceScreen(
                         PaletteStyle.Content -> stringResource(R.string.monet_content)
                     },
                     onClick = { paletteStyleDialog = true },
-                    painter = rememberVectorPainter(Icons.Outlined.Palette)
+                    drawableRes = R.drawable.ic_palette
                 )
             }
             item {
@@ -222,7 +215,7 @@ fun SettingsAppearanceScreen(
                     onClick = {
                         bloc.updateAmoledBlack(!amoledBlack)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.Contrast)
+                    drawableRes = R.drawable.ic_contrast
                 )
             }
             item {
@@ -232,7 +225,7 @@ fun SettingsAppearanceScreen(
                     onClick = {
                         navigate(SettingsBoardThemeConfig)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.Tag)
+                    drawableRes = R.drawable.ic_grid
                 )
             }
             item {
@@ -242,7 +235,7 @@ fun SettingsAppearanceScreen(
                         ZonedDateTime.now().format(AppSettingsManager.dateFormat(dateFormat))
                     })",
                     onClick = { dateFormatDialog = true },
-                    painter = rememberVectorPainter(Icons.Outlined.EditCalendar)
+                    drawableRes = R.drawable.ic_edit_calendar
                 )
             }
         }

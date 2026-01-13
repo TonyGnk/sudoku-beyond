@@ -20,18 +20,12 @@ package gr.tonygnk.sudokubeyond.ui.settings.assistance
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Adjust
-import androidx.compose.material.icons.outlined.AutoFixHigh
-import androidx.compose.material.icons.outlined.LooksOne
-import androidx.compose.material.icons.outlined.Pin
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import gr.tonygnk.sudokubeyond.R
@@ -77,7 +71,7 @@ fun SettingsAssistanceScreen(
                         else -> stringResource(R.string.pref_mistakes_check_off)
                     },
                     onClick = { mistakesDialog = true },
-                    painter = rememberVectorPainter(Icons.Outlined.Adjust)
+                    drawableRes = R.drawable.ic_adjust
                 )
             }
 
@@ -89,7 +83,7 @@ fun SettingsAssistanceScreen(
                     onClick = {
                         bloc.updateHighlightIdentical(!highlightIdentical)
                     },
-                    painter = rememberVectorPainter(Icons.Outlined.LooksOne)
+                    drawableRes = R.drawable.ic_looks_one
                 )
             }
 
@@ -99,7 +93,7 @@ fun SettingsAssistanceScreen(
                     subtitle = stringResource(R.string.pref_remaining_uses_summ),
                     checked = remainingUse,
                     onClick = { bloc.updateRemainingUse(!remainingUse) },
-                    painter = rememberVectorPainter(Icons.Outlined.Pin)
+                    drawableRes = R.drawable.ic_progress_bar_square_empty
                 )
 
             }
@@ -109,7 +103,7 @@ fun SettingsAssistanceScreen(
                     title = stringResource(R.string.pref_auto_erase_notes),
                     checked = autoEraseNotes,
                     onClick = { bloc.updateAutoEraseNotes(!autoEraseNotes) },
-                    painter = rememberVectorPainter(Icons.Outlined.AutoFixHigh)
+                    drawableRes = R.drawable.ic_auto_fix
                 )
             }
         }

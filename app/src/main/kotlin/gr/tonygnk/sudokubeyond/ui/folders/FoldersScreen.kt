@@ -41,16 +41,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.Folder
-import androidx.compose.material.icons.rounded.AddCircleOutline
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.CreateNewFolder
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Help
-import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
@@ -158,20 +148,23 @@ fun FoldersScreen(
                     navigationIcon = {
                         IconButton(onClick = finish) {
                             Icon(
-                                painter = painterResource(R.drawable.ic_round_arrow_back_24),
+                                painter = painterResource(R.drawable.ic_arrow_small_left),
                                 contentDescription = null
                             )
                         }
                     },
                     actions = {
                         IconButton(onClick = { helpDialog = true }) {
-                            Icon(Icons.Rounded.Help, contentDescription = null)
+                            Icon(
+                                painter = painterResource(R.drawable.ic_help),
+                                contentDescription = null
+                            )
                         }
                         var showMenu by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { showMenu = !showMenu }) {
                                 Icon(
-                                    Icons.Default.MoreVert,
+                                    painter = painterResource(R.drawable.ic_more_vert),
                                     contentDescription = null
                                 )
                             }
@@ -183,7 +176,7 @@ fun FoldersScreen(
                                     DropdownMenuItem(
                                         leadingIcon = {
                                             Icon(
-                                                Icons.Rounded.AddCircleOutline,
+                                                painter = painterResource(R.drawable.ic_add_circle),
                                                 contentDescription = null
                                             )
                                         },
@@ -198,7 +191,7 @@ fun FoldersScreen(
                                     DropdownMenuItem(
                                         leadingIcon = {
                                             Icon(
-                                                Icons.Rounded.CreateNewFolder,
+                                                painter = painterResource(R.drawable.ic_folder_new_folder),
                                                 contentDescription = null
                                             )
                                         },
@@ -230,7 +223,7 @@ fun FoldersScreen(
                     navigationIcon = {
                         IconButton(onClick = finish) {
                             Icon(
-                                imageVector = Icons.Rounded.Close,
+                                painter = painterResource(R.drawable.ic_close),
                                 contentDescription = null
                             )
                         }
@@ -323,7 +316,10 @@ fun FoldersScreen(
 
         NameActionDialog(
             icon = {
-                Icon(Icons.Rounded.CreateNewFolder, contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_folder_new_folder),
+                    contentDescription = null
+                )
             },
             title = { Text(stringResource(R.string.create_folder)) },
             value = textFieldValue,
@@ -359,7 +355,10 @@ fun FoldersScreen(
         NameActionDialog(
             title = { Text(stringResource(R.string.edit_name)) },
             icon = {
-                Icon(Icons.Rounded.Edit, contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_create),
+                    contentDescription = null
+                )
             },
             value = textFieldValue,
             onValueChange = {
@@ -409,7 +408,10 @@ fun FoldersScreen(
     } else if (helpDialog) {
         AlertDialog(
             icon = {
-                Icon(Icons.Rounded.Help, contentDescription = null)
+                Icon(
+                    painter = painterResource(R.drawable.ic_help),
+                    contentDescription = null
+                )
             },
             title = { Text(stringResource(R.string.help)) },
             text = {
@@ -440,16 +442,19 @@ fun FoldersScreen(
     if (folderActionBottomSheet) {
         ModalBottomSheet(onDismissRequest = { folderActionBottomSheet = false }) {
             val actions = listOf(
-                Pair(Icons.Rounded.Edit, stringResource(R.string.edit_name)),
-                Pair(Icons.Rounded.Share, stringResource(R.string.export)),
-                Pair(Icons.Rounded.Delete, stringResource(R.string.action_delete)),
+                Pair(R.drawable.ic_create, stringResource(R.string.edit_name)),
+                Pair(R.drawable.ic_share, stringResource(R.string.export)),
+                Pair(R.drawable.ic_delete, stringResource(R.string.action_delete)),
             )
             bloc.selectedFolder?.let {
                 Row(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Outlined.Folder, contentDescription = null)
+                    Icon(
+                        painter = painterResource(R.drawable.ic_folder),
+                        contentDescription = null
+                    )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = stringResource(R.string.folder_name, it.name),
@@ -493,8 +498,8 @@ fun FoldersScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
+                            painter = painterResource(action.first),
                             modifier = Modifier.padding(12.dp),
-                            imageVector = action.first,
                             contentDescription = null
                         )
                         Text(action.second)
