@@ -93,7 +93,7 @@ import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
-import dev.jeziellago.compose.markdowntext.MarkdownText
+import com.mikepenz.markdown.m3.Markdown
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.core.update.DownloadStatus
@@ -360,8 +360,8 @@ fun AutoUpdateScreen(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                MarkdownText(
-                                    markdown = release.body.toString()
+                                Markdown(
+                                    content = release.body.toString()
                                 )
                                 OutlinedButton(
                                     onClick = {

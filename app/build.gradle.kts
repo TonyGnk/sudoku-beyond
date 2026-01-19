@@ -116,17 +116,15 @@ dependencies {
 
     implementation(libs.androidx.appcompat)
 
-    implementation(libs.mikepenz.aboutLibraries.compose)
-
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.documentFile)
     implementation(libs.androidx.work.runtime.ktx)
 
     implementation(libs.materialKolor.material.kolor)
-
     implementation(libs.squareup.okhttp3)
-    implementation(libs.jeziellago.compose.markdown)
-
+    implementation(libs.mikepenz.aboutLibraries.compose)
+    implementation(libs.mikepenz.markdown.renderer)
+    implementation(libs.mikepenz.markdown.renderer.m3)
     implementation(libs.arkivanov.decompose)
     implementation(libs.arkivanov.decompose.extensions.compose.experimental)
     implementation(libs.arkivanov.decompose.jetpack.component.context)

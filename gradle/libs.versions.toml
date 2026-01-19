@@ -17,11 +17,11 @@ googleDevtoolsKsp = "2.3.4"
 jetbrainsKotlin = "2.3.0"
 jetbrainsKotlinStdlib = "2.3.0"
 jetbrainsKotlinxSerializationJson = "1.9.0"
-jeziellagoComposeMarkdown = "0.5.4"
 junit = "4.13.2"
 kotlinTest = "2.3.0"
 materialKolor = "2.0.0"
 mikepenzAboutLibraries = '13.2.1'
+mikepenzMarkdownRenderer = "0.39.1"
 squareupOkhttp3 = "5.0.0-alpha.14"
 
 # Sdk versions
@@ -62,10 +62,11 @@ jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name =
 arkivanov-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "arkivanovDecompose" }
 arkivanov-decompose-extensions-compose-experimental = { module = "com.arkivanov.decompose:extensions-compose-experimental", version.ref = "arkivanovDecompose" }
 arkivanov-decompose-jetpack-component-context = { module = "com.arkivanov.decompose:jetpack-component-context", version.ref = "arkivanovDecompose" }
-jeziellago-compose-markdown = { group = "com.github.jeziellago", name = "compose-markdown", version.ref = "jeziellagoComposeMarkdown" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 materialKolor-material-kolor = { group = "com.materialkolor", name = "material-kolor", version.ref = "materialKolor" }
 mikepenz-aboutLibraries-compose = { group = "com.mikepenz", name = "aboutlibraries-compose", version.ref = "mikepenzAboutLibraries" }
+mikepenz-markdown-renderer-m3 = { module = "com.mikepenz:multiplatform-markdown-renderer-m3", version.ref = "mikepenzMarkdownRenderer" }
+mikepenz-markdown-renderer = { module = "com.mikepenz:multiplatform-markdown-renderer", version.ref = "mikepenzMarkdownRenderer" }
 squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "squareupOkhttp3" }
 
 [plugins]
