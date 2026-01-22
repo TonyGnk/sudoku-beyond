@@ -22,9 +22,9 @@ import androidx.lifecycle.coroutineScope
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
-import gr.tonygnk.sudokubeyond.core.update.Release
 import gr.tonygnk.sudokubeyond.data.datastore.AppSettingsManager
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
+import gr.tonygnk.sudokubeyond.updates.ReleaseBrief
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -39,7 +39,7 @@ class MoreBloc(
     val updateChannel = appSettingsManager.autoUpdateChannel
     val updateDismissedName = appSettingsManager.updateDismissedName
 
-    fun dismissUpdate(release: Release) {
+    fun dismissUpdate(release: ReleaseBrief) {
         scope.launch(Dispatchers.IO) {
             appSettingsManager.setUpdateDismissedName(release.name.toString())
         }

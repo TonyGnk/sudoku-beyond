@@ -1,9 +1,7 @@
 /*
- * Copyright (C) 2022-2025 kaajjo
  * Copyright (C) 2026 TonyGnk
  *
  * This file is part of Sudoku Beyond.
- * Originally from LibreSudoku (https://github.com/kaajjo/LibreSudoku)
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,14 +14,12 @@
  * GNU General Public License for more details.
  */
 
-package gr.tonygnk.sudokubeyond.core.update
+package gr.tonygnk.sudokubeyond.updates
 
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.FileProvider
-import gr.tonygnk.sudokubeyond.BuildConfig
-import gr.tonygnk.sudokubeyond.util.FlavorUtil
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -39,15 +35,9 @@ import okhttp3.Request
 import okhttp3.ResponseBody
 import java.io.File
 
-object UpdateUtil {
+object UpdatesManager {
     private const val OWNER = "kaajjo"
     private const val REPO = "LibreSudoku"
-    private const val GITHUB_URL = "https://github.com/kaajjo/LibreSudoku"
-
-    private val requestLatestRelease =
-        Request.Builder()
-            .url("https://api.github.com/repos/$OWNER/$REPO/releases/latest")
-            .build()
 
     private val requestReleases =
         Request.Builder()
@@ -61,51 +51,42 @@ object UpdateUtil {
         encodeDefaults = true
     }
 
-    private fun getLatestRelease(allowBetas: Boolean): Release {
+    private suspend fun getLatestRelease(allowBetas: Boolean): Release = withContext(Dispatchers.IO) {
         okHttpClient
             .newCall(requestReleases)
             .execute()
             .body.use { releasesResponse ->
                 val releases = jsonFormat.decodeFromString<List<Release>>(releasesResponse.string())
-                return releases
-                    .filter {
-                        Log.d("UpdateUtil:filter", it.name?.toString() ?: "null")
-                        if (!allowBetas && it.name != null)
-                            it.name.toVersion() is Version.Stable
+                return@withContext releases
+                    .filter { release ->
+                        Log.d("UpdatesManager:filter", release.name ?: "null")
+                        if (!allowBetas && release.name != null)
+                            release.name.toVersion() is Version.Stable
                         else
                             true
                     }
                     .maxBy { it.name?.toVersion()?.toVersionNumber() ?: 0 }
                     .also {
-                        Log.d("UpdateUtil:maxBy", it.name?.toVersion()?.toVersionString() ?: "null")
+                        Log.d("UpdatesManager:maxBy", it.name?.toVersion()?.toVersionString() ?: "null")
                     }
             }
     }
 
-    fun checkForUpdate(allowBetas: Boolean = true): Release? {
-        if (FlavorUtil.isFoss()) {
-            return null
-        }
-        val currentVersion = BuildConfig.VERSION_NAME.toVersion()
+    suspend fun checkForUpdate(currentVersion: String, allowBetas: Boolean = true): Release? {
+        val currentVersionParsed = currentVersion.toVersion()
 
         val latestRelease = getLatestRelease(allowBetas)
         val latestVersion = latestRelease.name?.toVersion() ?: Version.Stable(0, 0, 0)
-        return if (latestVersion > currentVersion) {
+        return if (latestVersion > currentVersionParsed) {
             latestRelease
-        } else {
-            null
-        }
+        } else null
     }
 
     suspend fun downloadApk(
         context: Context,
-        release: Release,
+        downloadUrl: String,
     ): Flow<DownloadStatus> =
         withContext(Dispatchers.IO) {
-            val downloadUrl = release.assets
-                ?.firstOrNull { it.name?.lowercase()?.contains("nonfoss") ?: false }
-                ?.browserDownloadUrl ?: return@withContext emptyFlow()
-
             val request = Request.Builder()
                 .url(downloadUrl)
                 .build()
@@ -115,7 +96,7 @@ object UpdateUtil {
                 val responseBody = response.body
                 return@withContext responseBody.downloadFileWithProgress(context.getLatestApk())
             } catch (e: Exception) {
-                Log.e("UpdateUtil", "Failed to download the apk", e)
+                Log.e("UpdatesManager", "Failed to download the apk", e)
             }
             emptyFlow()
         }
@@ -158,7 +139,7 @@ object UpdateUtil {
                     }
                 }
 
-                emit(DownloadStatus.Finished(saveFile))
+                emit(DownloadStatus.Finished)
             } finally {
                 if (deleteFile) {
                     saveFile.delete()
@@ -168,28 +149,27 @@ object UpdateUtil {
             .flowOn(Dispatchers.IO)
             .distinctUntilChanged()
 
-    fun installLatestApk(context: Context) =
-        context.run {
-            kotlin
-                .runCatching {
-                    val contentUri =
-                        FileProvider.getUriForFile(
-                            this,
-                            "${context.packageName}.provider",
-                            getLatestApk()
-                        )
-                    val intent =
-                        Intent(Intent.ACTION_VIEW).apply {
-                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                            setDataAndType(contentUri, "application/vnd.android.package-archive")
-                        }
-                    startActivity(intent)
-                }
-                .onFailure { throwable: Throwable ->
-                    throwable.printStackTrace()
-                }
-        }
+    fun installLatestApk(context: Context) = context.run {
+        kotlin
+            .runCatching {
+                val contentUri =
+                    FileProvider.getUriForFile(
+                        this,
+                        "${context.packageName}.provider",
+                        getLatestApk()
+                    )
+                val intent =
+                    Intent(Intent.ACTION_VIEW).apply {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                        setDataAndType(contentUri, "application/vnd.android.package-archive")
+                    }
+                startActivity(intent)
+            }
+            .onFailure { throwable: Throwable ->
+                throwable.printStackTrace()
+            }
+    }
 }
 
 @Serializable
@@ -202,7 +182,7 @@ data class Release(
     @SerialName("created_at") val createdAt: String? = null,
     @SerialName("published_at") val publishedAt: String? = null,
     val assets: List<AssetsItem>? = null,
-    val body: String? = null
+    val body: String? = null,
 )
 
 @Serializable
@@ -217,11 +197,9 @@ data class AssetsItem(
 )
 
 sealed class DownloadStatus {
-    object NotStarted : DownloadStatus()
-
     data class Progress(val percent: Int) : DownloadStatus()
 
-    data class Finished(val file: File) : DownloadStatus()
+    data object Finished : DownloadStatus()
 }
 
 fun String.toVersion(): Version {
@@ -235,7 +213,7 @@ fun String.toVersion(): Version {
             minor.toInt()
             patch.toInt()
         } catch (e: Exception) {
-            Log.e("UpdateUtil", "Failed to parse version name: $this")
+            Log.e("UpdatesManager", "Failed to parse version name: $this")
         }
         return if (this.contains("beta")) {
             Version.Beta(major.toInt(), minor.toInt(), patch.toInt(), build.toInt())
@@ -249,7 +227,7 @@ sealed class Version(
     val major: Int,
     val minor: Int,
     val patch: Int,
-    val build: Int = 0
+    val build: Int = 0,
 ) : Comparable<Version> {
     companion object {
         private const val MAJOR = 10_000_000L

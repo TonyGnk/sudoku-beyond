@@ -19,7 +19,6 @@
 
 package gr.tonygnk.sudokubeyond.ui.app.composable
 
-import android.util.Log
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
@@ -29,17 +28,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.arkivanov.decompose.ExperimentalDecomposeApi
 import gr.tonygnk.sudokubeyond.LocalBoardColors
 import gr.tonygnk.sudokubeyond.core.BlocContext
-import gr.tonygnk.sudokubeyond.core.update.Release
-import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.backup.BackupBloc
@@ -92,7 +87,6 @@ import gr.tonygnk.sudokubeyond.ui.settings.assistance.SettingsAssistanceBloc
 import gr.tonygnk.sudokubeyond.ui.settings.assistance.SettingsAssistanceScreen
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.AutoUpdateBloc
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.AutoUpdateScreen
-import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.settings.boardtheme.SettingsBoardTheme
 import gr.tonygnk.sudokubeyond.ui.settings.boardtheme.SettingsBoardThemeBloc
 import gr.tonygnk.sudokubeyond.ui.settings.gameplay.SettingsGameplayBloc
@@ -106,8 +100,6 @@ import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsScreen
 import gr.tonygnk.sudokubeyond.ui.theme.BoardColors
 import gr.tonygnk.sudokubeyond.ui.theme.LibreSudokuTheme
 import gr.tonygnk.sudokubeyond.ui.theme.SudokuBoardColorsImpl
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Composable
 internal fun MainActivityScreen(blocContext: BlocContext) {
@@ -126,6 +118,7 @@ internal fun MainActivityScreen(blocContext: BlocContext) {
 
     val settings by bloc.settings.collectAsStateWithLifecycle()
     val stack by bloc.stack.collectAsStateWithLifecycle()
+    val hasUndismissedUpdate by bloc.hasUndismissedUpdate.collectAsStateWithLifecycle()
 
     MainActivityContent(
         settings = settings,
@@ -136,6 +129,7 @@ internal fun MainActivityScreen(blocContext: BlocContext) {
             backHandler = blocContext.backHandler,
             onBackClick = bloc::onBackClicked,
         ),
+        hasUndismissedUpdate = hasUndismissedUpdate
     )
 }
 
@@ -143,6 +137,7 @@ internal fun MainActivityScreen(blocContext: BlocContext) {
 private fun MainActivityContent(
     settings: MainActivitySettings,
     stackState: ChildStackState<MainActivityBloc.PagesConfig, MainActivityBloc.PagesBloc>,
+    hasUndismissedUpdate: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val isDarkMode = when (settings.darkTheme) {
@@ -193,21 +188,6 @@ private fun MainActivityContent(
                     thinLineColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(0.25f)
                 )
             }
-        var latestRelease by remember { mutableStateOf<Release?>(null) }
-        if (settings.autoUpdateChannel != UpdateChannel.Disabled) {
-            LaunchedEffect(Unit) {
-                if (latestRelease == null) {
-                    withContext(Dispatchers.IO) {
-                        try {
-                            latestRelease = UpdateUtil.checkForUpdate(settings.autoUpdateChannel == UpdateChannel.Beta)
-                        } catch (e: Exception) {
-                            Log.e("UpdateUtil", "Failed to check for update: ${e.message.toString()}")
-                            e.printStackTrace()
-                        }
-                    }
-                }
-            }
-        }
 
         CompositionLocalProvider(LocalBoardColors provides boardColors) {
             Scaffold(
@@ -216,7 +196,7 @@ private fun MainActivityContent(
                     AppNavigationBar(
                         activeChild = stackState.stack.active.configuration,
                         onChildSelected = stackState.onChildSelect,
-                        updateAvailable = latestRelease != null && latestRelease!!.name.toString() != settings.updateDismissedName
+                        updateAvailable = hasUndismissedUpdate
                     )
                 },
                 contentWindowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp)

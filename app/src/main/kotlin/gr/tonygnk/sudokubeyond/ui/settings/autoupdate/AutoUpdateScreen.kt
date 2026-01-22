@@ -87,24 +87,24 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.graphics.shapes.CornerRounding
 import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
 import com.materialkolor.ktx.harmonize
-import com.mikepenz.markdown.m3.Markdown
 import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.update.DownloadStatus
-import gr.tonygnk.sudokubeyond.core.update.Release
-import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
-import gr.tonygnk.sudokubeyond.core.update.Version
-import gr.tonygnk.sudokubeyond.core.update.toVersion
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitle
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
+import gr.tonygnk.sudokubeyond.updates.ReleaseBrief
+import gr.tonygnk.sudokubeyond.updates.ReleaseDownloadStatus
+import gr.tonygnk.sudokubeyond.updates.UpdateSystem
+import gr.tonygnk.sudokubeyond.updates.UpdateSystem.MarkdownBody
+import gr.tonygnk.sudokubeyond.updates.UpdateSystem.toVersionName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -119,15 +119,14 @@ fun AutoUpdateScreen(
     val scope = rememberCoroutineScope()
     val scrollBehavior = rememberTopAppBarScrollBehavior()
 
-    val settings =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            UpdateUtil.installLatestApk(context)
-        }
+    val settings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        UpdateSystem.installApk(context)
+    }
 
     val installApkLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { result ->
             if (result) {
-                UpdateUtil.installLatestApk(context)
+                UpdateSystem.installApk(context)
             } else {
                 if (!context.packageManager.canRequestPackageInstalls())
                     settings.launch(
@@ -136,27 +135,29 @@ fun AutoUpdateScreen(
                             Uri.parse("package:${context.packageName}"),
                         )
                     )
-                else UpdateUtil.installLatestApk(context)
+                else UpdateSystem.installApk(context)
             }
         }
 
-    var latestRelease by remember { mutableStateOf<Release?>(null) }
-    var currentDownloadStatus by remember { mutableStateOf(DownloadStatus.NotStarted as DownloadStatus) }
+    var latestRelease by remember { mutableStateOf<ReleaseBrief?>(null) }
+    var currentDownloadStatus by remember { mutableStateOf<ReleaseDownloadStatus>(ReleaseDownloadStatus.NotStarted) }
     val updateChannel by bloc.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
     var checkingForUpdates by rememberSaveable { mutableStateOf(false) }
     var checkingForUpdatesError by rememberSaveable { mutableStateOf(false) }
     var changeLogBottomSheet by rememberSaveable { mutableStateOf(false) }
 
     LaunchedEffect(updateChannel) {
-        if (updateChannel != UpdateChannel.Disabled) {
+        if (updateChannel != UpdateChannel.Disabled && UpdateSystem.canUpdate) {
             checkingForUpdates = true
             latestRelease = null
             withContext(Dispatchers.IO) {
                 runCatching {
-                    latestRelease = UpdateUtil.checkForUpdate(updateChannel == UpdateChannel.Beta)
-                        .also {
-                            checkingForUpdates = false
-                        }
+                    latestRelease = UpdateSystem.getAvailableUpdateRelease(
+                        currentVersion = BuildConfig.VERSION_NAME,
+                        updateChannel == UpdateChannel.Beta
+                    ).also {
+                        checkingForUpdates = false
+                    }
                 }
                     .onFailure {
                         Log.e("AutoUpdateScreen", "Failed to check for updates", it)
@@ -204,12 +205,12 @@ fun AutoUpdateScreen(
                                     if (latestRelease == null) return@NewUpdateContainer
                                     scope.launch(Dispatchers.IO) {
                                         runCatching {
-                                            UpdateUtil.downloadApk(
+                                            UpdateSystem.downloadApk(
                                                 context = context,
-                                                release = latestRelease!!
+                                                downloadUrl = latestRelease!!.downloadUrl
                                             ).collect { downloadStatus ->
                                                 currentDownloadStatus = downloadStatus
-                                                if (downloadStatus is DownloadStatus.Finished) {
+                                                if (downloadStatus is ReleaseDownloadStatus.Finished) {
                                                     installApkLauncher.launch(
                                                         Manifest.permission.REQUEST_INSTALL_PACKAGES
                                                     )
@@ -218,18 +219,14 @@ fun AutoUpdateScreen(
                                         }
                                             .onFailure {
                                                 it.printStackTrace()
-                                                currentDownloadStatus = DownloadStatus.NotStarted
+                                                currentDownloadStatus = ReleaseDownloadStatus.NotStarted
                                                 return@launch
                                             }
                                     }
                                 },
                                 onChangelogClick = { changeLogBottomSheet = true },
-                                currentVersion = BuildConfig.VERSION_NAME.toVersion(),
-                                newVersion = latestRelease?.name?.toVersion() ?: Version.Stable(
-                                    0,
-                                    0,
-                                    0
-                                ),
+                                currentVersion = BuildConfig.VERSION_NAME.toVersionName(),
+                                newVersion = latestRelease?.name?.toVersionName(),
                                 downloadStatus = currentDownloadStatus
                             )
                         } else if (updateChannel != UpdateChannel.Disabled) {
@@ -246,11 +243,12 @@ fun AutoUpdateScreen(
                                             scope.launch {
                                                 withContext(Dispatchers.IO) {
                                                     kotlin.runCatching {
-                                                        latestRelease =
-                                                            UpdateUtil.checkForUpdate(updateChannel == UpdateChannel.Beta)
-                                                                .also {
-                                                                    checkingForUpdates = false
-                                                                }
+                                                        UpdateSystem.getAvailableUpdateRelease(
+                                                            currentVersion = BuildConfig.VERSION_NAME,
+                                                            updateChannel == UpdateChannel.Beta
+                                                        ).also {
+                                                            checkingForUpdates = false
+                                                        }
                                                     }
                                                         .onFailure {
                                                             Log.e(
@@ -351,7 +349,7 @@ fun AutoUpdateScreen(
                             Text(
                                 text = stringResource(
                                     R.string.whats_new_in_version,
-                                    release.name.toString()
+                                    release.name
                                 ),
                                 style = MaterialTheme.typography.titleLarge,
                                 modifier = Modifier.padding(bottom = 8.dp)
@@ -360,15 +358,13 @@ fun AutoUpdateScreen(
                                 modifier = Modifier
                                     .verticalScroll(rememberScrollState())
                             ) {
-                                Markdown(
-                                    content = release.body.toString()
-                                )
+                                release.MarkdownBody()
                                 OutlinedButton(
                                     onClick = {
                                         context.startActivity(
                                             Intent(
                                                 Intent.ACTION_VIEW,
-                                                Uri.parse(release.htmlUrl.toString())
+                                                release.htmlUrl.toUri()
                                             )
                                         )
                                     },
@@ -439,9 +435,9 @@ fun UpdateChannelItem(
 fun NewUpdateContainer(
     onDownloadClick: () -> Unit,
     onChangelogClick: () -> Unit,
-    currentVersion: Version,
-    newVersion: Version,
-    downloadStatus: DownloadStatus,
+    currentVersion: String?,
+    newVersion: String?,
+    downloadStatus: ReleaseDownloadStatus,
     modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition()
@@ -542,7 +538,7 @@ fun NewUpdateContainer(
             ) {
                 CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.titleMedium) {
                     Text(
-                        text = currentVersion.toVersionString(),
+                        text = currentVersion ?: "",
                     )
                     Icon(
                         painter = painterResource(R.drawable.ic_arrow_right),
@@ -550,7 +546,7 @@ fun NewUpdateContainer(
                         modifier = Modifier.padding(horizontal = 4.dp)
                     )
                     Text(
-                        text = newVersion.toVersionString(),
+                        text = newVersion ?: "",
                     )
                 }
             }
@@ -567,10 +563,10 @@ fun NewUpdateContainer(
                 Spacer(modifier = Modifier.width(12.dp))
                 Button(
                     onClick = onDownloadClick,
-                    enabled = downloadStatus !is DownloadStatus.Progress
+                    enabled = downloadStatus !is ReleaseDownloadStatus.Progress
                 ) {
                     Text(
-                        text = if (downloadStatus is DownloadStatus.Progress) {
+                        text = if (downloadStatus is ReleaseDownloadStatus.Progress) {
                             downloadStatus.percent.toString()
                         } else {
                             stringResource(R.string.action_download)

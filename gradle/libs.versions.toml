@@ -29,7 +29,6 @@ compileSdk = "36"
 minSdk = "24"
 targetSdk = "36"
 
-
 [libraries]
 # AndroidX
 android-tools-desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidToolsDesugarJdkLibs" }
@@ -71,6 +70,7 @@ squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.re
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevtoolsKsp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlin" }
 jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrainsKotlin" }

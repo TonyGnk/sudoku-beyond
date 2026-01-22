@@ -23,6 +23,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -31,6 +32,10 @@ dependencyResolutionManagement {
         maven("https://jitpack.io")
     }
 }
+
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+
 rootProject.name = "LibreSudoku"
 include(":app")
 include(":sudoku-core")
+include(":updates")

@@ -17,6 +17,7 @@
 
 package gr.tonygnk.sudokubeyond.ui.app.bloc
 
+import android.util.Log
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.coroutineScope
 import com.arkivanov.decompose.ExperimentalDecomposeApi
@@ -27,6 +28,7 @@ import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.router.stack.replaceAll
 import com.materialkolor.PaletteStyle
+import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
@@ -86,6 +88,8 @@ import gr.tonygnk.sudokubeyond.ui.settings.language.SettingsLanguageBloc
 import gr.tonygnk.sudokubeyond.ui.settings.other.SettingsOtherBloc
 import gr.tonygnk.sudokubeyond.ui.statistics.StatisticsBloc
 import gr.tonygnk.sudokubeyond.ui.util.toStateFlow
+import gr.tonygnk.sudokubeyond.updates.UpdateSystem
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -117,6 +121,8 @@ class MainActivityBloc(
         )
 
     private val navigation = StackNavigation<PagesConfig>()
+
+    val hasUndismissedUpdate: MutableStateFlow<Boolean> = MutableStateFlow(false)
 
     private var hasHandledFirstLaunch = false
 
@@ -166,6 +172,22 @@ class MainActivityBloc(
                 if (currentSettings.firstLaunch && !hasHandledFirstLaunch) {
                     hasHandledFirstLaunch = true
                     navigation.replaceAll(WelcomeConfig)
+                }
+
+                if (currentSettings.autoUpdateChannel != UpdateChannel.Disabled && UpdateSystem.canUpdate) {
+                    scope.launch {
+                        try {
+                            hasUndismissedUpdate.value = UpdateSystem.hasUndismissedUpdate(
+                                BuildConfig.VERSION_NAME,
+                                currentSettings.autoUpdateChannel == UpdateChannel.Beta,
+                                currentSettings.updateDismissedName,
+                            )
+                            Log.d("UpdateCheck", "Latest release: ${hasUndismissedUpdate.value}")
+                        } catch (e: Exception) {
+                            Log.e("UpdateCheck", "Failed to check for update: ${e.message} - ${e.printStackTrace()}")
+                            e.printStackTrace()
+                        }
+                    }
                 }
             }
         }
@@ -301,8 +323,8 @@ class MainActivityBloc(
             blocContext = blocContext,
             getMainActivitySettingsUseCase = GetMainActivitySettingsUseCase(
                 themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
-                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager
-            )
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            ),
         )
     }
 }

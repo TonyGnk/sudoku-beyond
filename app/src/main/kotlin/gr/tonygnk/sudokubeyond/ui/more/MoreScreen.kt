@@ -74,9 +74,8 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
+import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
-import gr.tonygnk.sudokubeyond.core.update.Release
-import gr.tonygnk.sudokubeyond.core.update.UpdateUtil
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AboutConfig
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AutoUpdateConfig
@@ -86,7 +85,8 @@ import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.LearnCon
 import gr.tonygnk.sudokubeyond.ui.components.PreferenceRow
 import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
-import gr.tonygnk.sudokubeyond.util.FlavorUtil
+import gr.tonygnk.sudokubeyond.updates.ReleaseBrief
+import gr.tonygnk.sudokubeyond.updates.UpdateSystem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -161,27 +161,29 @@ fun MoreScreen(
                 }
             )
 
-            if (!FlavorUtil.isFoss()) {
+            if (UpdateSystem.canUpdate) {
                 AnimatedVisibility(autoUpdateChannel != UpdateChannel.Disabled) {
-                    var latestRelease by remember { mutableStateOf<Release?>(null) }
+                    var latestRelease by remember { mutableStateOf<ReleaseBrief?>(null) }
                     LaunchedEffect(Unit) {
                         if (latestRelease == null) {
                             withContext(Dispatchers.IO) {
                                 runCatching {
-                                    latestRelease =
-                                        UpdateUtil.checkForUpdate(autoUpdateChannel == UpdateChannel.Beta)
+                                    latestRelease = UpdateSystem.getAvailableUpdateRelease(
+                                        currentVersion = BuildConfig.VERSION_NAME,
+                                        allowBetas = autoUpdateChannel == UpdateChannel.Beta
+                                    )
                                 }
                             }
                         }
                     }
                     latestRelease?.let { release ->
                         AnimatedVisibility(
-                            visible = release.name.toString() != updateDismissedName,
+                            visible = release.name != updateDismissedName,
                             enter = expandVertically() + fadeIn(),
                             exit = shrinkVertically() + fadeOut()
                         ) {
                             UpdateFoundBox(
-                                versionToUpdate = release.name ?: "?",
+                                versionToUpdate = release.name,
                                 onClick = { navigate(AutoUpdateConfig) },
                                 onDismissed = {
                                     bloc.dismissUpdate(release)

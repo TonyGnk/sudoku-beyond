@@ -29,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
-import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun AppNavigationBar(
@@ -37,7 +36,7 @@ fun AppNavigationBar(
     onChildSelected: (MainActivityBloc.PagesConfig) -> Unit,
     updateAvailable: Boolean = false,
 ) {
-    val directions = persistentListOf(
+    val directions = listOf(
         MainActivityBloc.PagesConfig.TopDestination.StatisticsConfig,
         MainActivityBloc.PagesConfig.TopDestination.HomeConfig,
         MainActivityBloc.PagesConfig.TopDestination.MoreConfig,
