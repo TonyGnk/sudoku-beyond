@@ -36,6 +36,6 @@ dependencyResolutionManagement {
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "LibreSudoku"
-include(":app")
+include(":shared")
 include(":sudoku-core")
 include(":updates")
