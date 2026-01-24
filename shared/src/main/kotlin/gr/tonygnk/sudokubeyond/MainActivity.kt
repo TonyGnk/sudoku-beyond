@@ -51,10 +51,10 @@ class MainActivity : AppCompatActivity() {
         DecomposeSettings.update { currentSettings ->
             currentSettings.copy(duplicateConfigurationsEnabled = true)
         }
-        val blocContext = defaultComponentContext()
+        val blocContext = defaultComponentContext().asJetpackComponentContext()
 
         setContent {
-            MainActivityScreen(blocContext.asJetpackComponentContext())
+            MainActivityScreen(blocContext)
         }
     }
 

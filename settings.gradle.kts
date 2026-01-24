@@ -39,3 +39,4 @@ rootProject.name = "LibreSudoku"
 include(":shared")
 include(":sudoku-core")
 include(":updates")
+include(":app:jvm")
