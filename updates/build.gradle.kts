@@ -61,14 +61,8 @@ kotlin {
 
 dependencies {
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.arkivanov.decompose)
-    implementation(libs.arkivanov.decompose.extensions.compose.experimental)
     implementation(libs.squareup.okhttp3)
     implementation(libs.jetbrains.kotlinx.serialization.json)
     implementation(libs.mikepenz.markdown.renderer)
