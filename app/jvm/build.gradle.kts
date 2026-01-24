@@ -25,9 +25,16 @@ kotlin {
     jvmToolchain(21)
 }
 
-//application {
-//    mainClass.set("gr.orbit.platform.preview.jvm.MainKt")
-//}
+val flavor = project.findProperty("flavor")?.toString() ?: "nonFoss"
+println("Building JVM app with flavor: $flavor")
+
+sourceSets {
+    main {
+        kotlin {
+            srcDirs("src/main/kotlin", "src/$flavor/kotlin")
+        }
+    }
+}
 
 tasks.withType<AbstractCopyTask> {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
