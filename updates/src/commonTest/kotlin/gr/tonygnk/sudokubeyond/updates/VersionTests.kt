@@ -16,10 +16,12 @@
  * GNU General Public License for more details.
  */
 
-package gr.tonygnk.sudokubeyond.app_update
+package gr.tonygnk.sudokubeyond.updates
 
-import gr.tonygnk.sudokubeyond.core.update.Version
-import org.junit.Test
+import gr.tonygnk.sudokubeyond.updates.model.Version
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class VersionTests {
     @Test
@@ -27,7 +29,7 @@ class VersionTests {
         val version1 = Version.Stable(2, 0, 0)
         val version2 = Version.Stable(2, 1, 0)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
@@ -35,7 +37,7 @@ class VersionTests {
         val version1 = Version.Beta(2, 0, 0, 1)
         val version2 = Version.Beta(2, 0, 0, 2)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
@@ -43,7 +45,7 @@ class VersionTests {
         val version1 = Version.Stable(2, 0, 0)
         val version2 = Version.Beta(2, 0, 0, 1)
 
-        assert(version1 > version2)
+        assertTrue(version1 > version2)
     }
 
     @Test
@@ -51,7 +53,7 @@ class VersionTests {
         val version1 = Version.Stable(2, 0, 0)
         val version2 = Version.Stable(3, 0, 0)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
@@ -59,7 +61,7 @@ class VersionTests {
         val version1 = Version.Stable(2, 0, 0)
         val version2 = Version.Stable(2, 1, 0)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
@@ -67,7 +69,7 @@ class VersionTests {
         val version1 = Version.Stable(2, 0, 0)
         val version2 = Version.Stable(2, 0, 1)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
@@ -75,20 +77,20 @@ class VersionTests {
         val version1 = Version.Beta(2, 0, 0, 1)
         val version2 = Version.Beta(2, 0, 0, 2)
 
-        assert(version1 < version2)
+        assertTrue(version1 < version2)
     }
 
     @Test
     fun testVersionToString() {
         val version = Version.Stable(2, 0, 0)
 
-        assert(version.toVersionString() == "2.0.0")
+        assertEquals(version.toVersionString(), "2.0.0")
     }
 
     @Test
     fun testVersionToStringBeta() {
         val version = Version.Beta(2, 0, 0, 1)
 
-        assert(version.toVersionString() == "2.0.0-beta1")
+        assertEquals(version.toVersionString(), "2.0.0-beta1")
     }
 }
