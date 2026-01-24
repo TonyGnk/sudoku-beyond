@@ -14,11 +14,13 @@ androidxRoom = "2.8.4"
 androidxWorkRuntime = "2.11.0"
 arkivanovDecompose = "3.5.0-alpha01"
 googleDevtoolsKsp = "2.3.4"
+jetbrainsCompose = "1.10.0"
 jetbrainsKotlin = "2.3.0"
 jetbrainsKotlinStdlib = "2.3.0"
 jetbrainsKotlinxSerializationJson = "1.9.0"
 junit = "4.13.2"
 kotlinTest = "2.3.0"
+ktor = "3.1.0"
 materialKolor = "4.1.0"
 mikepenzAboutLibraries = '13.2.1'
 mikepenzMarkdownRenderer = "0.39.1"
@@ -53,9 +55,17 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "androidxWorkRuntime" }
 
 # JetBrains
+jetbrains-compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "jetbrainsCompose" }
 jetbrains-kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "jetbrainsKotlinStdlib" }
 jetbrains-kotlin-test = { group = "org.jetbrains.kotlin", name = "kotlin-test", version.ref = "kotlinTest" }
 jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "jetbrainsKotlinxSerializationJson" }
+
+# Ktor
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-java = { group = "io.ktor", name = "ktor-client-java", version.ref = "ktor" }
+ktor-client-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-serialization-kotlinx-json = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor" }
 
 # Third Party
 arkivanov-decompose = { module = "com.arkivanov.decompose:decompose", version.ref = "arkivanovDecompose" }
@@ -70,7 +80,7 @@ squareup-okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.re
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "androidGradlePlugin" }
 google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "googleDevtoolsKsp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "jetbrainsKotlin" }
 jetbrains-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "jetbrainsKotlin" }

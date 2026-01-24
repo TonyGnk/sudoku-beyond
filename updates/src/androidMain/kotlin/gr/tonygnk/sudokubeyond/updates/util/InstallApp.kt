@@ -20,7 +20,6 @@ package gr.tonygnk.sudokubeyond.updates.util
 import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
-import gr.tonygnk.sudokubeyond.updates.repository.getLatestApk
 
 fun installLatestApk(context: Context) = context.run {
     kotlin

@@ -28,7 +28,6 @@ kotlin {
             jvmTarget.set(JvmTarget.JVM_17)
         }
     }
-//    iosSimulatorArm64()
 
     sourceSets {
         commonMain {

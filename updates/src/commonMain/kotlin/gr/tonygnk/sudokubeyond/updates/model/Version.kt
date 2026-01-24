@@ -17,8 +17,6 @@
 
 package gr.tonygnk.sudokubeyond.updates.model
 
-import android.util.Log
-
 sealed class Version(
     val major: Int,
     val minor: Int,
@@ -64,7 +62,7 @@ fun String.toVersion(): Version {
             minor.toInt()
             patch.toInt()
         } catch (e: Exception) {
-            Log.e("UpdatesManager", "Failed to parse version name: $this")
+            println("Failed to parse version name: $this - ${e.message}")
         }
         return if (this.contains("beta")) {
             Version.Beta(major.toInt(), minor.toInt(), patch.toInt(), build.toInt())

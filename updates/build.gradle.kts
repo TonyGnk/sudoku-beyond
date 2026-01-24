@@ -17,54 +17,41 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
  */
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.jetbrains.kotlin.compose)
+    alias(libs.plugins.jetbrains.kotlin.multiplatform)
     alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
-android {
-    namespace = "gr.tonygnk.sudokubeyond.updates"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
+kotlin {
+    androidLibrary {
+        namespace = "gr.tonygnk.sudokubeyond.updates"
+        compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
-
-        consumerProguardFiles("consumer-rules.pro")
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+    jvm {
+        compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.jetbrains.compose.ui)
+            implementation(libs.jetbrains.kotlinx.serialization.json)
+            implementation(libs.mikepenz.markdown.renderer)
+            implementation(libs.mikepenz.markdown.renderer.m3)
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.ktor.client.okhttp)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.java)
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-    }
-}
-
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
-    }
-}
-
-dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.squareup.okhttp3)
-    implementation(libs.jetbrains.kotlinx.serialization.json)
-    implementation(libs.mikepenz.markdown.renderer)
-    implementation(libs.mikepenz.markdown.renderer.m3)
 }

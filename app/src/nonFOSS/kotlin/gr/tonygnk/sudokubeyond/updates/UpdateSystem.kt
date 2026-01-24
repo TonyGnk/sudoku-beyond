@@ -23,6 +23,8 @@ import gr.tonygnk.sudokubeyond.updates.model.Release
 import gr.tonygnk.sudokubeyond.updates.model.toVersion
 import gr.tonygnk.sudokubeyond.updates.repository.UpdatesRepository
 import gr.tonygnk.sudokubeyond.updates.ui.UpdateMarkdown
+import gr.tonygnk.sudokubeyond.updates.util.filterAssetForPlatform
+import gr.tonygnk.sudokubeyond.updates.util.getLatestApk
 import gr.tonygnk.sudokubeyond.updates.util.installLatestApk
 import kotlinx.coroutines.flow.Flow
 
@@ -37,8 +39,9 @@ internal object UpdateSystem : UpdateSystemContract {
     }
 
     override suspend fun downloadApk(context: Context, downloadUrl: String): Flow<Int> {
-        return UpdatesRepository.downloadApk(
-            context = context, downloadUrl = downloadUrl
+        return UpdatesRepository.downloadApp(
+            downloadUrl = downloadUrl,
+            getTargetFileLocation = context::getLatestApk
         )
     }
 
@@ -59,9 +62,7 @@ internal object UpdateSystem : UpdateSystemContract {
 
 private fun Release?.toBrief(): ReleaseBrief? {
     val name = this?.name ?: return null
-    val downloadUrl = this.assets
-        ?.firstOrNull { it.name?.lowercase()?.contains("nonfoss") ?: false }
-        ?.browserDownloadUrl ?: return null
+    val downloadUrl = filterAssetForPlatform(this.assets) ?: return null
     val htmlUrl = this.htmlUrl ?: return null
     val body = this.body ?: return null
 
@@ -72,11 +73,3 @@ private fun Release?.toBrief(): ReleaseBrief? {
         body = body
     )
 }
-
-//private fun Flow<DownloadStatus>.toReleaseDownloadStatusFlow(): Flow<ReleaseDownloadStatus> {
-//    return this.map { status ->
-//        when (status) {
-//            is DownloadStatus.Progress -> ReleaseDownloadStatus.Progress(status.percent)
-//        }
-//    }
-//}
