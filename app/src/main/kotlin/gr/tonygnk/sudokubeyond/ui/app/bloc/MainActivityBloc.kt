@@ -33,6 +33,7 @@ import gr.tonygnk.sudokubeyond.LibreSudokuApp
 import gr.tonygnk.sudokubeyond.core.BlocContext
 import gr.tonygnk.sudokubeyond.domain.model.MainActivitySettings
 import gr.tonygnk.sudokubeyond.domain.usecase.app.GetMainActivitySettingsUseCase
+import gr.tonygnk.sudokubeyond.domain.usecase.update.UpdateCheckUseCase
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AboutConfig
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AutoUpdateConfig
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.BackupConfig
@@ -100,6 +101,7 @@ import kotlinx.serialization.Serializable
 class MainActivityBloc(
     blocContext: BlocContext,
     getMainActivitySettingsUseCase: GetMainActivitySettingsUseCase,
+    private val updateCheckUseCase: UpdateCheckUseCase,
 ) : BlocContext by blocContext {
     private val scope = lifecycle.coroutineScope
 
@@ -174,18 +176,34 @@ class MainActivityBloc(
                     navigation.replaceAll(WelcomeConfig)
                 }
 
-                if (currentSettings.autoUpdateChannel != UpdateChannel.Disabled && UpdateSystem.canUpdate) {
+                if (UpdateSystem.canUpdate && currentSettings.autoUpdateChannel != UpdateChannel.Disabled) {
                     scope.launch {
                         try {
-                            hasUndismissedUpdate.value = UpdateSystem.hasUndismissedUpdate(
-                                BuildConfig.VERSION_NAME,
-                                currentSettings.autoUpdateChannel == UpdateChannel.Beta,
-                                currentSettings.updateDismissedName,
+                            val result = updateCheckUseCase(
+                                currentVersion = BuildConfig.VERSION_NAME,
+                                allowBetas = currentSettings.autoUpdateChannel == UpdateChannel.Beta,
+                                forceRefresh = false
                             )
-                            Log.d("UpdateCheck", "Latest release: ${hasUndismissedUpdate.value}")
+
+                            when (result) {
+                                is UpdateCheckUseCase.Result.Success -> {
+                                    val release = result.release
+                                    hasUndismissedUpdate.value = release != null &&
+                                            release.name != currentSettings.updateDismissedName
+                                    Log.d(UPDATE_CHECK_TAG, "Update check result: ${release?.name ?: "no update"}")
+                                }
+                                is UpdateCheckUseCase.Result.Error -> {
+                                    Log.e(UPDATE_CHECK_TAG, "Failed to check for update", result.exception)
+                                    hasUndismissedUpdate.value = false
+                                }
+                                is UpdateCheckUseCase.Result.CachedError -> {
+                                    Log.w(UPDATE_CHECK_TAG, "Skipping check due to recent error")
+                                    hasUndismissedUpdate.value = false
+                                }
+                            }
                         } catch (e: Exception) {
-                            Log.e("UpdateCheck", "Failed to check for update: ${e.message} - ${e.printStackTrace()}")
-                            e.printStackTrace()
+                            Log.e(UPDATE_CHECK_TAG, "Unexpected error checking for update", e)
+                            hasUndismissedUpdate.value = false
                         }
                     }
                 }
@@ -319,10 +337,14 @@ class MainActivityBloc(
     }
 
     companion object {
+        private const val UPDATE_CHECK_TAG = "UpdateCheck"
         operator fun invoke(blocContext: BlocContext) = MainActivityBloc(
             blocContext = blocContext,
             getMainActivitySettingsUseCase = GetMainActivitySettingsUseCase(
                 themeSettingsManager = LibreSudokuApp.appModule.themeSettingsManager,
+                appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
+            ),
+            updateCheckUseCase = UpdateCheckUseCase(
                 appSettingsManager = LibreSudokuApp.appModule.appSettingsManager,
             ),
         )

@@ -38,10 +38,14 @@ class MoreBloc(
 
     val updateChannel = appSettingsManager.autoUpdateChannel
     val updateDismissedName = appSettingsManager.updateDismissedName
+    val cachedReleaseName = appSettingsManager.cachedReleaseName
+    val cachedReleaseDownloadUrl = appSettingsManager.cachedReleaseDownloadUrl
+    val cachedReleaseHtmlUrl = appSettingsManager.cachedReleaseHtmlUrl
+    val cachedReleaseBody = appSettingsManager.cachedReleaseBody
 
     fun dismissUpdate(release: ReleaseBrief) {
         scope.launch(Dispatchers.IO) {
-            appSettingsManager.setUpdateDismissedName(release.name.toString())
+            appSettingsManager.setUpdateDismissedName(release.name)
         }
     }
 

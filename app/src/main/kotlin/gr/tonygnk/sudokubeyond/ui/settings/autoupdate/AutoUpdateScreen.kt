@@ -22,7 +22,6 @@ import android.Manifest
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.DrawableRes
@@ -69,7 +68,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -100,14 +98,11 @@ import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTitl
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.CollapsingTopAppBar
 import gr.tonygnk.sudokubeyond.ui.components.collapsing_topappbar.rememberTopAppBarScrollBehavior
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
-import gr.tonygnk.sudokubeyond.updates.ReleaseBrief
-import gr.tonygnk.sudokubeyond.updates.ReleaseDownloadStatus
 import gr.tonygnk.sudokubeyond.updates.UpdateSystem
 import gr.tonygnk.sudokubeyond.updates.UpdateSystem.MarkdownBody
 import gr.tonygnk.sudokubeyond.updates.UpdateSystem.toVersionName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -139,35 +134,12 @@ fun AutoUpdateScreen(
             }
         }
 
-    var latestRelease by remember { mutableStateOf<ReleaseBrief?>(null) }
-    var currentDownloadStatus by remember { mutableStateOf<ReleaseDownloadStatus>(ReleaseDownloadStatus.NotStarted) }
+    val latestRelease by bloc.latestRelease.collectAsStateWithLifecycle()
+    var currentDownloadStatus by remember { mutableStateOf<Int?>(null) }
     val updateChannel by bloc.updateChannel.collectAsStateWithLifecycle(UpdateChannel.Disabled)
-    var checkingForUpdates by rememberSaveable { mutableStateOf(false) }
-    var checkingForUpdatesError by rememberSaveable { mutableStateOf(false) }
+    val checkingForUpdates by bloc.checkingForUpdates.collectAsStateWithLifecycle()
+    val checkingForUpdatesError by bloc.checkingForUpdatesError.collectAsStateWithLifecycle()
     var changeLogBottomSheet by rememberSaveable { mutableStateOf(false) }
-
-    LaunchedEffect(updateChannel) {
-        if (updateChannel != UpdateChannel.Disabled && UpdateSystem.canUpdate) {
-            checkingForUpdates = true
-            latestRelease = null
-            withContext(Dispatchers.IO) {
-                runCatching {
-                    latestRelease = UpdateSystem.getAvailableUpdateRelease(
-                        currentVersion = BuildConfig.VERSION_NAME,
-                        updateChannel == UpdateChannel.Beta
-                    ).also {
-                        checkingForUpdates = false
-                    }
-                }
-                    .onFailure {
-                        Log.e("AutoUpdateScreen", "Failed to check for updates", it)
-                        checkingForUpdates = false
-                        checkingForUpdatesError = true
-                    }
-            }
-        }
-
-    }
 
     Scaffold(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -210,7 +182,7 @@ fun AutoUpdateScreen(
                                                 downloadUrl = latestRelease!!.downloadUrl
                                             ).collect { downloadStatus ->
                                                 currentDownloadStatus = downloadStatus
-                                                if (downloadStatus is ReleaseDownloadStatus.Finished) {
+                                                if (downloadStatus == 100) {
                                                     installApkLauncher.launch(
                                                         Manifest.permission.REQUEST_INSTALL_PACKAGES
                                                     )
@@ -219,7 +191,7 @@ fun AutoUpdateScreen(
                                         }
                                             .onFailure {
                                                 it.printStackTrace()
-                                                currentDownloadStatus = ReleaseDownloadStatus.NotStarted
+                                                currentDownloadStatus = null
                                                 return@launch
                                             }
                                     }
@@ -227,7 +199,7 @@ fun AutoUpdateScreen(
                                 onChangelogClick = { changeLogBottomSheet = true },
                                 currentVersion = BuildConfig.VERSION_NAME.toVersionName(),
                                 newVersion = latestRelease?.name?.toVersionName(),
-                                downloadStatus = currentDownloadStatus
+                                downloadStatusPercent = currentDownloadStatus
                             )
                         } else if (updateChannel != UpdateChannel.Disabled) {
                             if (checkingForUpdatesError) {
@@ -238,29 +210,9 @@ fun AutoUpdateScreen(
                                 ) {
                                     OutlinedButton(
                                         onClick = {
-                                            checkingForUpdatesError = false
-                                            checkingForUpdates = true
-                                            scope.launch {
-                                                withContext(Dispatchers.IO) {
-                                                    kotlin.runCatching {
-                                                        UpdateSystem.getAvailableUpdateRelease(
-                                                            currentVersion = BuildConfig.VERSION_NAME,
-                                                            updateChannel == UpdateChannel.Beta
-                                                        ).also {
-                                                            checkingForUpdates = false
-                                                        }
-                                                    }
-                                                        .onFailure {
-                                                            Log.e(
-                                                                "AutoUpdateScreen",
-                                                                "Failed to check for updates",
-                                                                it
-                                                            )
-                                                            checkingForUpdates = false
-                                                            checkingForUpdatesError = true
-                                                        }
-                                                }
-                                            }
+                                            bloc.checkForUpdates(
+                                                allowBetas = updateChannel == UpdateChannel.Beta
+                                            )
                                         },
                                         modifier = Modifier.align(Alignment.End)
                                     ) {
@@ -437,7 +389,7 @@ fun NewUpdateContainer(
     onChangelogClick: () -> Unit,
     currentVersion: String?,
     newVersion: String?,
-    downloadStatus: ReleaseDownloadStatus,
+    downloadStatusPercent: Int?,
     modifier: Modifier = Modifier,
 ) {
     val infiniteTransition = rememberInfiniteTransition()
@@ -563,14 +515,10 @@ fun NewUpdateContainer(
                 Spacer(modifier = Modifier.width(12.dp))
                 Button(
                     onClick = onDownloadClick,
-                    enabled = downloadStatus !is ReleaseDownloadStatus.Progress
+                    enabled = downloadStatusPercent == null || downloadStatusPercent < 100
                 ) {
                     Text(
-                        text = if (downloadStatus is ReleaseDownloadStatus.Progress) {
-                            downloadStatus.percent.toString()
-                        } else {
-                            stringResource(R.string.action_download)
-                        }
+                        text = downloadStatusPercent?.toString() ?: stringResource(R.string.action_download)
                     )
                 }
             }

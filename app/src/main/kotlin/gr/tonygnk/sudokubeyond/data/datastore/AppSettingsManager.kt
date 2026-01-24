@@ -135,6 +135,14 @@ class AppSettingsManager(context: Context) {
 
     private val autoUpdateChannelKey = intPreferencesKey("auto_update")
     private val updateDismissedNameKey = stringPreferencesKey("update_dismissed_name") // name of the update that was dismissed
+    private val lastUpdateCheckTimestampKey = longPreferencesKey("last_update_check_timestamp")
+    private val cachedReleaseNameKey = stringPreferencesKey("cached_release_name")
+    private val cachedReleaseDownloadUrlKey = stringPreferencesKey("cached_release_download_url")
+    private val cachedReleaseHtmlUrlKey = stringPreferencesKey("cached_release_html_url")
+    private val cachedReleaseBodyKey = stringPreferencesKey("cached_release_body")
+    private val cachedUpdateCheckChannelKey = intPreferencesKey("cached_update_check_channel") // channel used for the cached check
+    private val lastUpdateCheckErrorKey = booleanPreferencesKey("last_update_check_error")
+    private val lastUpdateCheckErrorTimestampKey = longPreferencesKey("last_update_check_error_timestamp")
 
     suspend fun setFirstLaunch(value: Boolean) {
         dataStore.edit { settings ->
@@ -477,6 +485,83 @@ class AppSettingsManager(context: Context) {
     suspend fun setUpdateDismissedName(name: String) {
         dataStore.edit { settings ->
             settings[updateDismissedNameKey] = name
+        }
+    }
+
+    val lastUpdateCheckTimestamp = dataStore.data.map { settings ->
+        settings[lastUpdateCheckTimestampKey] ?: 0L
+    }
+
+    val cachedReleaseName = dataStore.data.map { settings ->
+        settings[cachedReleaseNameKey]
+    }
+
+    val cachedReleaseDownloadUrl = dataStore.data.map { settings ->
+        settings[cachedReleaseDownloadUrlKey]
+    }
+
+    val cachedReleaseHtmlUrl = dataStore.data.map { settings ->
+        settings[cachedReleaseHtmlUrlKey]
+    }
+
+    val cachedReleaseBody = dataStore.data.map { settings ->
+        settings[cachedReleaseBodyKey]
+    }
+
+    val cachedUpdateCheckChannel = dataStore.data.map { settings ->
+        settings[cachedUpdateCheckChannelKey] ?: -1
+    }
+
+    val lastUpdateCheckError = dataStore.data.map { settings ->
+        settings[lastUpdateCheckErrorKey] ?: false
+    }
+
+    val lastUpdateCheckErrorTimestamp = dataStore.data.map { settings ->
+        settings[lastUpdateCheckErrorTimestampKey] ?: 0L
+    }
+
+    suspend fun setCachedUpdateRelease(
+        releaseName: String?,
+        downloadUrl: String?,
+        htmlUrl: String?,
+        body: String?,
+        channel: UpdateChannel,
+        timestamp: Long = System.currentTimeMillis()
+    ) {
+        dataStore.edit { settings ->
+            settings[lastUpdateCheckTimestampKey] = timestamp
+            settings[cachedReleaseNameKey] = releaseName ?: ""
+            settings[cachedReleaseDownloadUrlKey] = downloadUrl ?: ""
+            settings[cachedReleaseHtmlUrlKey] = htmlUrl ?: ""
+            settings[cachedReleaseBodyKey] = body ?: ""
+            settings[cachedUpdateCheckChannelKey] = when (channel) {
+                UpdateChannel.Disabled -> 0
+                UpdateChannel.Stable -> 1
+                UpdateChannel.Beta -> 2
+            }
+            // Clear error state on successful check
+            settings[lastUpdateCheckErrorKey] = false
+            settings[lastUpdateCheckErrorTimestampKey] = 0L
+        }
+    }
+
+    suspend fun setUpdateCheckError(timestamp: Long = System.currentTimeMillis()) {
+        dataStore.edit { settings ->
+            settings[lastUpdateCheckErrorKey] = true
+            settings[lastUpdateCheckErrorTimestampKey] = timestamp
+        }
+    }
+
+    suspend fun clearCachedUpdateRelease() {
+        dataStore.edit { settings ->
+            settings[lastUpdateCheckTimestampKey] = 0L
+            settings[cachedReleaseNameKey] = ""
+            settings[cachedReleaseDownloadUrlKey] = ""
+            settings[cachedReleaseHtmlUrlKey] = ""
+            settings[cachedReleaseBodyKey] = ""
+            settings[cachedUpdateCheckChannelKey] = -1
+            settings[lastUpdateCheckErrorKey] = false
+            settings[lastUpdateCheckErrorTimestampKey] = 0L
         }
     }
 

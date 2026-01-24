@@ -15,19 +15,19 @@
  *  GNU General Public License for more details.
  */
 
-package gr.tonygnk.sudokubeyond.updates
+package gr.tonygnk.sudokubeyond.updates.ui
 
-data class ReleaseBrief(
-    val name: String,
-    val downloadUrl: String,
-    val htmlUrl: String,
-    val body: String,
-)
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import com.mikepenz.markdown.m3.Markdown
 
-sealed interface ReleaseDownloadStatus {
-    object NotStarted : ReleaseDownloadStatus
-
-    data class Progress(val percent: Int) : ReleaseDownloadStatus
-
-    data object Finished : ReleaseDownloadStatus
+@Composable
+fun UpdateMarkdown(
+    body: String,
+    modifier: Modifier = Modifier,
+) {
+    Markdown(
+        content = body,
+        modifier = modifier
+    )
 }

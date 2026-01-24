@@ -26,13 +26,7 @@ internal object UpdateSystem : UpdateSystemContract {
 
     override val canUpdate = true
 
-    override suspend fun hasUndismissedUpdate(
-        currentVersion: String,
-        allowBetas: Boolean,
-        updateDismissedName: String,
-    ): Boolean = false
-
-    override suspend fun getAvailableUpdateRelease(
+    override suspend fun getLatestRelease(
         currentVersion: String,
         allowBetas: Boolean,
     ): ReleaseBrief? = null
@@ -40,10 +34,10 @@ internal object UpdateSystem : UpdateSystemContract {
     override suspend fun downloadApk(
         context: Context,
         downloadUrl: String,
-    ): Flow<ReleaseDownloadStatus> = flow {
-        emit(ReleaseDownloadStatus.NotStarted)
+    ): Flow<Int> = flow {
+        emit(0)
     }
-
+    
     override fun installApk(context: Context) {}
 
     override fun String.toVersionName(): String? = null

@@ -55,11 +55,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,7 +71,6 @@ import androidx.graphics.shapes.RoundedPolygon
 import androidx.graphics.shapes.star
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.materialkolor.ktx.blend
-import gr.tonygnk.sudokubeyond.BuildConfig
 import gr.tonygnk.sudokubeyond.R
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc
 import gr.tonygnk.sudokubeyond.ui.app.bloc.MainActivityBloc.PagesConfig.AboutConfig
@@ -87,8 +83,6 @@ import gr.tonygnk.sudokubeyond.ui.settings.autoupdate.UpdateChannel
 import gr.tonygnk.sudokubeyond.ui.theme.RoundedPolygonShape
 import gr.tonygnk.sudokubeyond.updates.ReleaseBrief
 import gr.tonygnk.sudokubeyond.updates.UpdateSystem
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 @Composable
 fun MoreScreen(
@@ -163,19 +157,27 @@ fun MoreScreen(
 
             if (UpdateSystem.canUpdate) {
                 AnimatedVisibility(autoUpdateChannel != UpdateChannel.Disabled) {
-                    var latestRelease by remember { mutableStateOf<ReleaseBrief?>(null) }
-                    LaunchedEffect(Unit) {
-                        if (latestRelease == null) {
-                            withContext(Dispatchers.IO) {
-                                runCatching {
-                                    latestRelease = UpdateSystem.getAvailableUpdateRelease(
-                                        currentVersion = BuildConfig.VERSION_NAME,
-                                        allowBetas = autoUpdateChannel == UpdateChannel.Beta
-                                    )
-                                }
-                            }
+                    val cachedReleaseName by bloc.cachedReleaseName.collectAsStateWithLifecycle(null)
+                    val cachedReleaseDownloadUrl by bloc.cachedReleaseDownloadUrl.collectAsStateWithLifecycle(null)
+                    val cachedReleaseHtmlUrl by bloc.cachedReleaseHtmlUrl.collectAsStateWithLifecycle(null)
+                    val cachedReleaseBody by bloc.cachedReleaseBody.collectAsStateWithLifecycle(null)
+
+                    // Build ReleaseBrief from cached data if all fields present
+                    val latestRelease = remember(cachedReleaseName, cachedReleaseDownloadUrl, cachedReleaseHtmlUrl, cachedReleaseBody) {
+                        if (!cachedReleaseName.isNullOrEmpty() && !cachedReleaseDownloadUrl.isNullOrEmpty() &&
+                            !cachedReleaseHtmlUrl.isNullOrEmpty() && !cachedReleaseBody.isNullOrEmpty()
+                        ) {
+                            ReleaseBrief(
+                                name = cachedReleaseName!!,
+                                downloadUrl = cachedReleaseDownloadUrl!!,
+                                htmlUrl = cachedReleaseHtmlUrl!!,
+                                body = cachedReleaseBody!!
+                            )
+                        } else {
+                            null
                         }
                     }
+
                     latestRelease?.let { release ->
                         AnimatedVisibility(
                             visible = release.name != updateDismissedName,

@@ -15,19 +15,21 @@
  *  GNU General Public License for more details.
  */
 
-package gr.tonygnk.sudokubeyond.updates
+package gr.tonygnk.sudokubeyond.updates.model
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.mikepenz.markdown.m3.Markdown
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@Composable
-fun Markdown(
-    body: String,
-    modifier: Modifier = Modifier,
-) {
-    Markdown(
-        content = body,
-        modifier = modifier
-    )
-}
+@Serializable
+data class Release(
+    @SerialName("html_url") val htmlUrl: String? = null,
+    val name: String? = null,
+    val assets: List<AssetsItem>? = null,
+    val body: String? = null,
+)
+
+@Serializable
+data class AssetsItem(
+    val name: String? = null,
+    @SerialName("browser_download_url") val browserDownloadUrl: String? = null,
+)

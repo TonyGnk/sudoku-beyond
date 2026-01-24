@@ -19,48 +19,38 @@ package gr.tonygnk.sudokubeyond.updates
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import gr.tonygnk.sudokubeyond.updates.model.Release
+import gr.tonygnk.sudokubeyond.updates.model.toVersion
+import gr.tonygnk.sudokubeyond.updates.repository.UpdatesRepository
+import gr.tonygnk.sudokubeyond.updates.ui.UpdateMarkdown
+import gr.tonygnk.sudokubeyond.updates.util.installLatestApk
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 internal object UpdateSystem : UpdateSystemContract {
 
     override val canUpdate = true
 
-    override suspend fun hasUndismissedUpdate(
-        currentVersion: String,
-        allowBetas: Boolean,
-        updateDismissedName: String,
-    ): Boolean {
-        val release = UpdatesManager.checkForUpdate(
-            currentVersion = currentVersion,
-            allowBetas = allowBetas
-        )
-        return release != null && release.name != updateDismissedName
-    }
-
-    override suspend fun getAvailableUpdateRelease(currentVersion: String, allowBetas: Boolean): ReleaseBrief? {
-        return UpdatesManager.checkForUpdate(
+    override suspend fun getLatestRelease(currentVersion: String, allowBetas: Boolean): ReleaseBrief? {
+        return UpdatesRepository.checkForUpdate(
             currentVersion = currentVersion, allowBetas = allowBetas
         ).toBrief()
     }
 
-
-    override suspend fun downloadApk(context: Context, downloadUrl: String): Flow<ReleaseDownloadStatus> {
-        return UpdatesManager.downloadApk(
+    override suspend fun downloadApk(context: Context, downloadUrl: String): Flow<Int> {
+        return UpdatesRepository.downloadApk(
             context = context, downloadUrl = downloadUrl
-        ).toReleaseDownloadStatusFlow()
+        )
     }
 
-
     override fun installApk(context: Context) {
-        UpdatesManager.installLatestApk(context)
+        installLatestApk(context)
     }
 
     override fun String.toVersionName(): String = this.toVersion().toVersionString()
 
     @Composable
     override fun ReleaseBrief.MarkdownBody(modifier: Modifier) {
-        Markdown(
+        UpdateMarkdown(
             body = this.body,
             modifier = modifier
         )
@@ -83,11 +73,10 @@ private fun Release?.toBrief(): ReleaseBrief? {
     )
 }
 
-private fun Flow<DownloadStatus>.toReleaseDownloadStatusFlow(): Flow<ReleaseDownloadStatus> {
-    return this.map { status ->
-        when (status) {
-            is DownloadStatus.Progress -> ReleaseDownloadStatus.Progress(status.percent)
-            is DownloadStatus.Finished -> ReleaseDownloadStatus.Finished
-        }
-    }
-}
+//private fun Flow<DownloadStatus>.toReleaseDownloadStatusFlow(): Flow<ReleaseDownloadStatus> {
+//    return this.map { status ->
+//        when (status) {
+//            is DownloadStatus.Progress -> ReleaseDownloadStatus.Progress(status.percent)
+//        }
+//    }
+//}

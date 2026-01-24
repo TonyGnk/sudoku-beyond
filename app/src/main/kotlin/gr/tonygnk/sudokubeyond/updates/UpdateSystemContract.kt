@@ -25,15 +25,9 @@ interface UpdateSystemContract {
 
     val canUpdate: Boolean
 
-    suspend fun hasUndismissedUpdate(
-        currentVersion: String,
-        allowBetas: Boolean = true,
-        updateDismissedName: String,
-    ): Boolean
+    suspend fun getLatestRelease(currentVersion: String, allowBetas: Boolean = true): ReleaseBrief?
 
-    suspend fun getAvailableUpdateRelease(currentVersion: String, allowBetas: Boolean = true): ReleaseBrief?
-
-    suspend fun downloadApk(context: Context, downloadUrl: String): Flow<ReleaseDownloadStatus>
+    suspend fun downloadApk(context: Context, downloadUrl: String): Flow<Int>
 
     fun installApk(context: Context)
 
